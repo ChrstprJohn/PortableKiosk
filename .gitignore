@@ -1,0 +1,74 @@
+# Visual Studio user settings and workspace cache
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build output
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# NuGet packages are restored from packages.config
+[Pp]ackages/
+*.nupkg
+*.snupkg
+
+# Test and coverage output
+[Tt]est[Rr]esult*/
+[Tt]est[Rr]esults/
+coverage/
+*.coverage
+*.coveragexml
+
+# Publish and deployment output
+[Pp]ublish/
+[Aa]pp_[Pp]ublish/
+*.Publish.xml
+*.pubxml.user
+
+# Compiler, tooling, and temporary files
+*.cache
+*.tmp
+*.temp
+*.log
+*.pdb
+*.opendb
+*.VC.db
+*.pidb
+*.svclog
+*.tlog
+~$*
+
+# ReSharper and other IDE tooling
+_ReSharper*/
+*.DotSettings.user
+.idea/
+.vscode/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local-only configuration and secrets
+*.local.config
+Web.local.config
+ConnectionStrings.config
+ConnectionStrings.*.config
+!ConnectionStrings.example.config
+.env
+.env.*
+!.env.example
+
+# Local database files and backups
+*.mdf
+*.ldf
+*.bak
+*.bacpac
