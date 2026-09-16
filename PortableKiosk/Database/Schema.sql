@@ -1,5 +1,12 @@
 -- Kiosk schema with dedicated Category, Size, and Bundle entities for Microsoft SQL Server
 
+IF DB_ID(N'portable_kiosk_db') IS NULL
+    EXEC(N'CREATE DATABASE portable_kiosk_db');
+GO
+
+USE portable_kiosk_db;
+GO
+
 CREATE TABLE Categories
 (
     CategoryID INT IDENTITY(1, 1) PRIMARY KEY,
