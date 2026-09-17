@@ -174,7 +174,20 @@
     <Content Include="Scripts\WebForms\WebForms.js" />
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
+    <Content Include="Shared\Layouts\Admin.Master" />
     <Content Include="Site.Master" />
+    <Content Include="UI\Account\AdminLogin.aspx" />
+    <Content Include="UI\Account\SignOut.aspx" />
+    <Content Include="UI\Admin\BundleOptionGroupItems.aspx" />
+    <Content Include="UI\Admin\BundleOptionGroups.aspx" />
+    <Content Include="UI\Admin\BundleSlots.aspx" />
+    <Content Include="UI\Admin\Bundles.aspx" />
+    <Content Include="UI\Admin\Category.aspx" />
+    <Content Include="UI\Admin\Products.aspx" />
+    <Content Include="UI\Admin\ProductVariants.aspx" />
+    <Content Include="UI\Admin\Sizes.aspx" />
+    <Content Include="UI\Admin\StaffAccounts.aspx" />
+    <Content Include="UI\POS\Index.aspx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
   </ItemGroup>
@@ -182,6 +195,24 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Core\Data\DatabaseConnection.cs" />
+    <Compile Include="Core\Data\Repositories\BundleOptionGroupItemRepository.cs" />
+    <Compile Include="Core\Data\Repositories\BundleOptionGroupRepository.cs" />
+    <Compile Include="Core\Data\Repositories\BundleRepository.cs" />
+    <Compile Include="Core\Data\Repositories\BundleSlotRepository.cs" />
+    <Compile Include="Core\Data\Repositories\CategoryRepository.cs" />
+    <Compile Include="Core\Data\Repositories\ProductRepository.cs" />
+    <Compile Include="Core\Data\Repositories\ProductVariantRepository.cs" />
+    <Compile Include="Core\Data\Repositories\SizeRepository.cs" />
+    <Compile Include="Core\Data\Repositories\StaffAccountRepository.cs" />
+    <Compile Include="Core\Models\Bundle.cs" />
+    <Compile Include="Core\Models\BundleOptionGroup.cs" />
+    <Compile Include="Core\Models\BundleOptionGroupItem.cs" />
+    <Compile Include="Core\Models\BundleSlot.cs" />
+    <Compile Include="Core\Models\Category.cs" />
+    <Compile Include="Core\Models\Product.cs" />
+    <Compile Include="Core\Models\ProductVariant.cs" />
+    <Compile Include="Core\Models\Size.cs" />
+    <Compile Include="Core\Models\StaffAccount.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -193,6 +224,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Layouts\Admin.Master.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Shared\Layouts\Admin.Master.designer.cs">
+      <DependentUpon>Admin.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\Security\PasswordHasher.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -200,23 +239,101 @@
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
     </Compile>
+    <Compile Include="UI\Account\AdminLogin.aspx.cs">
+      <DependentUpon>AdminLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Account\AdminLogin.aspx.designer.cs">
+      <DependentUpon>AdminLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Account\SignOut.aspx.cs">
+      <DependentUpon>SignOut.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Account\SignOut.aspx.designer.cs">
+      <DependentUpon>SignOut.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\BundleOptionGroupItems.aspx.cs">
+      <DependentUpon>BundleOptionGroupItems.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\BundleOptionGroupItems.aspx.designer.cs">
+      <DependentUpon>BundleOptionGroupItems.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\BundleOptionGroups.aspx.cs">
+      <DependentUpon>BundleOptionGroups.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\BundleOptionGroups.aspx.designer.cs">
+      <DependentUpon>BundleOptionGroups.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\BundleSlots.aspx.cs">
+      <DependentUpon>BundleSlots.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\BundleSlots.aspx.designer.cs">
+      <DependentUpon>BundleSlots.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Bundles.aspx.cs">
+      <DependentUpon>Bundles.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Bundles.aspx.designer.cs">
+      <DependentUpon>Bundles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Category.aspx.cs">
+      <DependentUpon>Category.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Category.aspx.designer.cs">
+      <DependentUpon>Category.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Products.aspx.cs">
+      <DependentUpon>Products.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Products.aspx.designer.cs">
+      <DependentUpon>Products.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\ProductVariants.aspx.cs">
+      <DependentUpon>ProductVariants.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\ProductVariants.aspx.designer.cs">
+      <DependentUpon>ProductVariants.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Sizes.aspx.cs">
+      <DependentUpon>Sizes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Sizes.aspx.designer.cs">
+      <DependentUpon>Sizes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\StaffAccounts.aspx.cs">
+      <DependentUpon>StaffAccounts.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\StaffAccounts.aspx.designer.cs">
+      <DependentUpon>StaffAccounts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\POS\Index.aspx.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\POS\Index.aspx.designer.cs">
+      <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\css\" />
     <Folder Include="Content\fonts\" />
     <Folder Include="Content\images\" />
-    <Folder Include="Core\Data\Repositories\" />
-    <Folder Include="Core\Models\" />
     <Folder Include="Core\Services\" />
     <Folder Include="Scripts\app\" />
     <Folder Include="Scripts\vendor\" />
     <Folder Include="Shared\Constants\" />
     <Folder Include="Shared\Controls\" />
     <Folder Include="Shared\Helpers\" />
-    <Folder Include="Shared\Layouts\" />
-    <Folder Include="Shared\Security\" />
-    <Folder Include="UI\Account\" />
-    <Folder Include="UI\Admin\" />
     <Folder Include="UI\User\" />
   </ItemGroup>
   <ItemGroup>

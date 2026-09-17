@@ -1,0 +1,51 @@
+<%@ Master
+    Language="C#"
+    MasterPageFile="~/Site.Master"
+    AutoEventWireup="true"
+    CodeBehind="Admin.Master.cs"
+    Inherits="PortableKiosk.Shared.Layouts.AdminLayout" %>
+
+<asp:Content
+    ID="AdminBody"
+    ContentPlaceHolderID="MainContent"
+    runat="server">
+
+    <div class="admin-shell">
+        <aside class="admin-sidebar" aria-label="Admin navigation">
+            <div class="admin-sidebar-heading">
+                <span>Management</span>
+                <strong>Admin workspace</strong>
+            </div>
+
+            <nav class="admin-nav">
+                <a ID="lnkCategories" runat="server"
+                    href="~/UI/Admin/Category.aspx">
+                    Categories
+                </a>
+
+                <a ID="lnkSizes" runat="server"
+                    href="~/UI/Admin/Sizes.aspx">
+                    Sizes
+                </a>
+
+                <a ID="lnkStaff" runat="server"
+                    href="~/UI/Admin/StaffAccounts.aspx">
+                    Staff accounts
+                </a>
+            </nav>
+
+            <div class="admin-sidebar-account">
+                <span>Signed in as</span>
+                <strong><asp:Literal ID="litAdminName" runat="server" /></strong>
+                <a runat="server" href="~/UI/Account/SignOut.aspx">
+                    Sign out
+                </a>
+            </div>
+        </aside>
+
+        <section class="admin-content">
+            <asp:ContentPlaceHolder ID="AdminContent" runat="server" />
+        </section>
+    </div>
+
+</asp:Content>
