@@ -65,23 +65,41 @@ UI page/code-behind -> Service -> Repository -> DbConnectionFactory -> SQL Serve
 - Existing package-managed assets remain in place until their bundle references are deliberately replaced.
 - New application styles belong in `Content/css`.
 - Images belong in `Content/images`; fonts belong in `Content/fonts`.
-- New application JavaScript belongs in `Scripts/app`.
+- New application JavaScript belongs in `Scripts/app`, partitioned by domain area and common utilities.
 - Third-party scripts belong in `Scripts/vendor` only when they are not already managed by the current NuGet/package setup.
 
-## 9. Root and routing behavior
+## 9. JavaScript architecture and conventions
+
+- **Dedicated Script Files**: Avoid inline `<script>` tags inside `.aspx` files. Place client-side logic in dedicated `.js` files under `Scripts/app/`.
+- **Folder Partitioning**: Client scripts mirror the UI area hierarchy:
+  - `Scripts/app/common/`: Shared utilities, formatters, HTTP/Ajax helpers, notification/modal wrappers.
+  - `Scripts/app/user/`: Customer-facing kiosk flow (home, menu, cart, checkout).
+  - `Scripts/app/admin/`: Administration screens (products, categories, orders, bundles).
+  - `Scripts/app/pos/`: POS / cashier workflow scripts.
+  - `Scripts/app/account/`: Authentication and profile screens.
+- **Script Inclusion**:
+  - Master pages provide a `<asp:ContentPlaceHolder ID="ScriptsContent" runat="server" />` right before the closing body tag.
+  - Individual `.aspx` views reference their dedicated script via `<asp:Content ContentPlaceHolderID="ScriptsContent" runat="server">` using `<script src="<%= ResolveUrl("~/Scripts/app/...") %>"></script>`.
+- **Web Forms Client ID Handling**:
+  - Favor HTML5 `data-*` attributes (e.g., `data-product-id`, `data-action`) or CSS classes for JS event binding and selectors to avoid coupling with Web Forms mangled control IDs.
+  - Use `ClientIDMode="Static"` on server controls where direct ID access in JS is strictly necessary.
+- **Scoping**: Wrap page script code in Immediately Invoked Function Expressions (IIFE) or modular namespaces to prevent global namespace pollution.
+- **Partial Postbacks**: If ASP.NET AJAX `UpdatePanel` is utilized, re-bind event handlers via `Sys.WebForms.PageRequestManager.getInstance().add_endRequest(...)`.
+
+## 10. Root and routing behavior
 
 - `Default.aspx` remains the root entry point until routing deliberately replaces it. It can later redirect to `UI/User/Home.aspx`.
 - `Site.Master` remains temporarily so the starter page continues to have a valid master page while the new layouts are being built.
 - Friendly URL and bundle configuration remain enabled through `App_Start`.
 
-## 10. Project maintenance rules
+## 11. Project maintenance rules
 
 - Add or move Web Forms files through Visual Studio when possible so the `.csproj`, namespaces, `Inherits`, and `DependentUpon` entries remain correct.
 - Generated `.vs`, `bin`, and `obj` directories are not source and may be regenerated.
 - Do not manually edit generated `.designer.cs` files unless there is a specific recovery reason.
 - Do not remove package, bundle, Web Forms, Bootstrap, or jQuery assets until all references have been checked and replaced.
 
-## 11. Planned directory layout
+## 12. Planned directory layout
 
 ```text
 PORTABLE_KIOSK/
@@ -93,6 +111,7 @@ PORTABLE_KIOSK/
     |-- UI/
     |   |-- User/
     |   |-- Admin/
+    |   |-- POS/
     |   `-- Account/
     |-- Core/
     |   |-- Models/
@@ -111,6 +130,11 @@ PORTABLE_KIOSK/
     |   `-- fonts/
     |-- Scripts/
     |   |-- app/
+    |   |   |-- common/
+    |   |   |-- user/
+    |   |   |-- admin/
+    |   |   |-- pos/
+    |   |   `-- account/
     |   `-- vendor/
     |-- App_Start/
     |-- Properties/
