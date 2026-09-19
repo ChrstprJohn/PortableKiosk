@@ -152,6 +152,7 @@
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
+    <Content Include="Scripts\app\admin\bundles.js" />
     <Content Include="Scripts\app\admin\products.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
@@ -174,7 +175,8 @@
     <Content Include="Scripts\WebForms\TreeView.js" />
     <Content Include="Scripts\WebForms\WebForms.js" />
     <Content Include="Scripts\WebForms\WebParts.js" />
-    <Content Include="Scripts\WebForms\WebUIValidation.js" />
+    <Content Include="Scripts\app\common\modal.js" />
+    <Content Include="Shared\Controls\ModalDialog.ascx" />
     <Content Include="Shared\Layouts\Admin.Master" />
     <Content Include="Site.Master" />
     <Content Include="UI\Account\AdminLogin.aspx" />
@@ -226,6 +228,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Controls\ModalDialog.ascx.cs">
+      <DependentUpon>ModalDialog.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Shared\Controls\ModalDialog.ascx.designer.cs">
+      <DependentUpon>ModalDialog.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Shared\Layouts\Admin.Master.cs">
       <DependentUpon>Admin.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

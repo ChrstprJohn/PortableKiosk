@@ -284,25 +284,36 @@ textarea {
     margin: 0;
 }
 
+.body-content:has(.admin-shell) {
+    padding: 0;
+}
+
 .admin-shell {
     display: grid;
-    gap: 1.5rem;
-    grid-template-columns: 230px minmax(0, 1fr);
-    margin: 2rem auto;
-    max-width: 1240px;
+    gap: 0;
+    grid-template-columns: 260px minmax(0, 1fr);
+    margin: 0;
+    max-width: 100%;
+    min-height: 100vh;
+    background: var(--canvas);
 }
 
 .admin-sidebar {
-    align-self: start;
+    align-self: stretch;
     background: var(--navy);
-    border-radius: 0.9rem;
+    border-radius: 0;
     color: #f8faff;
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 9rem);
-    padding: 1.25rem;
+    min-height: 100vh;
+    height: 100%;
+    padding: 1.5rem 1.25rem;
     position: sticky;
-    top: 1.25rem;
+    top: 0;
+    max-height: 100vh;
+    overflow-y: auto;
+    z-index: 10;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .admin-sidebar-heading {
@@ -329,7 +340,7 @@ textarea {
 }
 
 .admin-nav a {
-    border-radius: 0.65rem;
+    border-radius: 0;
     color: #cbd3e1;
     font-weight: 650;
     padding: 0.8rem 0.9rem;
@@ -369,6 +380,8 @@ textarea {
 
 .admin-content {
     min-width: 0;
+    width: 100%;
+    padding: 1.5rem clamp(1.25rem, 3vw, 2.5rem) 2.5rem;
 }
 
 .admin-content .staff-shell,
@@ -637,7 +650,10 @@ textarea {
 
     .admin-sidebar {
         min-height: auto;
+        height: auto;
+        max-height: none;
         position: static;
+        padding: 1.25rem 1rem;
     }
 
     .admin-nav {
