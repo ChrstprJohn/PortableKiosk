@@ -34,10 +34,12 @@ namespace PortableKiosk.UI.Admin
             public bool IsAvailable { get; set; }
             public int DisplayOrder { get; set; }
             public List<ProductVariant> Variants { get; set; }
+            public string ExistingSizeKeys { get; set; }
 
             public ProductCardViewModel()
             {
                 Variants = new List<ProductVariant>();
+                ExistingSizeKeys = string.Empty;
             }
         }
 
@@ -359,6 +361,215 @@ namespace PortableKiosk.UI.Admin
             chkModalIsAvailable.Checked = true;
         }
 
+        protected void btnUpdateVariant_Click(
+            object sender,
+            EventArgs e)
+        {
+            lblGlobalMessage.Visible = false;
+            Page.Validate("EditVariantForm");
+
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
+            int productVariantID;
+            if (!int.TryParse(
+                    hfEditVariantID.Value,
+                    out productVariantID) ||
+                productVariantID <= 0)
+            {
+                ShowError("The selected variant is invalid.");
+                return;
+            }
+
+            int? sizeID = null;
+            int parsedSizeID;
+
+            if (!string.Equals(
+                    ddlEditVariantSize.SelectedValue,
+                    "NONE",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                if (!int.TryParse(
+                        ddlEditVariantSize.SelectedValue,
+                        out parsedSizeID) ||
+                    parsedSizeID <= 0)
+                {
+                    ShowError("Choose a valid size or serving.");
+                    return;
+                }
+
+                sizeID = parsedSizeID;
+            }
+
+            decimal price;
+            if (!decimal.TryParse(
+                    txtEditVariantPrice.Text.Trim(),
+                    out price) ||
+                price < 0)
+            {
+                ShowError("Enter a valid non-negative price.");
+                return;
+            }
+
+            ProductVariant existingVariant;
+
+            try
+            {
+                existingVariant =
+                    variantService.GetByID(productVariantID);
+            }
+            catch (Exception)
+            {
+                ShowError(
+                    "The variant could not be loaded for editing.");
+                return;
+            }
+
+            if (existingVariant == null)
+            {
+                ShowError("The variant no longer exists.");
+                return;
+            }
+
+            string newImagePath;
+            string savedPhysicalPath;
+            string uploadError;
+
+            if (!TrySaveImage(
+                    uploadEditVariantImage,
+                    out newImagePath,
+                    out savedPhysicalPath,
+                    out uploadError))
+            {
+                ShowError(uploadError);
+                return;
+            }
+
+            ProductVariant updatedVariant = new ProductVariant
+            {
+                ProductVariantID = productVariantID,
+                ProductID = existingVariant.ProductID,
+                SizeID = sizeID,
+                Price = price,
+                ImagePath =
+                    string.IsNullOrWhiteSpace(newImagePath)
+                        ? existingVariant.ImagePath
+                        : newImagePath,
+                IsAvailable =
+                    chkEditVariantIsAvailable.Checked
+            };
+
+            try
+            {
+                if (!variantService.Update(updatedVariant))
+                {
+                    DeleteSavedImage(savedPhysicalPath);
+                    ShowError("The variant no longer exists.");
+                    return;
+                }
+
+                if (!string.IsNullOrWhiteSpace(newImagePath))
+                {
+                    DeleteSavedImageByVirtualPath(
+                        existingVariant.ImagePath);
+                }
+
+                ShowSuccess("Variant updated successfully.");
+                LoadProductCards();
+            }
+            catch (SqlException ex)
+            {
+                DeleteSavedImage(savedPhysicalPath);
+
+                if (ex.Number == 2601 || ex.Number == 2627)
+                {
+                    ShowError(
+                        "That size already exists for this product.");
+                }
+                else
+                {
+                    ShowError(
+                        "The variant could not be updated due to a database error.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                DeleteSavedImage(savedPhysicalPath);
+                ShowError(ex.Message);
+            }
+            catch (Exception)
+            {
+                DeleteSavedImage(savedPhysicalPath);
+                ShowError(
+                    "An unexpected error occurred while updating the variant.");
+            }
+        }
+
+        protected void btnDeleteVariant_Click(
+            object sender,
+            EventArgs e)
+        {
+            lblGlobalMessage.Visible = false;
+
+            int productVariantID;
+            if (!int.TryParse(
+                    hfDeleteVariantID.Value,
+                    out productVariantID) ||
+                productVariantID <= 0)
+            {
+                ShowError("The selected variant is invalid.");
+                return;
+            }
+
+            try
+            {
+                ProductVariant existingVariant =
+                    variantService.GetByID(productVariantID);
+
+                if (existingVariant == null)
+                {
+                    ShowError("The variant no longer exists.");
+                    return;
+                }
+
+                if (!variantService.Delete(productVariantID))
+                {
+                    ShowError("The variant no longer exists.");
+                    return;
+                }
+
+                DeleteSavedImageByVirtualPath(
+                    existingVariant.ImagePath);
+
+                ShowSuccess("Variant deleted successfully.");
+                LoadProductCards();
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547)
+                {
+                    ShowError(
+                        "This variant is used in an order. Mark it unavailable instead of deleting it.");
+                }
+                else
+                {
+                    ShowError(
+                        "The variant could not be deleted due to a database error.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ShowError(ex.Message);
+            }
+            catch (Exception)
+            {
+                ShowError(
+                    "An unexpected error occurred while deleting the variant.");
+            }
+        }
+
         #endregion
 
         #region Loading Data & Rendering
@@ -394,6 +605,24 @@ namespace PortableKiosk.UI.Admin
             {
                 variantSizes = sizeService.GetAll();
 
+                ddlEditVariantSize.Items.Clear();
+                ddlEditVariantSize.Items.Add(
+                    new ListItem(
+                        "Choose size / serving",
+                        ""));
+                ddlEditVariantSize.Items.Add(
+                    new ListItem(
+                        "Standard / No size",
+                        "NONE"));
+
+                foreach (Size size in variantSizes)
+                {
+                    ddlEditVariantSize.Items.Add(
+                        new ListItem(
+                            size.SizeName,
+                            size.SizeID.ToString()));
+                }
+
                 List<VariantInputRow> rows =
                     new List<VariantInputRow>();
 
@@ -415,7 +644,14 @@ namespace PortableKiosk.UI.Admin
                 rptBulkVariantRows.DataSource =
                     new List<VariantInputRow>();
                 rptBulkVariantRows.DataBind();
+                ddlEditVariantSize.Items.Clear();
+                ddlEditVariantSize.Items.Add(
+                    new ListItem(
+                        "Sizes unavailable",
+                        ""));
+                ddlEditVariantSize.Enabled = false;
                 btnSaveModalVariant.Enabled = false;
+                btnUpdateVariant.Enabled = false;
                 ShowError("Sizes could not be loaded.");
             }
         }
@@ -484,6 +720,20 @@ namespace PortableKiosk.UI.Admin
                     {
                         vm.Variants = variantsByProduct[p.ProductID];
                     }
+
+                    List<string> existingSizeKeys =
+                        new List<string>();
+
+                    foreach (ProductVariant variant in vm.Variants)
+                    {
+                        existingSizeKeys.Add(
+                            variant.SizeID.HasValue
+                                ? variant.SizeID.Value.ToString()
+                                : "NONE");
+                    }
+
+                    vm.ExistingSizeKeys =
+                        string.Join(",", existingSizeKeys);
 
                     cardViewModels.Add(vm);
                 }
@@ -600,6 +850,38 @@ namespace PortableKiosk.UI.Admin
             foreach (string physicalPath in physicalPaths)
             {
                 DeleteSavedImage(physicalPath);
+            }
+        }
+
+        private void DeleteSavedImageByVirtualPath(
+            string virtualPath)
+        {
+            if (string.IsNullOrWhiteSpace(virtualPath) ||
+                !virtualPath.StartsWith(
+                    "~/Content/images/product-variants/",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            try
+            {
+                string imageFolder = Path.GetFullPath(
+                    Server.MapPath(
+                        "~/Content/images/product-variants/"));
+                string physicalPath = Path.GetFullPath(
+                    Server.MapPath(virtualPath));
+
+                if (physicalPath.StartsWith(
+                        imageFolder,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    DeleteSavedImage(physicalPath);
+                }
+            }
+            catch
+            {
+                // A database change should not fail because an old image could not be removed.
             }
         }
 

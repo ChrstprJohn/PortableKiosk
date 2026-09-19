@@ -198,7 +198,9 @@
             <asp:Repeater ID="rptProductCards" runat="server">
                 <ItemTemplate>
                     <div class="col-12 col-xl-6">
-                        <div class="card shadow-sm h-100 border-1">
+                        <div
+                            class="card shadow-sm h-100 border-1"
+                            data-existing-size-keys='<%# Eval("ExistingSizeKeys") %>'>
                             
                             <!-- CARD HEADER -->
                             <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
@@ -216,7 +218,7 @@
                                         class="btn btn-sm btn-outline-primary"
                                         data-bs-toggle="modal"
                                         data-bs-target="#addVariantModal"
-                                        onclick='openAddVariantModal(<%# Eval("ProductID") %>, "<%# HttpUtility.JavaScriptStringEncode(Eval("ProductName").ToString()) %>");'>
+                                        onclick='openAddVariantModal(<%# Eval("ProductID") %>, "<%# HttpUtility.JavaScriptStringEncode(Eval("ProductName").ToString()) %>", "<%# Eval("ExistingSizeKeys") %>");'>
                                         <i class="bi bi-plus"></i> Add Variants
                                     </button>
                                 </div>
@@ -238,6 +240,7 @@
                                                         <th>Size / Serving</th>
                                                         <th>Price</th>
                                                         <th>Status</th>
+                                                        <th class="text-end">Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -261,6 +264,28 @@
                                                 <span class='badge <%# (bool)Eval("IsAvailable") ? "bg-success-subtle text-success" : "bg-secondary-subtle text-secondary" %>'>
                                                     <%# (bool)Eval("IsAvailable") ? "Available" : "Unavailable" %>
                                                 </span>
+                                            </td>
+                                            <td class="text-end text-nowrap">
+                                                <div class="btn-group btn-group-sm" role="group" aria-label="Variant actions">
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-outline-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editVariantModal"
+                                                        onclick='openEditVariantModal(this, <%# Eval("ProductVariantID") %>, "<%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeID"))) ? "NONE" : Convert.ToString(Eval("SizeID")) %>", "<%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeID"))) ? "Standard / No size" : HttpUtility.JavaScriptStringEncode(Convert.ToString(Eval("SizeName"))) %>", "<%# Convert.ToDecimal(Eval("Price")).ToString(System.Globalization.CultureInfo.InvariantCulture) %>", <%# (bool)Eval("IsAvailable") ? "true" : "false" %>, "<%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("ImagePath"))) ? "" : HttpUtility.JavaScriptStringEncode(ResolveUrl(Convert.ToString(Eval("ImagePath")))) %>");'
+                                                        aria-label="Edit <%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeID"))) ? "standard variant" : HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("SizeName"))) %>">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        class="btn btn-outline-danger"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#deleteVariantModal"
+                                                        onclick='openDeleteVariantModal(this, <%# Eval("ProductVariantID") %>, "<%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeID"))) ? "Standard / No size" : HttpUtility.JavaScriptStringEncode(Convert.ToString(Eval("SizeName"))) %>");'
+                                                        aria-label="Delete <%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeID"))) ? "standard variant" : HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("SizeName"))) %>">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     </ItemTemplate>
@@ -321,6 +346,13 @@
                         <p class="text-muted small mb-3">
                             Start with one size. Add another row only when you need another variant.
                         </p>
+                        <div
+                            id="existingVariantNotice"
+                            class="alert alert-light border small py-2 d-none"
+                            role="status">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Sizes marked “already added” are unavailable for this product.
+                        </div>
 
                         <div id="bulkVariantRows">
                             <asp:Repeater
@@ -420,6 +452,155 @@
                         OnClick="btnSaveModalVariant_Click" />
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT VARIANT MODAL -->
+    <div class="modal fade" id="editVariantModal" tabindex="-1" aria-labelledby="editVariantModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="editVariantModalLabel">
+                        <i class="bi bi-pencil-square me-1"></i>Edit Product Variant
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <asp:ValidationSummary
+                        ID="validationSummaryEditVariant"
+                        runat="server"
+                        ValidationGroup="EditVariantForm"
+                        CssClass="alert alert-danger"
+                        HeaderText="Please correct the following errors:"
+                        DisplayMode="BulletList" />
+
+                    <asp:HiddenField ID="hfEditVariantID" runat="server" />
+
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Product</label>
+                        <div id="editVariantProductName" class="form-control bg-light fw-semibold"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="<%= ddlEditVariantSize.ClientID %>">Size / Serving</label>
+                        <asp:DropDownList
+                            ID="ddlEditVariantSize"
+                            runat="server"
+                            CssClass="form-select">
+                        </asp:DropDownList>
+                        <asp:RequiredFieldValidator
+                            ID="requiredEditVariantSize"
+                            runat="server"
+                            ControlToValidate="ddlEditVariantSize"
+                            InitialValue=""
+                            ValidationGroup="EditVariantForm"
+                            ErrorMessage="Choose a size or serving."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="<%= txtEditVariantPrice.ClientID %>">Price</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <asp:TextBox
+                                ID="txtEditVariantPrice"
+                                runat="server"
+                                CssClass="form-control"
+                                TextMode="Number"
+                                step="0.01"
+                                min="0"
+                                max="99999999.99"
+                                inputmode="decimal">
+                            </asp:TextBox>
+                        </div>
+                        <asp:RequiredFieldValidator
+                            ID="requiredEditVariantPrice"
+                            runat="server"
+                            ControlToValidate="txtEditVariantPrice"
+                            ValidationGroup="EditVariantForm"
+                            ErrorMessage="Enter a price."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                        <asp:RangeValidator
+                            ID="rangeEditVariantPrice"
+                            runat="server"
+                            ControlToValidate="txtEditVariantPrice"
+                            ValidationGroup="EditVariantForm"
+                            Type="Currency"
+                            MinimumValue="0"
+                            MaximumValue="99999999.99"
+                            ErrorMessage="Price must be between 0 and 99,999,999.99."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="<%= uploadEditVariantImage.ClientID %>">Replace image <span class="text-muted">(optional)</span></label>
+                        <div id="editVariantImagePreview" class="d-none mb-2">
+                            <img id="editVariantCurrentImage" class="rounded border" style="width: 72px; height: 72px; object-fit: cover;" alt="Current variant" />
+                            <span class="small text-muted ms-2">Current image</span>
+                        </div>
+                        <asp:FileUpload
+                            ID="uploadEditVariantImage"
+                            runat="server"
+                            CssClass="form-control"
+                            accept=".jpg,.jpeg,.png,.webp" />
+                        <div class="form-text">Leave empty to keep the current image. JPG, PNG, or WebP; maximum 3 MB.</div>
+                    </div>
+
+                    <div class="form-check">
+                        <asp:CheckBox
+                            ID="chkEditVariantIsAvailable"
+                            runat="server"
+                            CssClass="form-check-input" />
+                        <label class="form-check-label" for="<%= chkEditVariantIsAvailable.ClientID %>">Available for ordering</label>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button
+                        ID="btnUpdateVariant"
+                        runat="server"
+                        Text="Save Changes"
+                        CssClass="btn btn-primary"
+                        ValidationGroup="EditVariantForm"
+                        OnClick="btnUpdateVariant_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE VARIANT MODAL -->
+    <div class="modal fade" id="deleteVariantModal" tabindex="-1" aria-labelledby="deleteVariantModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="deleteVariantModalLabel">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i>Delete Product Variant
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <asp:HiddenField ID="hfDeleteVariantID" runat="server" />
+                    <p class="mb-2">Delete <strong id="deleteVariantName"></strong>?</p>
+                    <p class="text-muted small mb-0">This permanently removes the variant and its stored image. This action cannot be undone.</p>
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button
+                        ID="btnDeleteVariant"
+                        runat="server"
+                        Text="Delete Variant"
+                        CssClass="btn btn-danger"
+                        CausesValidation="false"
+                        OnClick="btnDeleteVariant_Click" />
+                </div>
             </div>
         </div>
     </div>

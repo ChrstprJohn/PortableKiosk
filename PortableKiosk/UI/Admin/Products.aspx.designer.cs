@@ -35,5 +35,19 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Repeater rptBulkVariantRows;
         protected global::System.Web.UI.WebControls.CheckBox chkModalIsAvailable;
         protected global::System.Web.UI.WebControls.Button btnSaveModalVariant;
+
+        protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryEditVariant;
+        protected global::System.Web.UI.WebControls.HiddenField hfEditVariantID;
+        protected global::System.Web.UI.WebControls.DropDownList ddlEditVariantSize;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditVariantSize;
+        protected global::System.Web.UI.WebControls.TextBox txtEditVariantPrice;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditVariantPrice;
+        protected global::System.Web.UI.WebControls.RangeValidator rangeEditVariantPrice;
+        protected global::System.Web.UI.WebControls.FileUpload uploadEditVariantImage;
+        protected global::System.Web.UI.WebControls.CheckBox chkEditVariantIsAvailable;
+        protected global::System.Web.UI.WebControls.Button btnUpdateVariant;
+
+        protected global::System.Web.UI.WebControls.HiddenField hfDeleteVariantID;
+        protected global::System.Web.UI.WebControls.Button btnDeleteVariant;
     }
 }

@@ -82,6 +82,28 @@ namespace PortableKiosk.Core.Services
 
         public bool Update(ProductVariant variant)
         {
+            if (variant == null)
+            {
+                throw new ArgumentNullException("variant");
+            }
+
+            List<ProductVariant> existingVariants =
+                variantRepository.GetByProductID(
+                    variant.ProductID);
+
+            bool sizeAlreadyExists =
+                existingVariants.Any(existing =>
+                    existing.ProductVariantID !=
+                        variant.ProductVariantID &&
+                    existing.SizeID == variant.SizeID);
+
+            if (sizeAlreadyExists)
+            {
+                throw new ArgumentException(
+                    "That size already exists for this product.",
+                    "variant");
+            }
+
             return variantRepository.Update(variant);
         }
 
