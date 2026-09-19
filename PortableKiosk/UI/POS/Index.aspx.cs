@@ -25,7 +25,7 @@ namespace PortableKiosk.UI.POS
                 "ADMIN",
                 StringComparison.OrdinalIgnoreCase))
             {
-                Redirect("~/UI/Admin/CreateCategory.aspx");
+                Redirect("~/UI/Admin/CatalogConfig.aspx");
                 return;
             }
 

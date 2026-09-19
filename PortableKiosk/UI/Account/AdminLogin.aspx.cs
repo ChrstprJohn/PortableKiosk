@@ -115,7 +115,7 @@ namespace PortableKiosk.UI.Account
                 staffRole,
                 "ADMIN",
                 StringComparison.OrdinalIgnoreCase)
-                    ? "~/UI/Admin/Category.aspx"
+                    ? "~/UI/Admin/CatalogConfig.aspx"
                     : "~/UI/POS/Index.aspx";
 
             Response.Redirect(destination, false);

@@ -181,15 +181,9 @@
     <Content Include="Site.Master" />
     <Content Include="UI\Account\AdminLogin.aspx" />
     <Content Include="UI\Account\SignOut.aspx" />
-    <Content Include="UI\Admin\BundleOptionGroupItems.aspx" />
-    <Content Include="UI\Admin\BundleOptionGroups.aspx" />
-    <Content Include="UI\Admin\BundleSlots.aspx" />
     <Content Include="UI\Admin\Bundles.aspx" />
     <Content Include="UI\Admin\CatalogConfig.aspx" />
-    <Content Include="UI\Admin\Category.aspx" />
     <Content Include="UI\Admin\Products.aspx" />
-    <Content Include="UI\Admin\ProductVariants.aspx" />
-    <Content Include="UI\Admin\Sizes.aspx" />
     <Content Include="UI\Admin\StaffAccounts.aspx" />
     <Content Include="UI\POS\Index.aspx" />
     <Content Include="Web.config" />
@@ -264,27 +258,6 @@
     <Compile Include="UI\Account\SignOut.aspx.designer.cs">
       <DependentUpon>SignOut.aspx</DependentUpon>
     </Compile>
-    <Compile Include="UI\Admin\BundleOptionGroupItems.aspx.cs">
-      <DependentUpon>BundleOptionGroupItems.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Admin\BundleOptionGroupItems.aspx.designer.cs">
-      <DependentUpon>BundleOptionGroupItems.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Admin\BundleOptionGroups.aspx.cs">
-      <DependentUpon>BundleOptionGroups.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Admin\BundleOptionGroups.aspx.designer.cs">
-      <DependentUpon>BundleOptionGroups.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Admin\BundleSlots.aspx.cs">
-      <DependentUpon>BundleSlots.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Admin\BundleSlots.aspx.designer.cs">
-      <DependentUpon>BundleSlots.aspx</DependentUpon>
-    </Compile>
     <Compile Include="UI\Admin\Bundles.aspx.cs">
       <DependentUpon>Bundles.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -299,33 +272,12 @@
     <Compile Include="UI\Admin\CatalogConfig.aspx.designer.cs">
       <DependentUpon>CatalogConfig.aspx</DependentUpon>
     </Compile>
-    <Compile Include="UI\Admin\Category.aspx.cs">
-      <DependentUpon>Category.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Admin\Category.aspx.designer.cs">
-      <DependentUpon>Category.aspx</DependentUpon>
-    </Compile>
     <Compile Include="UI\Admin\Products.aspx.cs">
       <DependentUpon>Products.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\Admin\Products.aspx.designer.cs">
       <DependentUpon>Products.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Admin\ProductVariants.aspx.cs">
-      <DependentUpon>ProductVariants.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Admin\ProductVariants.aspx.designer.cs">
-      <DependentUpon>ProductVariants.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Admin\Sizes.aspx.cs">
-      <DependentUpon>Sizes.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Admin\Sizes.aspx.designer.cs">
-      <DependentUpon>Sizes.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Admin\StaffAccounts.aspx.cs">
       <DependentUpon>StaffAccounts.aspx</DependentUpon>

@@ -31,15 +31,6 @@ namespace PortableKiosk.Shared.Layouts
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkCatalogConfig;
 
         /// <summary>
-        /// lnkCategories control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkCategories;
-
-        /// <summary>
         /// lnkProducts control.
         /// </summary>
         /// <remarks>
@@ -49,24 +40,6 @@ namespace PortableKiosk.Shared.Layouts
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkProducts;
 
         /// <summary>
-        /// lnkProductVariants control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkProductVariants;
-
-        /// <summary>
-        /// lnkSizes control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkSizes;
-
-        /// <summary>
         /// lnkBundles control.
         /// </summary>
         /// <remarks>
@@ -74,33 +47,6 @@ namespace PortableKiosk.Shared.Layouts
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkBundles;
-
-        /// <summary>
-        /// lnkBundleOptionGroups control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkBundleOptionGroups;
-
-        /// <summary>
-        /// lnkBundleOptionGroupItems control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkBundleOptionGroupItems;
-
-        /// <summary>
-        /// lnkBundleSlots control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkBundleSlots;
 
         /// <summary>
         /// lnkStaff control.

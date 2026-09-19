@@ -100,9 +100,9 @@ namespace PortableKiosk.Shared.Layouts
             string pagePath =
                 Request.AppRelativeCurrentExecutionFilePath;
 
-            lnkCategories.Attributes["class"] =
+            lnkCatalogConfig.Attributes["class"] =
                 pagePath.EndsWith(
-                    "Category.aspx",
+                    "CatalogConfig.aspx",
                     StringComparison.OrdinalIgnoreCase)
                         ? "active"
                         : string.Empty;
@@ -114,44 +114,9 @@ namespace PortableKiosk.Shared.Layouts
                         ? "active"
                         : string.Empty;
 
-            lnkProductVariants.Attributes["class"] =
-                pagePath.EndsWith(
-                    "ProductVariants.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
-
-            lnkSizes.Attributes["class"] =
-                pagePath.EndsWith(
-                    "Sizes.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
-
             lnkBundles.Attributes["class"] =
                 pagePath.EndsWith(
                     "Bundles.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
-
-            lnkBundleOptionGroups.Attributes["class"] =
-                pagePath.EndsWith(
-                    "BundleOptionGroups.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
-
-            lnkBundleOptionGroupItems.Attributes["class"] =
-                pagePath.EndsWith(
-                    "BundleOptionGroupItems.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
-
-            lnkBundleSlots.Attributes["class"] =
-                pagePath.EndsWith(
-                    "BundleSlots.aspx",
                     StringComparison.OrdinalIgnoreCase)
                         ? "active"
                         : string.Empty;
