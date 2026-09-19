@@ -23,6 +23,8 @@ namespace PortableKiosk.UI.Admin
         private readonly ProductVariantService variantService =
             new ProductVariantService();
 
+        private List<Size> variantSizes = new List<Size>();
+
         public class ProductCardViewModel
         {
             public int ProductID { get; set; }
@@ -41,7 +43,13 @@ namespace PortableKiosk.UI.Admin
 
         public class VariantInputRow
         {
-            public int? SizeID { get; set; }
+            public int RowNumber { get; set; }
+        }
+
+        private class PendingVariantInput
+        {
+            public ProductVariant Variant { get; set; }
+            public FileUpload ImageUpload { get; set; }
             public string SizeName { get; set; }
         }
 
@@ -176,42 +184,47 @@ namespace PortableKiosk.UI.Admin
                 return;
             }
 
-            List<ProductVariant> variants =
-                new List<ProductVariant>();
+            List<PendingVariantInput> pendingVariants =
+                new List<PendingVariantInput>();
 
             foreach (RepeaterItem item in
                 rptBulkVariantRows.Items)
             {
-                CheckBox selected =
-                    (CheckBox)item.FindControl(
-                        "chkBulkSelected");
+                DropDownList sizeField =
+                    (DropDownList)item.FindControl(
+                        "ddlBulkSize");
 
-                if (selected == null || !selected.Checked)
+                if (sizeField == null ||
+                    string.IsNullOrWhiteSpace(sizeField.SelectedValue))
                 {
                     continue;
                 }
-
-                HiddenField sizeField =
-                    (HiddenField)item.FindControl(
-                        "hfBulkSizeID");
-
-                Label sizeNameLabel =
-                    (Label)item.FindControl(
-                        "lblBulkSizeName");
 
                 TextBox priceField =
                     (TextBox)item.FindControl(
                         "txtBulkPrice");
 
+                FileUpload imageUpload =
+                    (FileUpload)item.FindControl(
+                        "uploadBulkImage");
+
                 int? sizeID = null;
                 int parsedSizeID;
 
-                if (!string.IsNullOrWhiteSpace(
-                        sizeField.Value) &&
-                    int.TryParse(
-                        sizeField.Value,
-                        out parsedSizeID))
+                if (!string.Equals(
+                        sizeField.SelectedValue,
+                        "NONE",
+                        StringComparison.OrdinalIgnoreCase))
                 {
+                    if (!int.TryParse(
+                            sizeField.SelectedValue,
+                            out parsedSizeID) ||
+                        parsedSizeID <= 0)
+                    {
+                        ShowError("Choose a valid size or serving.");
+                        return;
+                    }
+
                     sizeID = parsedSizeID;
                 }
 
@@ -223,40 +236,64 @@ namespace PortableKiosk.UI.Admin
                 {
                     ShowError(
                         "Enter a valid non-negative price for " +
-                        sizeNameLabel.Text + ".");
+                        sizeField.SelectedItem.Text + ".");
                     return;
                 }
 
-                variants.Add(new ProductVariant
+                pendingVariants.Add(new PendingVariantInput
                 {
-                    ProductID = productID,
-                    SizeID = sizeID,
-                    Price = price,
-                    IsAvailable =
-                        chkModalIsAvailable.Checked
+                    Variant = new ProductVariant
+                    {
+                        ProductID = productID,
+                        SizeID = sizeID,
+                        Price = price,
+                        IsAvailable =
+                            chkModalIsAvailable.Checked
+                    },
+                    ImageUpload = imageUpload,
+                    SizeName = sizeField.SelectedItem.Text
                 });
             }
 
-            if (variants.Count == 0)
+            if (pendingVariants.Count == 0)
             {
                 ShowError(
-                    "Select at least one size or serving to add.");
+                    "Add at least one size or serving before saving.");
                 return;
             }
 
-            string imagePath;
-            string savedPhysicalPath;
-            string uploadError;
+            List<ProductVariant> variants =
+                new List<ProductVariant>();
 
-            if (!TrySaveImage(out imagePath, out savedPhysicalPath, out uploadError))
-            {
-                ShowError(uploadError);
-                return;
-            }
+            List<string> savedPhysicalPaths =
+                new List<string>();
 
-            foreach (ProductVariant variant in variants)
+            foreach (PendingVariantInput pending in pendingVariants)
             {
-                variant.ImagePath = imagePath;
+                string imagePath;
+                string savedPhysicalPath;
+                string uploadError;
+
+                if (!TrySaveImage(
+                        pending.ImageUpload,
+                        out imagePath,
+                        out savedPhysicalPath,
+                        out uploadError))
+                {
+                    DeleteSavedImages(savedPhysicalPaths);
+                    ShowError(
+                        "Image for " + pending.SizeName + ": " +
+                        uploadError);
+                    return;
+                }
+
+                pending.Variant.ImagePath = imagePath;
+                variants.Add(pending.Variant);
+
+                if (!string.IsNullOrWhiteSpace(savedPhysicalPath))
+                {
+                    savedPhysicalPaths.Add(savedPhysicalPath);
+                }
             }
 
             try
@@ -276,7 +313,7 @@ namespace PortableKiosk.UI.Admin
             }
             catch (SqlException ex)
             {
-                DeleteSavedImage(savedPhysicalPath);
+                DeleteSavedImages(savedPhysicalPaths);
 
                 if (ex.Number == 2601 || ex.Number == 2627)
                 {
@@ -290,12 +327,12 @@ namespace PortableKiosk.UI.Admin
             }
             catch (ArgumentException ex)
             {
-                DeleteSavedImage(savedPhysicalPath);
+                DeleteSavedImages(savedPhysicalPaths);
                 ShowError(ex.Message);
             }
             catch (Exception)
             {
-                DeleteSavedImage(savedPhysicalPath);
+                DeleteSavedImages(savedPhysicalPaths);
                 ShowError("An unexpected error occurred while saving the variant.");
             }
         }
@@ -307,15 +344,15 @@ namespace PortableKiosk.UI.Admin
             foreach (RepeaterItem item in
                 rptBulkVariantRows.Items)
             {
-                CheckBox selected =
-                    (CheckBox)item.FindControl(
-                        "chkBulkSelected");
+                DropDownList sizeField =
+                    (DropDownList)item.FindControl(
+                        "ddlBulkSize");
 
                 TextBox priceField =
                     (TextBox)item.FindControl(
                         "txtBulkPrice");
 
-                selected.Checked = false;
+                sizeField.SelectedIndex = 0;
                 priceField.Text = string.Empty;
             }
 
@@ -355,24 +392,18 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                List<Size> sizes = sizeService.GetAll();
+                variantSizes = sizeService.GetAll();
 
                 List<VariantInputRow> rows =
-                    new List<VariantInputRow>
-                    {
-                        new VariantInputRow
-                        {
-                            SizeID = null,
-                            SizeName = "Standard / No size"
-                        }
-                    };
+                    new List<VariantInputRow>();
 
-                foreach (Size s in sizes)
+                for (int rowIndex = 0;
+                    rowIndex < variantSizes.Count + 1;
+                    rowIndex++)
                 {
                     rows.Add(new VariantInputRow
                     {
-                        SizeID = s.SizeID,
-                        SizeName = s.SizeName
+                        RowNumber = rowIndex + 1
                     });
                 }
 
@@ -386,6 +417,33 @@ namespace PortableKiosk.UI.Admin
                 rptBulkVariantRows.DataBind();
                 btnSaveModalVariant.Enabled = false;
                 ShowError("Sizes could not be loaded.");
+            }
+        }
+
+        protected void rptBulkVariantRows_ItemDataBound(
+            object sender,
+            RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType != ListItemType.Item &&
+                e.Item.ItemType != ListItemType.AlternatingItem)
+            {
+                return;
+            }
+
+            DropDownList sizeField =
+                (DropDownList)e.Item.FindControl("ddlBulkSize");
+
+            sizeField.Items.Add(
+                new ListItem("Choose size / serving", ""));
+            sizeField.Items.Add(
+                new ListItem("Standard / No size", "NONE"));
+
+            foreach (Size size in variantSizes)
+            {
+                sizeField.Items.Add(
+                    new ListItem(
+                        size.SizeName,
+                        size.SizeID.ToString()));
             }
         }
 
@@ -450,25 +508,29 @@ namespace PortableKiosk.UI.Admin
 
         #region File Upload & Notification Helpers
 
-        private bool TrySaveImage(out string imagePath, out string savedPhysicalPath, out string errorMessage)
+        private bool TrySaveImage(
+            FileUpload imageUpload,
+            out string imagePath,
+            out string savedPhysicalPath,
+            out string errorMessage)
         {
             imagePath = null;
             savedPhysicalPath = null;
             errorMessage = null;
 
-            if (!uploadModalImage.HasFile)
+            if (imageUpload == null || !imageUpload.HasFile)
             {
                 return true;
             }
 
             const int maximumFileSize = 3 * 1024 * 1024;
-            if (uploadModalImage.PostedFile.ContentLength > maximumFileSize)
+            if (imageUpload.PostedFile.ContentLength > maximumFileSize)
             {
                 errorMessage = "The variant image cannot exceed 3 MB.";
                 return false;
             }
 
-            string extension = Path.GetExtension(uploadModalImage.FileName).ToLowerInvariant();
+            string extension = Path.GetExtension(imageUpload.FileName).ToLowerInvariant();
             bool allowedExtension = extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".webp";
             if (!allowedExtension)
             {
@@ -476,7 +538,7 @@ namespace PortableKiosk.UI.Admin
                 return false;
             }
 
-            string contentType = uploadModalImage.PostedFile.ContentType;
+            string contentType = imageUpload.PostedFile.ContentType;
             bool allowedContentType =
                 string.Equals(contentType, "image/jpeg", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(contentType, "image/png", StringComparison.OrdinalIgnoreCase) ||
@@ -498,7 +560,7 @@ namespace PortableKiosk.UI.Admin
                 string fileName = Guid.NewGuid().ToString("N") + extension;
                 savedPhysicalPath = Path.Combine(physicalFolder, fileName);
 
-                uploadModalImage.SaveAs(savedPhysicalPath);
+                imageUpload.SaveAs(savedPhysicalPath);
                 imagePath = virtualFolder + fileName;
 
                 return true;
@@ -529,6 +591,15 @@ namespace PortableKiosk.UI.Admin
             catch
             {
                 // Silent fail to preserve original error
+            }
+        }
+
+        private void DeleteSavedImages(
+            IEnumerable<string> physicalPaths)
+        {
+            foreach (string physicalPath in physicalPaths)
+            {
+                DeleteSavedImage(physicalPath);
             }
         }
 

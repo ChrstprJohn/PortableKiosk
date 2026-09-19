@@ -184,6 +184,28 @@
                                         </span>
                                     </ItemTemplate>
                                 </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="190px">
+                                    <ItemTemplate>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editCategoryModal"
+                                                onclick='openEditCategoryModal(<%# Eval("CategoryID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("CategoryName").ToString())) %>", <%# Eval("DisplayOrder") %>, <%# (bool)Eval("IsAvailable") ? "true" : "false" %>);'>
+                                                <i class="bi bi-pencil-square me-1"></i>Edit
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteCategoryModal"
+                                                onclick='openDeleteCategoryModal(<%# Eval("CategoryID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("CategoryName").ToString())) %>");'>
+                                                <i class="bi bi-trash me-1"></i>Delete
+                                            </button>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                             </Columns>
 
                             <HeaderStyle CssClass="table-light" />
@@ -340,6 +362,28 @@
                                 <asp:BoundField DataField="SizeID" HeaderText="ID" ItemStyle-Width="90px" />
                                 <asp:BoundField DataField="SizeName" HeaderText="Size Name" />
                                 <asp:BoundField DataField="DisplayOrder" HeaderText="Display Order" ItemStyle-Width="140px" />
+                                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="190px">
+                                    <ItemTemplate>
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#editSizeModal"
+                                                onclick='openEditSizeModal(<%# Eval("SizeID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("SizeName").ToString())) %>", <%# Eval("DisplayOrder") %>);'>
+                                                <i class="bi bi-pencil-square me-1"></i>Edit
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteSizeModal"
+                                                onclick='openDeleteSizeModal(<%# Eval("SizeID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("SizeName").ToString())) %>");'>
+                                                <i class="bi bi-trash me-1"></i>Delete
+                                            </button>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                             </Columns>
 
                             <HeaderStyle CssClass="table-light" />
@@ -353,5 +397,273 @@
         </section>
 
     </div>
+
+    <!-- EDIT CATEGORY MODAL -->
+    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h2 class="modal-title h5" id="editCategoryModalLabel">
+                        <i class="bi bi-pencil-square me-1"></i>Edit category
+                    </h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <asp:ValidationSummary
+                        ID="validationSummaryEditCategory"
+                        runat="server"
+                        ValidationGroup="EditCategoryForm"
+                        CssClass="alert alert-danger"
+                        HeaderText="Please correct the following:"
+                        DisplayMode="BulletList" />
+
+                    <asp:HiddenField ID="hfEditCategoryID" runat="server" />
+
+                    <div class="mb-3">
+                        <asp:Label
+                            ID="lblEditCategoryName"
+                            runat="server"
+                            AssociatedControlID="txtEditCategoryName"
+                            CssClass="form-label fw-bold"
+                            Text="Category name">
+                        </asp:Label>
+                        <asp:TextBox
+                            ID="txtEditCategoryName"
+                            runat="server"
+                            CssClass="form-control"
+                            MaxLength="100">
+                        </asp:TextBox>
+                        <asp:RequiredFieldValidator
+                            ID="requiredEditCategoryName"
+                            runat="server"
+                            ControlToValidate="txtEditCategoryName"
+                            ValidationGroup="EditCategoryForm"
+                            ErrorMessage="Category name is required."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                    </div>
+
+                    <div class="mb-3">
+                        <asp:Label
+                            ID="lblEditCategoryDisplayOrder"
+                            runat="server"
+                            AssociatedControlID="txtEditCategoryDisplayOrder"
+                            CssClass="form-label fw-bold"
+                            Text="Display order">
+                        </asp:Label>
+                        <asp:TextBox
+                            ID="txtEditCategoryDisplayOrder"
+                            runat="server"
+                            CssClass="form-control"
+                            TextMode="Number"
+                            min="0">
+                        </asp:TextBox>
+                        <asp:RequiredFieldValidator
+                            ID="requiredEditCategoryDisplayOrder"
+                            runat="server"
+                            ControlToValidate="txtEditCategoryDisplayOrder"
+                            ValidationGroup="EditCategoryForm"
+                            ErrorMessage="Display order is required."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                        <asp:RangeValidator
+                            ID="rangeEditCategoryDisplayOrder"
+                            runat="server"
+                            ControlToValidate="txtEditCategoryDisplayOrder"
+                            ValidationGroup="EditCategoryForm"
+                            Type="Integer"
+                            MinimumValue="0"
+                            MaximumValue="2147483647"
+                            ErrorMessage="Order must be 0 or greater."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                    </div>
+
+                    <div class="form-check">
+                        <asp:CheckBox
+                            ID="chkEditCategoryIsAvailable"
+                            runat="server"
+                            CssClass="form-check-input" />
+                        <label class="form-check-label" for="<%= chkEditCategoryIsAvailable.ClientID %>">
+                            Available in the catalog
+                        </label>
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button
+                        ID="btnUpdateCategory"
+                        runat="server"
+                        Text="Save category"
+                        CssClass="btn btn-primary"
+                        ValidationGroup="EditCategoryForm"
+                        OnClick="btnUpdateCategory_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE CATEGORY CONFIRMATION -->
+    <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="deleteCategoryModalLabel">Delete category?</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <asp:HiddenField ID="hfDeleteCategoryID" runat="server" />
+                    <p class="mb-2">
+                        You are about to delete <strong id="deleteCategoryName"></strong>.
+                    </p>
+                    <p class="text-muted small mb-0">
+                        This cannot be undone. Categories that still contain products cannot be deleted.
+                    </p>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep category</button>
+                    <asp:Button
+                        ID="btnDeleteCategory"
+                        runat="server"
+                        Text="Delete category"
+                        CssClass="btn btn-danger"
+                        CausesValidation="false"
+                        OnClick="btnDeleteCategory_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT SIZE MODAL -->
+    <div class="modal fade" id="editSizeModal" tabindex="-1" aria-labelledby="editSizeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h2 class="modal-title h5" id="editSizeModalLabel">
+                        <i class="bi bi-pencil-square me-1"></i>Edit size
+                    </h2>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <asp:ValidationSummary
+                        ID="validationSummaryEditSize"
+                        runat="server"
+                        ValidationGroup="EditSizeForm"
+                        CssClass="alert alert-danger"
+                        HeaderText="Please correct the following:"
+                        DisplayMode="BulletList" />
+
+                    <asp:HiddenField ID="hfEditSizeID" runat="server" />
+
+                    <div class="mb-3">
+                        <asp:Label
+                            ID="lblEditSizeName"
+                            runat="server"
+                            AssociatedControlID="txtEditSizeName"
+                            CssClass="form-label fw-bold"
+                            Text="Size name">
+                        </asp:Label>
+                        <asp:TextBox
+                            ID="txtEditSizeName"
+                            runat="server"
+                            CssClass="form-control"
+                            MaxLength="50">
+                        </asp:TextBox>
+                        <asp:RequiredFieldValidator
+                            ID="requiredEditSizeName"
+                            runat="server"
+                            ControlToValidate="txtEditSizeName"
+                            ValidationGroup="EditSizeForm"
+                            ErrorMessage="Size name is required."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                    </div>
+
+                    <div class="mb-3">
+                        <asp:Label
+                            ID="lblEditSizeDisplayOrder"
+                            runat="server"
+                            AssociatedControlID="txtEditSizeDisplayOrder"
+                            CssClass="form-label fw-bold"
+                            Text="Display order">
+                        </asp:Label>
+                        <asp:TextBox
+                            ID="txtEditSizeDisplayOrder"
+                            runat="server"
+                            CssClass="form-control"
+                            TextMode="Number"
+                            min="0">
+                        </asp:TextBox>
+                        <asp:RequiredFieldValidator
+                            ID="requiredEditSizeDisplayOrder"
+                            runat="server"
+                            ControlToValidate="txtEditSizeDisplayOrder"
+                            ValidationGroup="EditSizeForm"
+                            ErrorMessage="Display order is required."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                        <asp:RangeValidator
+                            ID="rangeEditSizeDisplayOrder"
+                            runat="server"
+                            ControlToValidate="txtEditSizeDisplayOrder"
+                            ValidationGroup="EditSizeForm"
+                            Type="Integer"
+                            MinimumValue="0"
+                            MaximumValue="2147483647"
+                            ErrorMessage="Order must be 0 or greater."
+                            CssClass="text-danger small"
+                            Display="Dynamic" />
+                    </div>
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button
+                        ID="btnUpdateSize"
+                        runat="server"
+                        Text="Save size"
+                        CssClass="btn btn-dark"
+                        ValidationGroup="EditSizeForm"
+                        OnClick="btnUpdateSize_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DELETE SIZE CONFIRMATION -->
+    <div class="modal fade" id="deleteSizeModal" tabindex="-1" aria-labelledby="deleteSizeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title h5" id="deleteSizeModalLabel">Delete size?</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <asp:HiddenField ID="hfDeleteSizeID" runat="server" />
+                    <p class="mb-2">
+                        You are about to delete <strong id="deleteSizeName"></strong>.
+                    </p>
+                    <p class="text-muted small mb-0">
+                        This cannot be undone. Sizes currently assigned to product variants cannot be deleted.
+                    </p>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep size</button>
+                    <asp:Button
+                        ID="btnDeleteSize"
+                        runat="server"
+                        Text="Delete size"
+                        CssClass="btn btn-danger"
+                        CausesValidation="false"
+                        OnClick="btnDeleteSize_Click" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="<%= ResolveUrl("~/Scripts/app/admin/catalog-config.js") %>"></script>
 
 </asp:Content>

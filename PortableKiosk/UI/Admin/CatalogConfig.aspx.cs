@@ -95,6 +95,143 @@ namespace PortableKiosk.UI.Admin
             }
         }
 
+        protected void btnUpdateCategory_Click(
+            object sender,
+            EventArgs e)
+        {
+            lblCategoryMessage.Visible = false;
+            Page.Validate("EditCategoryForm");
+
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
+            int categoryID;
+            int displayOrder;
+
+            if (!int.TryParse(
+                    hfEditCategoryID.Value,
+                    out categoryID) ||
+                categoryID <= 0)
+            {
+                ShowCategoryError(
+                    "The selected category is invalid.");
+                return;
+            }
+
+            if (!int.TryParse(
+                    txtEditCategoryDisplayOrder.Text.Trim(),
+                    out displayOrder))
+            {
+                ShowCategoryError(
+                    "Display order must be a valid number.");
+                return;
+            }
+
+            Category category = new Category
+            {
+                CategoryID = categoryID,
+                CategoryName =
+                    txtEditCategoryName.Text.Trim(),
+                DisplayOrder = displayOrder,
+                IsAvailable =
+                    chkEditCategoryIsAvailable.Checked
+            };
+
+            try
+            {
+                if (!categoryService.Update(category))
+                {
+                    ShowCategoryError(
+                        "The category no longer exists.");
+                    return;
+                }
+
+                ShowCategorySuccess(
+                    "Category \"" +
+                    category.CategoryName +
+                    "\" updated successfully.");
+                LoadCategories();
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 2601 || ex.Number == 2627)
+                {
+                    ShowCategoryError(
+                        "A category with this name already exists.");
+                }
+                else
+                {
+                    ShowCategoryError(
+                        "The category could not be updated due to a database error.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ShowCategoryError(ex.Message);
+            }
+            catch (Exception)
+            {
+                ShowCategoryError(
+                    "An unexpected error occurred while updating the category.");
+            }
+        }
+
+        protected void btnDeleteCategory_Click(
+            object sender,
+            EventArgs e)
+        {
+            lblCategoryMessage.Visible = false;
+
+            int categoryID;
+            if (!int.TryParse(
+                    hfDeleteCategoryID.Value,
+                    out categoryID) ||
+                categoryID <= 0)
+            {
+                ShowCategoryError(
+                    "The selected category is invalid.");
+                return;
+            }
+
+            try
+            {
+                if (!categoryService.Delete(categoryID))
+                {
+                    ShowCategoryError(
+                        "The category no longer exists.");
+                    return;
+                }
+
+                ShowCategorySuccess(
+                    "Category deleted successfully.");
+                LoadCategories();
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547)
+                {
+                    ShowCategoryError(
+                        "This category still contains products. Move or delete those products first.");
+                }
+                else
+                {
+                    ShowCategoryError(
+                        "The category could not be deleted due to a database error.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ShowCategoryError(ex.Message);
+            }
+            catch (Exception)
+            {
+                ShowCategoryError(
+                    "An unexpected error occurred while deleting the category.");
+            }
+        }
+
         private void LoadCategories()
         {
             try
@@ -190,6 +327,135 @@ namespace PortableKiosk.UI.Admin
             catch (Exception)
             {
                 ShowSizeError("An unexpected error occurred while saving the size.");
+            }
+        }
+
+        protected void btnUpdateSize_Click(
+            object sender,
+            EventArgs e)
+        {
+            lblSizeMessage.Visible = false;
+            Page.Validate("EditSizeForm");
+
+            if (!Page.IsValid)
+            {
+                return;
+            }
+
+            int sizeID;
+            int displayOrder;
+
+            if (!int.TryParse(
+                    hfEditSizeID.Value,
+                    out sizeID) ||
+                sizeID <= 0)
+            {
+                ShowSizeError("The selected size is invalid.");
+                return;
+            }
+
+            if (!int.TryParse(
+                    txtEditSizeDisplayOrder.Text.Trim(),
+                    out displayOrder))
+            {
+                ShowSizeError(
+                    "Display order must be a valid number.");
+                return;
+            }
+
+            Size size = new Size
+            {
+                SizeID = sizeID,
+                SizeName = txtEditSizeName.Text.Trim(),
+                DisplayOrder = displayOrder
+            };
+
+            try
+            {
+                if (!sizeService.Update(size))
+                {
+                    ShowSizeError("The size no longer exists.");
+                    return;
+                }
+
+                ShowSizeSuccess(
+                    "Size \"" +
+                    size.SizeName +
+                    "\" updated successfully.");
+                LoadSizes();
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 2601 || ex.Number == 2627)
+                {
+                    ShowSizeError(
+                        "A size with this name already exists.");
+                }
+                else
+                {
+                    ShowSizeError(
+                        "The size could not be updated due to a database error.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ShowSizeError(ex.Message);
+            }
+            catch (Exception)
+            {
+                ShowSizeError(
+                    "An unexpected error occurred while updating the size.");
+            }
+        }
+
+        protected void btnDeleteSize_Click(
+            object sender,
+            EventArgs e)
+        {
+            lblSizeMessage.Visible = false;
+
+            int sizeID;
+            if (!int.TryParse(
+                    hfDeleteSizeID.Value,
+                    out sizeID) ||
+                sizeID <= 0)
+            {
+                ShowSizeError("The selected size is invalid.");
+                return;
+            }
+
+            try
+            {
+                if (!sizeService.Delete(sizeID))
+                {
+                    ShowSizeError("The size no longer exists.");
+                    return;
+                }
+
+                ShowSizeSuccess("Size deleted successfully.");
+                LoadSizes();
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547)
+                {
+                    ShowSizeError(
+                        "This size is assigned to product variants. Change or delete those variants first.");
+                }
+                else
+                {
+                    ShowSizeError(
+                        "The size could not be deleted due to a database error.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ShowSizeError(ex.Message);
+            }
+            catch (Exception)
+            {
+                ShowSizeError(
+                    "An unexpected error occurred while deleting the size.");
             }
         }
 

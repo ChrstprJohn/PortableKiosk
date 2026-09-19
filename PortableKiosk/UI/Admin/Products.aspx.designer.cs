@@ -33,8 +33,6 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryVariant;
         protected global::System.Web.UI.WebControls.HiddenField hfModalProductID;
         protected global::System.Web.UI.WebControls.Repeater rptBulkVariantRows;
-        protected global::System.Web.UI.WebControls.Label lblModalImage;
-        protected global::System.Web.UI.WebControls.FileUpload uploadModalImage;
         protected global::System.Web.UI.WebControls.CheckBox chkModalIsAvailable;
         protected global::System.Web.UI.WebControls.Button btnSaveModalVariant;
     }

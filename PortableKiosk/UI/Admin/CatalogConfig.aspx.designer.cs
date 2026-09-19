@@ -25,6 +25,19 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Label lblCategoryCount;
         protected global::System.Web.UI.WebControls.Label lblCategoryLoadError;
         protected global::System.Web.UI.WebControls.GridView gridCategories;
+        protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryEditCategory;
+        protected global::System.Web.UI.WebControls.HiddenField hfEditCategoryID;
+        protected global::System.Web.UI.WebControls.Label lblEditCategoryName;
+        protected global::System.Web.UI.WebControls.TextBox txtEditCategoryName;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditCategoryName;
+        protected global::System.Web.UI.WebControls.Label lblEditCategoryDisplayOrder;
+        protected global::System.Web.UI.WebControls.TextBox txtEditCategoryDisplayOrder;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditCategoryDisplayOrder;
+        protected global::System.Web.UI.WebControls.RangeValidator rangeEditCategoryDisplayOrder;
+        protected global::System.Web.UI.WebControls.CheckBox chkEditCategoryIsAvailable;
+        protected global::System.Web.UI.WebControls.Button btnUpdateCategory;
+        protected global::System.Web.UI.WebControls.HiddenField hfDeleteCategoryID;
+        protected global::System.Web.UI.WebControls.Button btnDeleteCategory;
 
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummarySize;
         protected global::System.Web.UI.WebControls.Label lblSizeMessage;
@@ -39,5 +52,17 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Label lblSizeCount;
         protected global::System.Web.UI.WebControls.Label lblSizeLoadError;
         protected global::System.Web.UI.WebControls.GridView gridSizes;
+        protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryEditSize;
+        protected global::System.Web.UI.WebControls.HiddenField hfEditSizeID;
+        protected global::System.Web.UI.WebControls.Label lblEditSizeName;
+        protected global::System.Web.UI.WebControls.TextBox txtEditSizeName;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditSizeName;
+        protected global::System.Web.UI.WebControls.Label lblEditSizeDisplayOrder;
+        protected global::System.Web.UI.WebControls.TextBox txtEditSizeDisplayOrder;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditSizeDisplayOrder;
+        protected global::System.Web.UI.WebControls.RangeValidator rangeEditSizeDisplayOrder;
+        protected global::System.Web.UI.WebControls.Button btnUpdateSize;
+        protected global::System.Web.UI.WebControls.HiddenField hfDeleteSizeID;
+        protected global::System.Web.UI.WebControls.Button btnDeleteSize;
     }
 }
