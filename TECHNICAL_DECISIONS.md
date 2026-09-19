@@ -26,15 +26,15 @@ UI page/code-behind -> Service -> Repository -> DbConnectionFactory -> SQL Serve
 ## 3. UI areas
 
 - `UI/User`: public customer kiosk flow, including home, menu, cart, checkout, and order status.
-- `UI/Admin`: protected administration screens for products, categories, bundles, orders, and accounts.
+- `UI/Admin`: protected administration screens for products, categories, orders, and accounts.
 - `UI/Account`: authentication screens such as login, logout, and access denied.
 - `UI/User` means the customer-facing kiosk experience; it is separate from the `UserAccount` model.
 
 ## 4. Core application code
 
-- `Core/Models`: domain and data models such as `UserAccount`, `Category`, `Size`, `Product`, `ProductVariant`, `Bundle`, `BundleComponent`, `Order`, `OrderItem`, and `OrderItemBundleComponent`. Cart-specific models may be added when required.
-- `Core/Services`: account, catalog, bundle, cart, and order business logic.
-- `Core/Data/Repositories`: feature repositories for account, catalog, bundle, and order persistence.
+- `Core/Models`: domain and data models such as `UserAccount`, `Category`, `Size`, `Product`, `ProductVariant`, `Order`, and `OrderItem`. Cart-specific models may be added when required.
+- `Core/Services`: account, catalog, cart, and order business logic.
+- `Core/Data/Repositories`: feature repositories for account, catalog, and order persistence.
 - `Core/Data/DbConnectionFactory.cs`: the single shared place for creating configured SQL connections.
 
 ## 5. Shared application code
@@ -58,7 +58,7 @@ UI page/code-behind -> Service -> Repository -> DbConnectionFactory -> SQL Serve
 - `Schema.sql` is the authoritative base schema.
 - `SeedData.sql` will contain development/reference data when it is created.
 - `Migrations` will contain ordered, incremental schema changes when they are needed.
-- Current domains are Accounts, Catalog, Bundles, and Orders.
+- Current domains are Accounts, Catalog, and Orders.
 
 ## 8. Static assets
 
@@ -74,7 +74,7 @@ UI page/code-behind -> Service -> Repository -> DbConnectionFactory -> SQL Serve
 - **Folder Partitioning**: Client scripts mirror the UI area hierarchy:
   - `Scripts/app/common/`: Shared utilities, formatters, HTTP/Ajax helpers, notification/modal wrappers.
   - `Scripts/app/user/`: Customer-facing kiosk flow (home, menu, cart, checkout).
-  - `Scripts/app/admin/`: Administration screens (products, categories, orders, bundles).
+  - `Scripts/app/admin/`: Administration screens (products, categories, and orders).
   - `Scripts/app/pos/`: POS / cashier workflow scripts.
   - `Scripts/app/account/`: Authentication and profile screens.
 - **Script Inclusion**:

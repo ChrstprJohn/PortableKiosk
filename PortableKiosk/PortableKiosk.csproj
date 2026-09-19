@@ -152,7 +152,6 @@
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
-    <Content Include="Scripts\app\admin\bundles.js" />
     <Content Include="Scripts\app\admin\products.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
@@ -181,7 +180,6 @@
     <Content Include="Site.Master" />
     <Content Include="UI\Account\AdminLogin.aspx" />
     <Content Include="UI\Account\SignOut.aspx" />
-    <Content Include="UI\Admin\Bundles.aspx" />
     <Content Include="UI\Admin\CatalogConfig.aspx" />
     <Content Include="UI\Admin\Products.aspx" />
     <Content Include="UI\Admin\StaffAccounts.aspx" />
@@ -193,20 +191,14 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Core\Data\DatabaseConnection.cs" />
-    <Compile Include="Core\Data\Repositories\BundleOptionGroupItemRepository.cs" />
-    <Compile Include="Core\Data\Repositories\BundleOptionGroupRepository.cs" />
-    <Compile Include="Core\Data\Repositories\BundleRepository.cs" />
-    <Compile Include="Core\Data\Repositories\BundleSlotRepository.cs" />
     <Compile Include="Core\Data\Repositories\CategoryRepository.cs" />
     <Compile Include="Core\Data\Repositories\ProductRepository.cs" />
     <Compile Include="Core\Data\Repositories\ProductVariantRepository.cs" />
     <Compile Include="Core\Data\Repositories\SizeRepository.cs" />
     <Compile Include="Core\Data\Repositories\StaffAccountRepository.cs" />
-    <Compile Include="Core\Models\Bundle.cs" />
-    <Compile Include="Core\Models\BundleOptionGroup.cs" />
-    <Compile Include="Core\Models\BundleOptionGroupItem.cs" />
-    <Compile Include="Core\Models\BundleSlot.cs" />
     <Compile Include="Core\Models\Category.cs" />
+    <Compile Include="Core\Models\Order.cs" />
+    <Compile Include="Core\Models\OrderItem.cs" />
     <Compile Include="Core\Models\Product.cs" />
     <Compile Include="Core\Models\ProductVariant.cs" />
     <Compile Include="Core\Models\Size.cs" />
@@ -257,13 +249,6 @@
     </Compile>
     <Compile Include="UI\Account\SignOut.aspx.designer.cs">
       <DependentUpon>SignOut.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Admin\Bundles.aspx.cs">
-      <DependentUpon>Bundles.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\Admin\Bundles.aspx.designer.cs">
-      <DependentUpon>Bundles.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Admin\CatalogConfig.aspx.cs">
       <DependentUpon>CatalogConfig.aspx</DependentUpon>

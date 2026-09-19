@@ -108,11 +108,6 @@
                     Products
                 </a>
 
-                <a ID="lnkBundles" runat="server"
-                    href="~/UI/Admin/Bundles.aspx">
-                    Bundles
-                </a>
-
                 <a ID="lnkStaff" runat="server"
                     href="~/UI/Admin/StaffAccounts.aspx">
                     Staff accounts

@@ -40,15 +40,6 @@ namespace PortableKiosk.Shared.Layouts
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkProducts;
 
         /// <summary>
-        /// lnkBundles control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkBundles;
-
-        /// <summary>
         /// lnkStaff control.
         /// </summary>
         /// <remarks>

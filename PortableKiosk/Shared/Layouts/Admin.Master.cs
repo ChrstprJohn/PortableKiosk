@@ -114,13 +114,6 @@ namespace PortableKiosk.Shared.Layouts
                         ? "active"
                         : string.Empty;
 
-            lnkBundles.Attributes["class"] =
-                pagePath.EndsWith(
-                    "Bundles.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
-
             lnkStaff.Attributes["class"] =
                 pagePath.EndsWith(
                     "StaffAccounts.aspx",
