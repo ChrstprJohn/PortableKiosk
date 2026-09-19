@@ -191,10 +191,10 @@ namespace PortableKiosk.Core.Data.Repositories
                 LEFT JOIN Sizes AS s
                     ON s.SizeID = pv.SizeID
                 ORDER BY
-                    c.DisplayOrder ASC,
-                    p.DisplayOrder ASC,
-                    s.DisplayOrder ASC,
-                    p.ProductName ASC;";
+                    c.CategoryName ASC,
+                    p.ProductName ASC,
+                    s.SizeName ASC,
+                    pv.ProductVariantID ASC;";
 
             List<ProductVariant> variants =
                 new List<ProductVariant>();
@@ -249,8 +249,8 @@ namespace PortableKiosk.Core.Data.Repositories
                     ON s.SizeID = pv.SizeID
                 WHERE pv.ProductID = @ProductID
                 ORDER BY
-                    s.DisplayOrder ASC,
-                    s.SizeName ASC;";
+                    s.SizeName ASC,
+                    pv.ProductVariantID ASC;";
 
             List<ProductVariant> variants =
                 new List<ProductVariant>();

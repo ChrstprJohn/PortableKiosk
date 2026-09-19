@@ -5,15 +5,13 @@
         return document.querySelector('[id$="' + idSuffix + '"]');
     }
 
-    window.openEditCategoryModal = function (categoryId, categoryName, displayOrder, isAvailable) {
+    window.openEditCategoryModal = function (categoryId, categoryName, isAvailable) {
         var id = findControl('hfEditCategoryID');
         var name = findControl('txtEditCategoryName');
-        var order = findControl('txtEditCategoryDisplayOrder');
         var available = findControl('chkEditCategoryIsAvailable');
 
         if (id) id.value = categoryId;
         if (name) name.value = categoryName;
-        if (order) order.value = displayOrder;
         if (available) available.checked = isAvailable;
     };
 
@@ -25,14 +23,12 @@
         if (name) name.textContent = categoryName;
     };
 
-    window.openEditSizeModal = function (sizeId, sizeName, displayOrder) {
+    window.openEditSizeModal = function (sizeId, sizeName) {
         var id = findControl('hfEditSizeID');
         var name = findControl('txtEditSizeName');
-        var order = findControl('txtEditSizeDisplayOrder');
 
         if (id) id.value = sizeId;
         if (name) name.value = sizeName;
-        if (order) order.value = displayOrder;
     };
 
     window.openDeleteSizeModal = function (sizeId, sizeName) {

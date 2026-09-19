@@ -1,4 +1,4 @@
-﻿using PortableKiosk.Core.Models;
+using PortableKiosk.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,154 +10,42 @@ namespace PortableKiosk.Core.Data.Repositories
     {
         public int Add(Product product)
         {
-            if (product == null)
-            {
-                throw new ArgumentNullException("product");
-            }
-
-            if (product.CategoryID <= 0)
-            {
-                throw new ArgumentException(
-                    "A valid category is required.",
-                    "product");
-            }
-
-            if (string.IsNullOrWhiteSpace(
-                product.ProductName))
-            {
-                throw new ArgumentException(
-                    "Product name is required.",
-                    "product");
-            }
-
-            if (product.DisplayOrder < 0)
-            {
-                throw new ArgumentException(
-                    "Display order cannot be negative.",
-                    "product");
-            }
+            ValidateForSave(product, false);
 
             const string sql = @"
-                INSERT INTO Products
-                    (
-                        CategoryID,
-                        ProductName,
-                        IsAvailable,
-                        DisplayOrder
-                    )
+                INSERT INTO Products (CategoryID, ProductName, IsAvailable)
                 OUTPUT INSERTED.ProductID
-                VALUES
-                    (
-                        @CategoryID,
-                        @ProductName,
-                        @IsAvailable,
-                        @DisplayOrder
-                    );";
+                VALUES (@CategoryID, @ProductName, @IsAvailable);";
 
-            using (SqlConnection connection =
-                DatabaseConnection.GetConnection())
-            using (SqlCommand command =
-                new SqlCommand(sql, connection))
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(sql, connection))
             {
-                command.Parameters.Add(
-                    "@CategoryID",
-                    SqlDbType.Int).Value =
-                        product.CategoryID;
-
-                command.Parameters.Add(
-                    "@ProductName",
-                    SqlDbType.NVarChar,
-                    100).Value =
-                        product.ProductName.Trim();
-
-                command.Parameters.Add(
-                    "@IsAvailable",
-                    SqlDbType.Bit).Value =
-                        product.IsAvailable;
-
-                command.Parameters.Add(
-                    "@DisplayOrder",
-                    SqlDbType.Int).Value =
-                        product.DisplayOrder;
-
+                AddWriteParameters(command, product);
                 connection.Open();
-
-                int productID =
-                    Convert.ToInt32(
-                        command.ExecuteScalar());
-
-                product.ProductID = productID;
-
-                return productID;
+                product.ProductID = Convert.ToInt32(command.ExecuteScalar());
+                return product.ProductID;
             }
         }
 
         public List<Product> GetAll()
         {
             const string sql = @"
-                SELECT
-                    p.ProductID,
-                    p.CategoryID,
-                    c.CategoryName,
-                    p.ProductName,
-                    p.IsAvailable,
-                    p.DisplayOrder
+                SELECT p.ProductID, p.CategoryID, c.CategoryName,
+                    p.ProductName, p.IsAvailable
                 FROM Products AS p
-                INNER JOIN Categories AS c
-                    ON c.CategoryID = p.CategoryID
-                ORDER BY
-                    p.DisplayOrder ASC,
-                    p.ProductName ASC;";
+                INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
+                ORDER BY p.ProductName ASC, p.ProductID ASC;";
 
-            List<Product> products =
-                new List<Product>();
-
-            using (SqlConnection connection =
-                DatabaseConnection.GetConnection())
-            using (SqlCommand command =
-                new SqlCommand(sql, connection))
+            List<Product> products = new List<Product>();
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(sql, connection))
             {
                 connection.Open();
-
-                using (SqlDataReader reader =
-                    command.ExecuteReader())
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        Product product = new Product
-                        {
-                            ProductID =
-                                reader.GetInt32(
-                                    reader.GetOrdinal(
-                                        "ProductID")),
-
-                            CategoryID =
-                                reader.GetInt32(
-                                    reader.GetOrdinal(
-                                        "CategoryID")),
-
-                            CategoryName =
-                                reader.GetString(
-                                    reader.GetOrdinal(
-                                        "CategoryName")),
-
-                            ProductName =
-                                reader.GetString(
-                                    reader.GetOrdinal(
-                                        "ProductName")),
-
-                            IsAvailable =
-                                reader.GetBoolean(
-                                    reader.GetOrdinal(
-                                        "IsAvailable")),
-
-                            DisplayOrder =
-                                reader.GetInt32(
-                                    reader.GetOrdinal(
-                                        "DisplayOrder"))
-                        };
-
-                        products.Add(product);
+                        products.Add(Map(reader));
                     }
                 }
             }
@@ -167,141 +55,43 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public Product GetByID(int productID)
         {
-            if (productID <= 0)
-            {
-                throw new ArgumentException(
-                    "A valid product is required.",
-                    "productID");
-            }
+            ValidateID(productID);
 
             const string sql = @"
-                SELECT
-                    p.ProductID,
-                    p.CategoryID,
-                    c.CategoryName,
-                    p.ProductName,
-                    p.IsAvailable,
-                    p.DisplayOrder
+                SELECT p.ProductID, p.CategoryID, c.CategoryName,
+                    p.ProductName, p.IsAvailable
                 FROM Products AS p
-                INNER JOIN Categories AS c
-                    ON c.CategoryID = p.CategoryID
+                INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
                 WHERE p.ProductID = @ProductID;";
 
-            using (SqlConnection connection =
-                DatabaseConnection.GetConnection())
-            using (SqlCommand command =
-                new SqlCommand(sql, connection))
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(sql, connection))
             {
-                command.Parameters.Add(
-                    "@ProductID",
-                    SqlDbType.Int).Value = productID;
-
+                command.Parameters.Add("@ProductID", SqlDbType.Int).Value = productID;
                 connection.Open();
-
-                using (SqlDataReader reader =
-                    command.ExecuteReader())
+                using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    if (!reader.Read())
-                    {
-                        return null;
-                    }
-
-                    return new Product
-                    {
-                        ProductID = reader.GetInt32(
-                            reader.GetOrdinal("ProductID")),
-                        CategoryID = reader.GetInt32(
-                            reader.GetOrdinal("CategoryID")),
-                        CategoryName = reader.GetString(
-                            reader.GetOrdinal("CategoryName")),
-                        ProductName = reader.GetString(
-                            reader.GetOrdinal("ProductName")),
-                        IsAvailable = reader.GetBoolean(
-                            reader.GetOrdinal("IsAvailable")),
-                        DisplayOrder = reader.GetInt32(
-                            reader.GetOrdinal("DisplayOrder"))
-                    };
+                    return reader.Read() ? Map(reader) : null;
                 }
             }
         }
 
         public bool Update(Product product)
         {
-            if (product == null)
-            {
-                throw new ArgumentNullException("product");
-            }
-
-            if (product.ProductID <= 0)
-            {
-                throw new ArgumentException(
-                    "A valid product is required.",
-                    "product");
-            }
-
-            if (product.CategoryID <= 0)
-            {
-                throw new ArgumentException(
-                    "A valid category is required.",
-                    "product");
-            }
-
-            if (string.IsNullOrWhiteSpace(product.ProductName))
-            {
-                throw new ArgumentException(
-                    "Product name is required.",
-                    "product");
-            }
-
-            if (product.ProductName.Trim().Length > 100)
-            {
-                throw new ArgumentException(
-                    "Product name cannot exceed 100 characters.",
-                    "product");
-            }
-
-            if (product.DisplayOrder < 0)
-            {
-                throw new ArgumentException(
-                    "Display order cannot be negative.",
-                    "product");
-            }
+            ValidateForSave(product, true);
 
             const string sql = @"
                 UPDATE Products
-                SET
-                    CategoryID = @CategoryID,
+                SET CategoryID = @CategoryID,
                     ProductName = @ProductName,
-                    IsAvailable = @IsAvailable,
-                    DisplayOrder = @DisplayOrder
+                    IsAvailable = @IsAvailable
                 WHERE ProductID = @ProductID;";
 
-            using (SqlConnection connection =
-                DatabaseConnection.GetConnection())
-            using (SqlCommand command =
-                new SqlCommand(sql, connection))
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(sql, connection))
             {
-                command.Parameters.Add(
-                    "@ProductID",
-                    SqlDbType.Int).Value = product.ProductID;
-
-                command.Parameters.Add(
-                    "@CategoryID",
-                    SqlDbType.Int).Value = product.CategoryID;
-
-                command.Parameters.Add(
-                    "@ProductName",
-                    SqlDbType.NVarChar,
-                    100).Value = product.ProductName.Trim();
-
-                command.Parameters.Add(
-                    "@IsAvailable",
-                    SqlDbType.Bit).Value = product.IsAvailable;
-
-                command.Parameters.Add(
-                    "@DisplayOrder",
-                    SqlDbType.Int).Value = product.DisplayOrder;
-
+                AddWriteParameters(command, product);
+                command.Parameters.Add("@ProductID", SqlDbType.Int).Value = product.ProductID;
                 connection.Open();
                 return command.ExecuteNonQuery() > 0;
             }
@@ -309,28 +99,73 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public bool Delete(int productID)
         {
-            if (productID <= 0)
-            {
-                throw new ArgumentException(
-                    "A valid product is required.",
-                    "productID");
-            }
+            ValidateID(productID);
 
             const string sql = @"
                 DELETE FROM Products
                 WHERE ProductID = @ProductID;";
 
-            using (SqlConnection connection =
-                DatabaseConnection.GetConnection())
-            using (SqlCommand command =
-                new SqlCommand(sql, connection))
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(sql, connection))
             {
-                command.Parameters.Add(
-                    "@ProductID",
-                    SqlDbType.Int).Value = productID;
-
+                command.Parameters.Add("@ProductID", SqlDbType.Int).Value = productID;
                 connection.Open();
                 return command.ExecuteNonQuery() > 0;
+            }
+        }
+
+        private static void AddWriteParameters(SqlCommand command, Product product)
+        {
+            command.Parameters.Add("@CategoryID", SqlDbType.Int).Value = product.CategoryID;
+            command.Parameters.Add("@ProductName", SqlDbType.NVarChar, 100).Value = product.ProductName.Trim();
+            command.Parameters.Add("@IsAvailable", SqlDbType.Bit).Value = product.IsAvailable;
+        }
+
+        private static Product Map(SqlDataReader reader)
+        {
+            return new Product
+            {
+                ProductID = reader.GetInt32(reader.GetOrdinal("ProductID")),
+                CategoryID = reader.GetInt32(reader.GetOrdinal("CategoryID")),
+                CategoryName = reader.GetString(reader.GetOrdinal("CategoryName")),
+                ProductName = reader.GetString(reader.GetOrdinal("ProductName")),
+                IsAvailable = reader.GetBoolean(reader.GetOrdinal("IsAvailable"))
+            };
+        }
+
+        private static void ValidateForSave(Product product, bool requireID)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException("product");
+            }
+
+            if (requireID)
+            {
+                ValidateID(product.ProductID);
+            }
+
+            if (product.CategoryID <= 0)
+            {
+                throw new ArgumentException("A valid category is required.", "product");
+            }
+
+            if (string.IsNullOrWhiteSpace(product.ProductName))
+            {
+                throw new ArgumentException("Product name is required.", "product");
+            }
+
+            if (product.ProductName.Trim().Length > 100)
+            {
+                throw new ArgumentException("Product name cannot exceed 100 characters.", "product");
+            }
+        }
+
+        private static void ValidateID(int productID)
+        {
+            if (productID <= 0)
+            {
+                throw new ArgumentException("A valid product is required.", "productID");
             }
         }
     }

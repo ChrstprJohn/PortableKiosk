@@ -14,10 +14,10 @@ namespace PortableKiosk.Core.Data.Repositories
 
             const string sql = @"
                 INSERT INTO Categories
-                    (CategoryName, DisplayOrder, IsAvailable)
+                    (CategoryName, IsAvailable)
                 OUTPUT INSERTED.CategoryID
                 VALUES
-                    (@CategoryName, @DisplayOrder, @IsAvailable);";
+                    (@CategoryName, @IsAvailable);";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
@@ -42,7 +42,6 @@ namespace PortableKiosk.Core.Data.Repositories
                 SELECT
                     CategoryID,
                     CategoryName,
-                    DisplayOrder,
                     IsAvailable
                 FROM Categories
                 WHERE CategoryID = @CategoryID;";
@@ -72,10 +71,9 @@ namespace PortableKiosk.Core.Data.Repositories
                 SELECT
                     CategoryID,
                     CategoryName,
-                    DisplayOrder,
                     IsAvailable
                 FROM Categories
-                ORDER BY DisplayOrder ASC, CategoryName ASC;";
+                ORDER BY CategoryName ASC, CategoryID ASC;";
 
             List<Category> categories = new List<Category>();
 
@@ -107,7 +105,6 @@ namespace PortableKiosk.Core.Data.Repositories
                 UPDATE Categories
                 SET
                     CategoryName = @CategoryName,
-                    DisplayOrder = @DisplayOrder,
                     IsAvailable = @IsAvailable
                 WHERE CategoryID = @CategoryID;";
 
@@ -158,10 +155,6 @@ namespace PortableKiosk.Core.Data.Repositories
                 100).Value = category.CategoryName.Trim();
 
             command.Parameters.Add(
-                "@DisplayOrder",
-                SqlDbType.Int).Value = category.DisplayOrder;
-
-            command.Parameters.Add(
                 "@IsAvailable",
                 SqlDbType.Bit).Value = category.IsAvailable;
         }
@@ -174,8 +167,6 @@ namespace PortableKiosk.Core.Data.Repositories
                     reader.GetOrdinal("CategoryID")),
                 CategoryName = reader.GetString(
                     reader.GetOrdinal("CategoryName")),
-                DisplayOrder = reader.GetInt32(
-                    reader.GetOrdinal("DisplayOrder")),
                 IsAvailable = reader.GetBoolean(
                     reader.GetOrdinal("IsAvailable"))
             };
@@ -202,12 +193,6 @@ namespace PortableKiosk.Core.Data.Repositories
                     "category");
             }
 
-            if (category.DisplayOrder < 0)
-            {
-                throw new ArgumentException(
-                    "Display order cannot be negative.",
-                    "category");
-            }
         }
 
         private static void ValidateID(int categoryID)

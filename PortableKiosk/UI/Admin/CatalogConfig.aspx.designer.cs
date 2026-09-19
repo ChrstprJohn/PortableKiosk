@@ -16,10 +16,6 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Label lblCategoryName;
         protected global::System.Web.UI.WebControls.TextBox txtCategoryName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredCategoryName;
-        protected global::System.Web.UI.WebControls.Label lblCategoryDisplayOrder;
-        protected global::System.Web.UI.WebControls.TextBox txtCategoryDisplayOrder;
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredCategoryDisplayOrder;
-        protected global::System.Web.UI.WebControls.RangeValidator rangeCategoryDisplayOrder;
         protected global::System.Web.UI.WebControls.CheckBox chkCategoryIsAvailable;
         protected global::System.Web.UI.WebControls.Button btnAddCategory;
         protected global::System.Web.UI.WebControls.Label lblCategoryCount;
@@ -30,10 +26,6 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Label lblEditCategoryName;
         protected global::System.Web.UI.WebControls.TextBox txtEditCategoryName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditCategoryName;
-        protected global::System.Web.UI.WebControls.Label lblEditCategoryDisplayOrder;
-        protected global::System.Web.UI.WebControls.TextBox txtEditCategoryDisplayOrder;
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditCategoryDisplayOrder;
-        protected global::System.Web.UI.WebControls.RangeValidator rangeEditCategoryDisplayOrder;
         protected global::System.Web.UI.WebControls.CheckBox chkEditCategoryIsAvailable;
         protected global::System.Web.UI.WebControls.Button btnUpdateCategory;
         protected global::System.Web.UI.WebControls.HiddenField hfDeleteCategoryID;
@@ -44,10 +36,6 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Label lblSizeName;
         protected global::System.Web.UI.WebControls.TextBox txtSizeName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredSizeName;
-        protected global::System.Web.UI.WebControls.Label lblSizeDisplayOrder;
-        protected global::System.Web.UI.WebControls.TextBox txtSizeDisplayOrder;
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredSizeDisplayOrder;
-        protected global::System.Web.UI.WebControls.RangeValidator rangeSizeDisplayOrder;
         protected global::System.Web.UI.WebControls.Button btnAddSize;
         protected global::System.Web.UI.WebControls.Label lblSizeCount;
         protected global::System.Web.UI.WebControls.Label lblSizeLoadError;
@@ -57,10 +45,6 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Label lblEditSizeName;
         protected global::System.Web.UI.WebControls.TextBox txtEditSizeName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditSizeName;
-        protected global::System.Web.UI.WebControls.Label lblEditSizeDisplayOrder;
-        protected global::System.Web.UI.WebControls.TextBox txtEditSizeDisplayOrder;
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditSizeDisplayOrder;
-        protected global::System.Web.UI.WebControls.RangeValidator rangeEditSizeDisplayOrder;
         protected global::System.Web.UI.WebControls.Button btnUpdateSize;
         protected global::System.Web.UI.WebControls.HiddenField hfDeleteSizeID;
         protected global::System.Web.UI.WebControls.Button btnDeleteSize;

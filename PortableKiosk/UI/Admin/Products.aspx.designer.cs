@@ -19,10 +19,6 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Label lblProductName;
         protected global::System.Web.UI.WebControls.TextBox txtProductName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredProductName;
-        protected global::System.Web.UI.WebControls.Label lblDisplayOrder;
-        protected global::System.Web.UI.WebControls.TextBox txtDisplayOrder;
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredDisplayOrder;
-        protected global::System.Web.UI.WebControls.RangeValidator rangeDisplayOrder;
         protected global::System.Web.UI.WebControls.CheckBox chkIsAvailable;
         protected global::System.Web.UI.WebControls.Button btnAddProduct;
         protected global::System.Web.UI.WebControls.Label lblProductStats;

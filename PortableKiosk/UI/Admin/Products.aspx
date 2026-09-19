@@ -109,48 +109,6 @@
                         </asp:RequiredFieldValidator>
                     </div>
 
-                    <!-- DISPLAY ORDER -->
-                    <div class="col-md-2">
-                        <asp:Label
-                            ID="lblDisplayOrder"
-                            runat="server"
-                            AssociatedControlID="txtDisplayOrder"
-                            CssClass="form-label"
-                            Text="Display order">
-                        </asp:Label>
-
-                        <asp:TextBox
-                            ID="txtDisplayOrder"
-                            runat="server"
-                            CssClass="form-control"
-                            TextMode="Number"
-                            Text="0">
-                        </asp:TextBox>
-
-                        <asp:RequiredFieldValidator
-                            ID="requiredDisplayOrder"
-                            runat="server"
-                            ControlToValidate="txtDisplayOrder"
-                            ValidationGroup="ProductForm"
-                            ErrorMessage="Display order is required."
-                            CssClass="text-danger small"
-                            Display="Dynamic">
-                        </asp:RequiredFieldValidator>
-
-                        <asp:RangeValidator
-                            ID="rangeDisplayOrder"
-                            runat="server"
-                            ControlToValidate="txtDisplayOrder"
-                            ValidationGroup="ProductForm"
-                            Type="Integer"
-                            MinimumValue="0"
-                            MaximumValue="2147483647"
-                            ErrorMessage="Order must be 0 or greater."
-                            CssClass="text-danger small"
-                            Display="Dynamic">
-                        </asp:RangeValidator>
-                    </div>
-
                     <!-- STATUS -->
                     <div class="col-md-1">
                         <label class="form-label d-block">Status</label>
@@ -207,7 +165,7 @@
                                 <div>
                                     <span class="badge bg-secondary mb-1"><%# Eval("CategoryName") %></span>
                                     <h5 class="mb-0 text-dark fw-bold"><%# Eval("ProductName") %></h5>
-                                    <small class="text-muted">ID: #<%# Eval("ProductID") %> &bull; Order: <%# Eval("DisplayOrder") %></small>
+                                    <small class="text-muted">ID: #<%# Eval("ProductID") %></small>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
                                     <span class='badge <%# (bool)Eval("IsAvailable") ? "bg-success" : "bg-secondary" %>'>

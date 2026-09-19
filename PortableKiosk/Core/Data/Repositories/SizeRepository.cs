@@ -14,10 +14,10 @@ namespace PortableKiosk.Core.Data.Repositories
 
             const string sql = @"
                 INSERT INTO Sizes
-                    (SizeName, DisplayOrder)
+                    (SizeName)
                 OUTPUT INSERTED.SizeID
                 VALUES
-                    (@SizeName, @DisplayOrder);";
+                    (@SizeName);";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
@@ -41,8 +41,7 @@ namespace PortableKiosk.Core.Data.Repositories
             const string sql = @"
                 SELECT
                     SizeID,
-                    SizeName,
-                    DisplayOrder
+                    SizeName
                 FROM Sizes
                 WHERE SizeID = @SizeID;";
 
@@ -70,10 +69,9 @@ namespace PortableKiosk.Core.Data.Repositories
             const string sql = @"
                 SELECT
                     SizeID,
-                    SizeName,
-                    DisplayOrder
+                    SizeName
                 FROM Sizes
-                ORDER BY DisplayOrder ASC, SizeName ASC;";
+                ORDER BY SizeName ASC, SizeID ASC;";
 
             List<Size> sizes = new List<Size>();
 
@@ -104,8 +102,7 @@ namespace PortableKiosk.Core.Data.Repositories
             const string sql = @"
                 UPDATE Sizes
                 SET
-                    SizeName = @SizeName,
-                    DisplayOrder = @DisplayOrder
+                    SizeName = @SizeName
                 WHERE SizeID = @SizeID;";
 
             using (SqlConnection connection =
@@ -154,9 +151,6 @@ namespace PortableKiosk.Core.Data.Repositories
                 SqlDbType.NVarChar,
                 50).Value = size.SizeName.Trim();
 
-            command.Parameters.Add(
-                "@DisplayOrder",
-                SqlDbType.Int).Value = size.DisplayOrder;
         }
 
         private static Size Map(SqlDataReader reader)
@@ -166,9 +160,7 @@ namespace PortableKiosk.Core.Data.Repositories
                 SizeID = reader.GetInt32(
                     reader.GetOrdinal("SizeID")),
                 SizeName = reader.GetString(
-                    reader.GetOrdinal("SizeName")),
-                DisplayOrder = reader.GetInt32(
-                    reader.GetOrdinal("DisplayOrder"))
+                    reader.GetOrdinal("SizeName"))
             };
         }
 
@@ -193,12 +185,6 @@ namespace PortableKiosk.Core.Data.Repositories
                     "size");
             }
 
-            if (size.DisplayOrder < 0)
-            {
-                throw new ArgumentException(
-                    "Display order cannot be negative.",
-                    "size");
-            }
         }
 
         private static void ValidateID(int sizeID)

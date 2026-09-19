@@ -82,17 +82,11 @@ CREATE TABLE Categories
 
     CategoryName NVARCHAR(100) NOT NULL,
 
-    DisplayOrder INT NOT NULL
-        DEFAULT 0,
-
     IsAvailable BIT NOT NULL
         DEFAULT 1,
 
     CONSTRAINT UQ_Categories_CategoryName
-        UNIQUE (CategoryName),
-
-    CONSTRAINT CK_Categories_DisplayOrder
-        CHECK (DisplayOrder >= 0)
+        UNIQUE (CategoryName)
 );
 GO
 
@@ -106,14 +100,8 @@ CREATE TABLE Sizes
 
     SizeName NVARCHAR(50) NOT NULL,
 
-    DisplayOrder INT NOT NULL
-        DEFAULT 0,
-
     CONSTRAINT UQ_Sizes_SizeName
-        UNIQUE (SizeName),
-
-    CONSTRAINT CK_Sizes_DisplayOrder
-        CHECK (DisplayOrder >= 0)
+        UNIQUE (SizeName)
 );
 GO
 
@@ -131,12 +119,6 @@ CREATE TABLE Products
 
     IsAvailable BIT NOT NULL
         DEFAULT 1,
-
-    DisplayOrder INT NOT NULL
-        DEFAULT 0,
-
-    CONSTRAINT CK_Products_DisplayOrder
-        CHECK (DisplayOrder >= 0),
 
     CONSTRAINT FK_Products_Categories
         FOREIGN KEY (CategoryID)

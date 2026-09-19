@@ -78,48 +78,6 @@
                             </asp:RequiredFieldValidator>
                         </div>
 
-                        <!-- DISPLAY ORDER -->
-                        <div class="col-md-3">
-                            <asp:Label
-                                ID="lblCategoryDisplayOrder"
-                                runat="server"
-                                AssociatedControlID="txtCategoryDisplayOrder"
-                                CssClass="form-label fw-bold"
-                                Text="Display Order">
-                            </asp:Label>
-
-                            <asp:TextBox
-                                ID="txtCategoryDisplayOrder"
-                                runat="server"
-                                CssClass="form-control"
-                                TextMode="Number"
-                                Text="0">
-                            </asp:TextBox>
-
-                            <asp:RequiredFieldValidator
-                                ID="requiredCategoryDisplayOrder"
-                                runat="server"
-                                ControlToValidate="txtCategoryDisplayOrder"
-                                ValidationGroup="CategoryForm"
-                                ErrorMessage="Display order is required."
-                                CssClass="text-danger small"
-                                Display="Dynamic">
-                            </asp:RequiredFieldValidator>
-
-                            <asp:RangeValidator
-                                ID="rangeCategoryDisplayOrder"
-                                runat="server"
-                                ControlToValidate="txtCategoryDisplayOrder"
-                                ValidationGroup="CategoryForm"
-                                Type="Integer"
-                                MinimumValue="0"
-                                MaximumValue="2147483647"
-                                ErrorMessage="Order must be 0 or greater."
-                                CssClass="text-danger small"
-                                Display="Dynamic">
-                            </asp:RangeValidator>
-                        </div>
-
                         <!-- STATUS -->
                         <div class="col-md-2">
                             <label class="form-label fw-bold d-block">Status</label>
@@ -176,7 +134,6 @@
                             <Columns>
                                 <asp:BoundField DataField="CategoryID" HeaderText="ID" ItemStyle-Width="90px" />
                                 <asp:BoundField DataField="CategoryName" HeaderText="Category Name" />
-                                <asp:BoundField DataField="DisplayOrder" HeaderText="Display Order" ItemStyle-Width="140px" />
                                 <asp:TemplateField HeaderText="Status" ItemStyle-Width="140px">
                                     <ItemTemplate>
                                         <span class='badge <%# (bool)Eval("IsAvailable") ? "bg-success" : "bg-secondary" %>'>
@@ -192,7 +149,7 @@
                                                 class="btn btn-sm btn-outline-primary"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editCategoryModal"
-                                                onclick='openEditCategoryModal(<%# Eval("CategoryID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("CategoryName").ToString())) %>", <%# Eval("DisplayOrder") %>, <%# (bool)Eval("IsAvailable") ? "true" : "false" %>);'>
+                                                onclick='openEditCategoryModal(<%# Eval("CategoryID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("CategoryName").ToString())) %>", <%# (bool)Eval("IsAvailable") ? "true" : "false" %>);'>
                                                 <i class="bi bi-pencil-square me-1"></i>Edit
                                             </button>
                                             <button
@@ -276,48 +233,6 @@
                             </asp:RequiredFieldValidator>
                         </div>
 
-                        <!-- DISPLAY ORDER -->
-                        <div class="col-md-4">
-                            <asp:Label
-                                ID="lblSizeDisplayOrder"
-                                runat="server"
-                                AssociatedControlID="txtSizeDisplayOrder"
-                                CssClass="form-label fw-bold"
-                                Text="Display Order">
-                            </asp:Label>
-
-                            <asp:TextBox
-                                ID="txtSizeDisplayOrder"
-                                runat="server"
-                                CssClass="form-control"
-                                TextMode="Number"
-                                Text="0">
-                            </asp:TextBox>
-
-                            <asp:RequiredFieldValidator
-                                ID="requiredSizeDisplayOrder"
-                                runat="server"
-                                ControlToValidate="txtSizeDisplayOrder"
-                                ValidationGroup="SizeForm"
-                                ErrorMessage="Display order is required."
-                                CssClass="text-danger small"
-                                Display="Dynamic">
-                            </asp:RequiredFieldValidator>
-
-                            <asp:RangeValidator
-                                ID="rangeSizeDisplayOrder"
-                                runat="server"
-                                ControlToValidate="txtSizeDisplayOrder"
-                                ValidationGroup="SizeForm"
-                                Type="Integer"
-                                MinimumValue="0"
-                                MaximumValue="2147483647"
-                                ErrorMessage="Order must be 0 or greater."
-                                CssClass="text-danger small"
-                                Display="Dynamic">
-                            </asp:RangeValidator>
-                        </div>
-
                         <!-- ADD BUTTON -->
                         <div class="col-md-2">
                             <asp:Button
@@ -361,7 +276,6 @@
                             <Columns>
                                 <asp:BoundField DataField="SizeID" HeaderText="ID" ItemStyle-Width="90px" />
                                 <asp:BoundField DataField="SizeName" HeaderText="Size Name" />
-                                <asp:BoundField DataField="DisplayOrder" HeaderText="Display Order" ItemStyle-Width="140px" />
                                 <asp:TemplateField HeaderText="Actions" ItemStyle-Width="190px">
                                     <ItemTemplate>
                                         <div class="d-flex gap-2 flex-wrap">
@@ -370,7 +284,7 @@
                                                 class="btn btn-sm btn-outline-primary"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#editSizeModal"
-                                                onclick='openEditSizeModal(<%# Eval("SizeID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("SizeName").ToString())) %>", <%# Eval("DisplayOrder") %>);'>
+                                                onclick='openEditSizeModal(<%# Eval("SizeID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("SizeName").ToString())) %>");'>
                                                 <i class="bi bi-pencil-square me-1"></i>Edit
                                             </button>
                                             <button
@@ -440,42 +354,6 @@
                             ControlToValidate="txtEditCategoryName"
                             ValidationGroup="EditCategoryForm"
                             ErrorMessage="Category name is required."
-                            CssClass="text-danger small"
-                            Display="Dynamic" />
-                    </div>
-
-                    <div class="mb-3">
-                        <asp:Label
-                            ID="lblEditCategoryDisplayOrder"
-                            runat="server"
-                            AssociatedControlID="txtEditCategoryDisplayOrder"
-                            CssClass="form-label fw-bold"
-                            Text="Display order">
-                        </asp:Label>
-                        <asp:TextBox
-                            ID="txtEditCategoryDisplayOrder"
-                            runat="server"
-                            CssClass="form-control"
-                            TextMode="Number"
-                            min="0">
-                        </asp:TextBox>
-                        <asp:RequiredFieldValidator
-                            ID="requiredEditCategoryDisplayOrder"
-                            runat="server"
-                            ControlToValidate="txtEditCategoryDisplayOrder"
-                            ValidationGroup="EditCategoryForm"
-                            ErrorMessage="Display order is required."
-                            CssClass="text-danger small"
-                            Display="Dynamic" />
-                        <asp:RangeValidator
-                            ID="rangeEditCategoryDisplayOrder"
-                            runat="server"
-                            ControlToValidate="txtEditCategoryDisplayOrder"
-                            ValidationGroup="EditCategoryForm"
-                            Type="Integer"
-                            MinimumValue="0"
-                            MaximumValue="2147483647"
-                            ErrorMessage="Order must be 0 or greater."
                             CssClass="text-danger small"
                             Display="Dynamic" />
                     </div>
@@ -582,41 +460,6 @@
                             Display="Dynamic" />
                     </div>
 
-                    <div class="mb-3">
-                        <asp:Label
-                            ID="lblEditSizeDisplayOrder"
-                            runat="server"
-                            AssociatedControlID="txtEditSizeDisplayOrder"
-                            CssClass="form-label fw-bold"
-                            Text="Display order">
-                        </asp:Label>
-                        <asp:TextBox
-                            ID="txtEditSizeDisplayOrder"
-                            runat="server"
-                            CssClass="form-control"
-                            TextMode="Number"
-                            min="0">
-                        </asp:TextBox>
-                        <asp:RequiredFieldValidator
-                            ID="requiredEditSizeDisplayOrder"
-                            runat="server"
-                            ControlToValidate="txtEditSizeDisplayOrder"
-                            ValidationGroup="EditSizeForm"
-                            ErrorMessage="Display order is required."
-                            CssClass="text-danger small"
-                            Display="Dynamic" />
-                        <asp:RangeValidator
-                            ID="rangeEditSizeDisplayOrder"
-                            runat="server"
-                            ControlToValidate="txtEditSizeDisplayOrder"
-                            ValidationGroup="EditSizeForm"
-                            Type="Integer"
-                            MinimumValue="0"
-                            MaximumValue="2147483647"
-                            ErrorMessage="Order must be 0 or greater."
-                            CssClass="text-danger small"
-                            Display="Dynamic" />
-                    </div>
                 </div>
 
                 <div class="modal-footer bg-light">

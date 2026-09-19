@@ -11,9 +11,6 @@
 
         public string CategoryName { get; set; }
 
-
-        public int DisplayOrder { get; set; }
-
         public bool IsAvailable { get; set; }
     }
 }

@@ -15,8 +15,6 @@
 
         public bool IsAvailable { get; set; }
 
-        public int DisplayOrder { get; set; }
-
         // Used when displaying products.
         // This value comes from the Categories table.
         public string CategoryName { get; set; }

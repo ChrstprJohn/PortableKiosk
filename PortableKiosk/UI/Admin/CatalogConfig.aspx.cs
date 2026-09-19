@@ -51,17 +51,9 @@ namespace PortableKiosk.UI.Admin
                 return;
             }
 
-            int displayOrder;
-            if (!int.TryParse(txtCategoryDisplayOrder.Text.Trim(), out displayOrder))
-            {
-                ShowCategoryError("Display order must be a valid number.");
-                return;
-            }
-
             Category category = new Category
             {
                 CategoryName = txtCategoryName.Text.Trim(),
-                DisplayOrder = displayOrder,
                 IsAvailable = chkCategoryIsAvailable.Checked
             };
 
@@ -108,7 +100,6 @@ namespace PortableKiosk.UI.Admin
             }
 
             int categoryID;
-            int displayOrder;
 
             if (!int.TryParse(
                     hfEditCategoryID.Value,
@@ -120,21 +111,11 @@ namespace PortableKiosk.UI.Admin
                 return;
             }
 
-            if (!int.TryParse(
-                    txtEditCategoryDisplayOrder.Text.Trim(),
-                    out displayOrder))
-            {
-                ShowCategoryError(
-                    "Display order must be a valid number.");
-                return;
-            }
-
             Category category = new Category
             {
                 CategoryID = categoryID,
                 CategoryName =
                     txtEditCategoryName.Text.Trim(),
-                DisplayOrder = displayOrder,
                 IsAvailable =
                     chkEditCategoryIsAvailable.Checked
             };
@@ -257,7 +238,6 @@ namespace PortableKiosk.UI.Admin
         private void ClearCategoryForm()
         {
             txtCategoryName.Text = string.Empty;
-            txtCategoryDisplayOrder.Text = "0";
             chkCategoryIsAvailable.Checked = true;
         }
 
@@ -288,17 +268,9 @@ namespace PortableKiosk.UI.Admin
                 return;
             }
 
-            int displayOrder;
-            if (!int.TryParse(txtSizeDisplayOrder.Text.Trim(), out displayOrder))
-            {
-                ShowSizeError("Display order must be a valid number.");
-                return;
-            }
-
             Size size = new Size
             {
-                SizeName = txtSizeName.Text.Trim(),
-                DisplayOrder = displayOrder
+                SizeName = txtSizeName.Text.Trim()
             };
 
             try
@@ -343,7 +315,6 @@ namespace PortableKiosk.UI.Admin
             }
 
             int sizeID;
-            int displayOrder;
 
             if (!int.TryParse(
                     hfEditSizeID.Value,
@@ -354,20 +325,10 @@ namespace PortableKiosk.UI.Admin
                 return;
             }
 
-            if (!int.TryParse(
-                    txtEditSizeDisplayOrder.Text.Trim(),
-                    out displayOrder))
-            {
-                ShowSizeError(
-                    "Display order must be a valid number.");
-                return;
-            }
-
             Size size = new Size
             {
                 SizeID = sizeID,
-                SizeName = txtEditSizeName.Text.Trim(),
-                DisplayOrder = displayOrder
+                SizeName = txtEditSizeName.Text.Trim()
             };
 
             try
@@ -483,7 +444,6 @@ namespace PortableKiosk.UI.Admin
         private void ClearSizeForm()
         {
             txtSizeName.Text = string.Empty;
-            txtSizeDisplayOrder.Text = "0";
         }
 
         private void ShowSizeSuccess(string message)

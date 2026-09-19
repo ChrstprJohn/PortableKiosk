@@ -32,7 +32,6 @@ namespace PortableKiosk.UI.Admin
             public string CategoryName { get; set; }
             public string ProductName { get; set; }
             public bool IsAvailable { get; set; }
-            public int DisplayOrder { get; set; }
             public List<ProductVariant> Variants { get; set; }
             public string ExistingSizeKeys { get; set; }
 
@@ -113,18 +112,10 @@ namespace PortableKiosk.UI.Admin
                 return;
             }
 
-            int displayOrder;
-            if (!int.TryParse(txtDisplayOrder.Text.Trim(), out displayOrder))
-            {
-                ShowError("Display order must be a valid integer.");
-                return;
-            }
-
             Product product = new Product
             {
                 CategoryID = categoryID,
                 ProductName = txtProductName.Text.Trim(),
-                DisplayOrder = displayOrder,
                 IsAvailable = chkIsAvailable.Checked
             };
 
@@ -162,7 +153,6 @@ namespace PortableKiosk.UI.Admin
         {
             ddlCategory.SelectedIndex = 0;
             txtProductName.Text = string.Empty;
-            txtDisplayOrder.Text = "0";
             chkIsAvailable.Checked = true;
         }
 
@@ -712,8 +702,7 @@ namespace PortableKiosk.UI.Admin
                         CategoryID = p.CategoryID,
                         CategoryName = p.CategoryName,
                         ProductName = p.ProductName,
-                        IsAvailable = p.IsAvailable,
-                        DisplayOrder = p.DisplayOrder
+                        IsAvailable = p.IsAvailable
                     };
 
                     if (variantsByProduct.ContainsKey(p.ProductID))

@@ -3,46 +3,43 @@ GO
 
 INSERT INTO Sizes
 (
-    SizeName,
-    DisplayOrder
+    SizeName
 )
 VALUES
-    (N'Regular', 1),
-    (N'Medium', 2),
-    (N'Large', 3);
+    (N'Regular'),
+    (N'Medium'),
+    (N'Large');
 GO
 
 INSERT INTO Categories
 (
     CategoryName,
-    DisplayOrder,
     IsAvailable
 )
 VALUES
-    (N'Burgers', 1, 1),
-    (N'Chicken', 2, 1),
-    (N'Sides', 3, 1),
-    (N'Drinks', 4, 1),
-    (N'Desserts', 5, 1);
+    (N'Burgers', 1),
+    (N'Chicken', 1),
+    (N'Sides', 1),
+    (N'Drinks', 1),
+    (N'Desserts', 1);
 GO
 
 INSERT INTO Products
 (
     CategoryID,
     ProductName,
-    IsAvailable,
-    DisplayOrder
+    IsAvailable
 )
 VALUES
-    (1, N'Classic Burger', 1, 1),
-    (1, N'Cheeseburger', 1, 2),
-    (2, N'Fried Chicken', 1, 1),
-    (3, N'French Fries', 1, 1),
-    (3, N'Onion Rings', 1, 2),
-    (4, N'Iced Tea', 1, 1),
-    (4, N'Soft Drink', 1, 2),
-    (4, N'Bottled Water', 1, 3),
-    (5, N'Sundae', 1, 1);
+    (1, N'Classic Burger', 1),
+    (1, N'Cheeseburger', 1),
+    (2, N'Fried Chicken', 1),
+    (3, N'French Fries', 1),
+    (3, N'Onion Rings', 1),
+    (4, N'Iced Tea', 1),
+    (4, N'Soft Drink', 1),
+    (4, N'Bottled Water', 1),
+    (5, N'Sundae', 1);
 GO
 
 INSERT INTO ProductVariants
