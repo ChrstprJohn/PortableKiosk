@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using PortableKiosk.Core.Data.Repositories;
 using PortableKiosk.Core.Models;
+using PortableKiosk.Core.Services;
 
 namespace PortableKiosk.UI.Admin
 {
     public partial class StaffAccounts : System.Web.UI.Page
     {
+        private readonly StaffAccountService staffAccountService =
+            new StaffAccountService();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!EnsureAdminAccess())
@@ -53,9 +56,6 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                StaffAccountRepository repository =
-                    new StaffAccountRepository();
-
                 int accountID;
 
                 if (string.Equals(
@@ -63,13 +63,13 @@ namespace PortableKiosk.UI.Admin
                     "ADMIN",
                     StringComparison.Ordinal))
                 {
-                    accountID = repository.AddAdmin(
+                    accountID = staffAccountService.AddAdmin(
                         account,
                         txtPassword.Text);
                 }
                 else
                 {
-                    accountID = repository.AddCrew(
+                    accountID = staffAccountService.AddCrew(
                         account,
                         txtPassword.Text);
                 }
@@ -158,11 +158,8 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                StaffAccountRepository repository =
-                    new StaffAccountRepository();
-
                 List<StaffAccount> accounts =
-                    repository.GetAll();
+                    staffAccountService.GetAll();
 
                 gridStaff.DataSource = accounts;
                 gridStaff.DataBind();

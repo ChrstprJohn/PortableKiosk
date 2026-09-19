@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using PortableKiosk.Core.Data.Repositories;
 using PortableKiosk.Core.Models;
+using PortableKiosk.Core.Services;
 
 namespace PortableKiosk.UI.Admin
 {
     public partial class CatalogConfig : System.Web.UI.Page
     {
+        private readonly CatalogService catalogService =
+            new CatalogService();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["StaffAccountID"] == null)
@@ -61,8 +64,8 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                CategoryRepository repository = new CategoryRepository();
-                int categoryID = repository.Add(category);
+                int categoryID =
+                    catalogService.AddCategory(category);
 
                 ShowCategorySuccess("Category \"" + category.CategoryName + "\" added successfully (ID: " + categoryID + ").");
                 ClearCategoryForm();
@@ -93,8 +96,8 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                CategoryRepository repository = new CategoryRepository();
-                List<Category> categories = repository.GetAll();
+                List<Category> categories =
+                    catalogService.GetCategories();
 
                 gridCategories.DataSource = categories;
                 gridCategories.DataBind();
@@ -160,8 +163,7 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                SizeRepository repository = new SizeRepository();
-                int sizeID = repository.Add(size);
+                int sizeID = catalogService.AddSize(size);
 
                 ShowSizeSuccess("Size \"" + size.SizeName + "\" added successfully (ID: " + sizeID + ").");
                 ClearSizeForm();
@@ -192,8 +194,7 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                SizeRepository repository = new SizeRepository();
-                List<Size> sizes = repository.GetAll();
+                List<Size> sizes = catalogService.GetSizes();
 
                 gridSizes.DataSource = sizes;
                 gridSizes.DataBind();

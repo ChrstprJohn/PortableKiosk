@@ -4,13 +4,19 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using PortableKiosk.Core.Data.Repositories;
 using PortableKiosk.Core.Models;
+using PortableKiosk.Core.Services;
 
 namespace PortableKiosk.UI.Admin
 {
     public partial class ProductManagement : Page
     {
+        private readonly CatalogService catalogService =
+            new CatalogService();
+
+        private readonly ProductService productService =
+            new ProductService();
+
         public class ProductCardViewModel
         {
             public int ProductID { get; set; }
@@ -89,8 +95,8 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                ProductRepository repository = new ProductRepository();
-                int productID = repository.Add(product);
+                int productID =
+                    productService.AddProduct(product);
 
                 ShowSuccess("Product \"" + product.ProductName + "\" added successfully. You can now add size variants below!");
                 ClearProductForm();
@@ -183,8 +189,8 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                ProductVariantRepository variantRepository = new ProductVariantRepository();
-                int variantID = variantRepository.Add(variant);
+                int variantID =
+                    productService.AddVariant(variant);
 
                 ShowSuccess("Variant added successfully (ID: " + variantID + ") to Product #" + productID + ".");
                 ClearModalForm();
@@ -231,8 +237,8 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                CategoryRepository repository = new CategoryRepository();
-                List<Category> categories = repository.GetAll();
+                List<Category> categories =
+                    catalogService.GetCategories();
 
                 ddlCategory.Items.Clear();
                 ddlCategory.Items.Add(new ListItem("-- Select category --", ""));
@@ -256,8 +262,7 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                SizeRepository repository = new SizeRepository();
-                List<Size> sizes = repository.GetAll();
+                List<Size> sizes = catalogService.GetSizes();
 
                 ddlModalSize.Items.Clear();
                 ddlModalSize.Items.Add(new ListItem("-- No size (Standard / Regular) --", ""));
@@ -278,11 +283,10 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                ProductRepository productRepo = new ProductRepository();
-                ProductVariantRepository variantRepo = new ProductVariantRepository();
-
-                List<Product> products = productRepo.GetAll();
-                List<ProductVariant> variants = variantRepo.GetAll();
+                List<Product> products =
+                    productService.GetProducts();
+                List<ProductVariant> variants =
+                    productService.GetVariants();
 
                 // Group variants by ProductID
                 Dictionary<int, List<ProductVariant>> variantsByProduct = new Dictionary<int, List<ProductVariant>>();

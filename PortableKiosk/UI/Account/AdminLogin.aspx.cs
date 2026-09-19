@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Data.SqlClient;
-using PortableKiosk.Core.Data.Repositories;
 using PortableKiosk.Core.Models;
-using PortableKiosk.Shared.Security;
+using PortableKiosk.Core.Services;
 
 namespace PortableKiosk.UI.Account
 {
     public partial class AdminLogin : System.Web.UI.Page
     {
+        private readonly StaffAccountService staffAccountService =
+            new StaffAccountService();
+
         protected void Page_Load(
             object sender,
             EventArgs e)
@@ -35,24 +37,12 @@ namespace PortableKiosk.UI.Account
 
             try
             {
-                StaffAccountRepository repository =
-                    new StaffAccountRepository();
-
                 StaffAccount staff =
-                    repository.GetByEmail(
-                        txtEmail.Text.Trim());
+                    staffAccountService.Authenticate(
+                        txtEmail.Text.Trim(),
+                        txtPassword.Text);
 
-                bool validLogin =
-                    staff != null &&
-                    staff.IsActive &&
-                    IsSupportedRole(staff.StaffRole) &&
-                    PasswordHasher.Verify(
-                        txtPassword.Text,
-                        staff.PasswordSalt,
-                        staff.PasswordHash,
-                        staff.PasswordIterations);
-
-                if (!validLogin)
+                if (staff == null)
                 {
                     ShowError(
                         "The email or password is incorrect.");
@@ -94,19 +84,6 @@ namespace PortableKiosk.UI.Account
             lblMessage.CssClass =
                 "alert alert-danger d-block";
             lblMessage.Visible = true;
-        }
-
-        private static bool IsSupportedRole(
-            string staffRole)
-        {
-            return string.Equals(
-                    staffRole,
-                    "ADMIN",
-                    StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(
-                    staffRole,
-                    "CREW",
-                    StringComparison.OrdinalIgnoreCase);
         }
 
         private void RedirectForRole(string staffRole)
