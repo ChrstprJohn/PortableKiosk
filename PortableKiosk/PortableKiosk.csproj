@@ -203,8 +203,10 @@
     <Compile Include="Core\Models\ProductVariant.cs" />
     <Compile Include="Core\Models\Size.cs" />
     <Compile Include="Core\Models\StaffAccount.cs" />
-    <Compile Include="Core\Services\CatalogService.cs" />
+    <Compile Include="Core\Services\CategoryService.cs" />
     <Compile Include="Core\Services\ProductService.cs" />
+    <Compile Include="Core\Services\ProductVariantService.cs" />
+    <Compile Include="Core\Services\SizeService.cs" />
     <Compile Include="Core\Services\StaffAccountService.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

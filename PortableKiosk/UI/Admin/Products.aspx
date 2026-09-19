@@ -217,7 +217,7 @@
                                         data-bs-toggle="modal"
                                         data-bs-target="#addVariantModal"
                                         onclick='openAddVariantModal(<%# Eval("ProductID") %>, "<%# HttpUtility.JavaScriptStringEncode(Eval("ProductName").ToString()) %>");'>
-                                        <i class="bi bi-plus"></i> Add Variant
+                                        <i class="bi bi-plus"></i> Add Variants
                                     </button>
                                 </div>
                             </div>
@@ -286,14 +286,14 @@
 
     </div>
 
-    <!-- ADD VARIANT MODAL -->
+    <!-- ADD VARIANTS MODAL -->
     <div class="modal fade" id="addVariantModal" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
 
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="addVariantModalLabel">
-                        <i class="bi bi-plus-square-fill me-1"></i> Add Product Variant
+                        <i class="bi bi-plus-square-fill me-1"></i> Add Product Variants
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -315,70 +315,64 @@
                         <asp:HiddenField ID="hfModalProductID" runat="server" />
                     </div>
 
-                    <!-- SIZE DROPDOWN -->
-                    <div class="mb-3">
-                        <asp:Label
-                            ID="lblModalSize"
-                            runat="server"
-                            AssociatedControlID="ddlModalSize"
-                            CssClass="form-label"
-                            Text="Size / Serving">
-                        </asp:Label>
+                    <!-- BULK SIZE AND PRICE ROWS -->
+                    <fieldset class="mb-4">
+                        <legend class="h6 mb-1">Choose sizes and set prices</legend>
+                        <p class="text-muted small mb-3">
+                            Select every variant you want to create. Only selected rows will be saved.
+                        </p>
 
-                        <asp:DropDownList
-                            ID="ddlModalSize"
-                            runat="server"
-                            CssClass="form-select">
-                        </asp:DropDownList>
-                        <small class="text-muted">Choose serving size, or leave as "No size" for standard products.</small>
-                    </div>
+                        <div id="bulkVariantRows" class="border overflow-hidden">
+                            <div class="row g-0 bg-light border-bottom px-3 py-2 small fw-semibold text-secondary" aria-hidden="true">
+                                <div class="col-2">Add</div>
+                                <div class="col-5">Size / Serving</div>
+                                <div class="col-5">Price</div>
+                            </div>
 
-                    <!-- PRICE INPUT -->
-                    <div class="mb-3">
-                        <asp:Label
-                            ID="lblModalPrice"
-                            runat="server"
-                            AssociatedControlID="txtModalPrice"
-                            CssClass="form-label"
-                            Text="Price (₱)">
-                        </asp:Label>
+                            <asp:Repeater ID="rptBulkVariantRows" runat="server">
+                                <ItemTemplate>
+                                    <div class="row g-0 align-items-center px-3 py-3 border-bottom bulk-variant-row">
+                                        <div class="col-2">
+                                            <asp:CheckBox
+                                                ID="chkBulkSelected"
+                                                runat="server"
+                                                CssClass="bulk-variant-toggle" />
+                                        </div>
 
-                        <div class="input-group">
-                            <span class="input-group-text">₱</span>
-                            <asp:TextBox
-                                ID="txtModalPrice"
-                                runat="server"
-                                CssClass="form-control"
-                                TextMode="Number"
-                                step="0.01"
-                                min="0"
-                                placeholder="0.00">
-                            </asp:TextBox>
+                                        <div class="col-5 pe-3">
+                                            <asp:HiddenField
+                                                ID="hfBulkSizeID"
+                                                runat="server"
+                                                Value='<%# Eval("SizeID") %>' />
+                                            <asp:Label
+                                                ID="lblBulkSizeName"
+                                                runat="server"
+                                                CssClass="fw-semibold"
+                                                Text='<%# Eval("SizeName") %>'>
+                                            </asp:Label>
+                                        </div>
+
+                                        <div class="col-5">
+                                            <div class="input-group input-group-sm">
+                                                <span class="input-group-text">₱</span>
+                                                <asp:TextBox
+                                                    ID="txtBulkPrice"
+                                                    runat="server"
+                                                    CssClass="form-control bulk-variant-price"
+                                                    TextMode="Number"
+                                                    step="0.01"
+                                                    min="0"
+                                                    max="99999999.99"
+                                                    inputmode="decimal"
+                                                    placeholder="0.00">
+                                                </asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ItemTemplate>
+                            </asp:Repeater>
                         </div>
-
-                        <asp:RequiredFieldValidator
-                            ID="requiredModalPrice"
-                            runat="server"
-                            ControlToValidate="txtModalPrice"
-                            ValidationGroup="VariantModalForm"
-                            ErrorMessage="Price is required."
-                            CssClass="text-danger small"
-                            Display="Dynamic">
-                        </asp:RequiredFieldValidator>
-
-                        <asp:RangeValidator
-                            ID="rangeModalPrice"
-                            runat="server"
-                            ControlToValidate="txtModalPrice"
-                            ValidationGroup="VariantModalForm"
-                            Type="Double"
-                            MinimumValue="0"
-                            MaximumValue="99999999.99"
-                            ErrorMessage="Price must be 0 or greater."
-                            CssClass="text-danger small"
-                            Display="Dynamic">
-                        </asp:RangeValidator>
-                    </div>
+                    </fieldset>
 
                     <!-- VARIANT IMAGE -->
                     <div class="mb-3">
@@ -387,7 +381,7 @@
                             runat="server"
                             AssociatedControlID="uploadModalImage"
                             CssClass="form-label"
-                            Text="Variant Image (Optional)">
+                            Text="Shared Image (Optional)">
                         </asp:Label>
 
                         <asp:FileUpload
@@ -395,7 +389,7 @@
                             runat="server"
                             CssClass="form-control"
                             accept=".jpg,.jpeg,.png,.webp" />
-                        <small class="text-muted">JPG, PNG, or WebP. Maximum 3 MB.</small>
+                        <small class="text-muted">Applied to every selected variant. JPG, PNG, or WebP; maximum 3 MB.</small>
                     </div>
 
                     <!-- STATUS -->
@@ -407,7 +401,7 @@
                                 runat="server"
                                 Checked="true"
                                 CssClass="form-check-input" />
-                            <label class="form-check-label" for="<%= chkModalIsAvailable.ClientID %>">Available for order</label>
+                            <label class="form-check-label" for="<%= chkModalIsAvailable.ClientID %>">Make all selected variants available for order</label>
                         </div>
                     </div>
 
@@ -418,7 +412,7 @@
                     <asp:Button
                         ID="btnSaveModalVariant"
                         runat="server"
-                        Text="Save Variant"
+                        Text="Save Selected Variants"
                         CssClass="btn btn-primary"
                         ValidationGroup="VariantModalForm"
                         OnClick="btnSaveModalVariant_Click" />

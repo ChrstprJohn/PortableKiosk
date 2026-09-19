@@ -11,11 +11,17 @@ namespace PortableKiosk.UI.Admin
 {
     public partial class ProductManagement : Page
     {
-        private readonly CatalogService catalogService =
-            new CatalogService();
+        private readonly CategoryService categoryService =
+            new CategoryService();
+
+        private readonly SizeService sizeService =
+            new SizeService();
 
         private readonly ProductService productService =
             new ProductService();
+
+        private readonly ProductVariantService variantService =
+            new ProductVariantService();
 
         public class ProductCardViewModel
         {
@@ -30,6 +36,26 @@ namespace PortableKiosk.UI.Admin
             public ProductCardViewModel()
             {
                 Variants = new List<ProductVariant>();
+            }
+        }
+
+        public class VariantInputRow
+        {
+            public int? SizeID { get; set; }
+            public string SizeName { get; set; }
+        }
+
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+
+            if (Session["StaffAccountID"] != null &&
+                string.Equals(
+                    Convert.ToString(Session["StaffRole"]),
+                    "ADMIN",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                LoadSizes();
             }
         }
 
@@ -55,7 +81,6 @@ namespace PortableKiosk.UI.Admin
             if (!IsPostBack)
             {
                 LoadCategories();
-                LoadSizes();
                 LoadProductCards();
             }
         }
@@ -96,7 +121,7 @@ namespace PortableKiosk.UI.Admin
             try
             {
                 int productID =
-                    productService.AddProduct(product);
+                    productService.Add(product);
 
                 ShowSuccess("Product \"" + product.ProductName + "\" added successfully. You can now add size variants below!");
                 ClearProductForm();
@@ -151,20 +176,71 @@ namespace PortableKiosk.UI.Admin
                 return;
             }
 
-            int? sizeID = null;
-            if (!string.IsNullOrWhiteSpace(ddlModalSize.SelectedValue))
+            List<ProductVariant> variants =
+                new List<ProductVariant>();
+
+            foreach (RepeaterItem item in
+                rptBulkVariantRows.Items)
             {
+                CheckBox selected =
+                    (CheckBox)item.FindControl(
+                        "chkBulkSelected");
+
+                if (selected == null || !selected.Checked)
+                {
+                    continue;
+                }
+
+                HiddenField sizeField =
+                    (HiddenField)item.FindControl(
+                        "hfBulkSizeID");
+
+                Label sizeNameLabel =
+                    (Label)item.FindControl(
+                        "lblBulkSizeName");
+
+                TextBox priceField =
+                    (TextBox)item.FindControl(
+                        "txtBulkPrice");
+
+                int? sizeID = null;
                 int parsedSizeID;
-                if (int.TryParse(ddlModalSize.SelectedValue, out parsedSizeID))
+
+                if (!string.IsNullOrWhiteSpace(
+                        sizeField.Value) &&
+                    int.TryParse(
+                        sizeField.Value,
+                        out parsedSizeID))
                 {
                     sizeID = parsedSizeID;
                 }
+
+                decimal price;
+                if (!decimal.TryParse(
+                        priceField.Text.Trim(),
+                        out price) ||
+                    price < 0)
+                {
+                    ShowError(
+                        "Enter a valid non-negative price for " +
+                        sizeNameLabel.Text + ".");
+                    return;
+                }
+
+                variants.Add(new ProductVariant
+                {
+                    ProductID = productID,
+                    SizeID = sizeID,
+                    Price = price,
+                    IsAvailable =
+                        chkModalIsAvailable.Checked
+                });
             }
 
-            decimal price;
-            if (!decimal.TryParse(txtModalPrice.Text.Trim(), out price) || price < 0)
+            if (variants.Count == 0)
             {
-                ShowError("Please enter a valid non-negative price.");
+                ShowError(
+                    "Select at least one size or serving to add.");
                 return;
             }
 
@@ -178,21 +254,23 @@ namespace PortableKiosk.UI.Admin
                 return;
             }
 
-            ProductVariant variant = new ProductVariant
+            foreach (ProductVariant variant in variants)
             {
-                ProductID = productID,
-                SizeID = sizeID,
-                Price = price,
-                ImagePath = imagePath,
-                IsAvailable = chkModalIsAvailable.Checked
-            };
+                variant.ImagePath = imagePath;
+            }
 
             try
             {
-                int variantID =
-                    productService.AddVariant(variant);
+                List<int> variantIDs =
+                    variantService.AddRange(variants);
 
-                ShowSuccess("Variant added successfully (ID: " + variantID + ") to Product #" + productID + ".");
+                ShowSuccess(
+                    variantIDs.Count +
+                    (variantIDs.Count == 1
+                        ? " variant was"
+                        : " variants were") +
+                    " added successfully to Product #" +
+                    productID + ".");
                 ClearModalForm();
                 LoadProductCards();
             }
@@ -202,7 +280,8 @@ namespace PortableKiosk.UI.Admin
 
                 if (ex.Number == 2601 || ex.Number == 2627)
                 {
-                    ShowError("This product already has a variant with the selected size.");
+                    ShowError(
+                        "One or more selected sizes already exist for this product.");
                 }
                 else
                 {
@@ -224,8 +303,22 @@ namespace PortableKiosk.UI.Admin
         private void ClearModalForm()
         {
             hfModalProductID.Value = string.Empty;
-            ddlModalSize.SelectedIndex = 0;
-            txtModalPrice.Text = string.Empty;
+
+            foreach (RepeaterItem item in
+                rptBulkVariantRows.Items)
+            {
+                CheckBox selected =
+                    (CheckBox)item.FindControl(
+                        "chkBulkSelected");
+
+                TextBox priceField =
+                    (TextBox)item.FindControl(
+                        "txtBulkPrice");
+
+                selected.Checked = false;
+                priceField.Text = string.Empty;
+            }
+
             chkModalIsAvailable.Checked = true;
         }
 
@@ -238,7 +331,7 @@ namespace PortableKiosk.UI.Admin
             try
             {
                 List<Category> categories =
-                    catalogService.GetCategories();
+                    categoryService.GetAll();
 
                 ddlCategory.Items.Clear();
                 ddlCategory.Items.Add(new ListItem("-- Select category --", ""));
@@ -262,20 +355,37 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                List<Size> sizes = catalogService.GetSizes();
+                List<Size> sizes = sizeService.GetAll();
 
-                ddlModalSize.Items.Clear();
-                ddlModalSize.Items.Add(new ListItem("-- No size (Standard / Regular) --", ""));
+                List<VariantInputRow> rows =
+                    new List<VariantInputRow>
+                    {
+                        new VariantInputRow
+                        {
+                            SizeID = null,
+                            SizeName = "Standard / No size"
+                        }
+                    };
 
                 foreach (Size s in sizes)
                 {
-                    ddlModalSize.Items.Add(new ListItem(s.SizeName, s.SizeID.ToString()));
+                    rows.Add(new VariantInputRow
+                    {
+                        SizeID = s.SizeID,
+                        SizeName = s.SizeName
+                    });
                 }
+
+                rptBulkVariantRows.DataSource = rows;
+                rptBulkVariantRows.DataBind();
             }
             catch (Exception)
             {
-                ddlModalSize.Items.Clear();
-                ddlModalSize.Items.Add(new ListItem("Sizes unavailable", ""));
+                rptBulkVariantRows.DataSource =
+                    new List<VariantInputRow>();
+                rptBulkVariantRows.DataBind();
+                btnSaveModalVariant.Enabled = false;
+                ShowError("Sizes could not be loaded.");
             }
         }
 
@@ -284,9 +394,9 @@ namespace PortableKiosk.UI.Admin
             try
             {
                 List<Product> products =
-                    productService.GetProducts();
+                    productService.GetAll();
                 List<ProductVariant> variants =
-                    productService.GetVariants();
+                    variantService.GetAll();
 
                 // Group variants by ProductID
                 Dictionary<int, List<ProductVariant>> variantsByProduct = new Dictionary<int, List<ProductVariant>>();

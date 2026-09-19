@@ -29,9 +29,24 @@ namespace PortableKiosk.Core.Services
                 plainTextPassword);
         }
 
+        public StaffAccount GetByID(int staffAccountID)
+        {
+            return staffAccountRepository.GetByID(staffAccountID);
+        }
+
         public List<StaffAccount> GetAll()
         {
             return staffAccountRepository.GetAll();
+        }
+
+        public bool Update(StaffAccount account)
+        {
+            return staffAccountRepository.Update(account);
+        }
+
+        public bool Delete(int staffAccountID)
+        {
+            return staffAccountRepository.Delete(staffAccountID);
         }
 
         public StaffAccount Authenticate(

@@ -4,32 +4,34 @@ using PortableKiosk.Core.Models;
 
 namespace PortableKiosk.Core.Services
 {
-    public class CatalogService
+    public class CategoryService
     {
         private readonly CategoryRepository categoryRepository =
             new CategoryRepository();
 
-        private readonly SizeRepository sizeRepository =
-            new SizeRepository();
-
-        public int AddCategory(Category category)
+        public int Add(Category category)
         {
             return categoryRepository.Add(category);
         }
 
-        public List<Category> GetCategories()
+        public Category GetByID(int categoryID)
+        {
+            return categoryRepository.GetByID(categoryID);
+        }
+
+        public List<Category> GetAll()
         {
             return categoryRepository.GetAll();
         }
 
-        public int AddSize(Size size)
+        public bool Update(Category category)
         {
-            return sizeRepository.Add(size);
+            return categoryRepository.Update(category);
         }
 
-        public List<Size> GetSizes()
+        public bool Delete(int categoryID)
         {
-            return sizeRepository.GetAll();
+            return categoryRepository.Delete(categoryID);
         }
     }
 }

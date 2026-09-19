@@ -32,12 +32,7 @@ namespace PortableKiosk.UI.Admin
 
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryVariant;
         protected global::System.Web.UI.WebControls.HiddenField hfModalProductID;
-        protected global::System.Web.UI.WebControls.Label lblModalSize;
-        protected global::System.Web.UI.WebControls.DropDownList ddlModalSize;
-        protected global::System.Web.UI.WebControls.Label lblModalPrice;
-        protected global::System.Web.UI.WebControls.TextBox txtModalPrice;
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredModalPrice;
-        protected global::System.Web.UI.WebControls.RangeValidator rangeModalPrice;
+        protected global::System.Web.UI.WebControls.Repeater rptBulkVariantRows;
         protected global::System.Web.UI.WebControls.Label lblModalImage;
         protected global::System.Web.UI.WebControls.FileUpload uploadModalImage;
         protected global::System.Web.UI.WebControls.CheckBox chkModalIsAvailable;

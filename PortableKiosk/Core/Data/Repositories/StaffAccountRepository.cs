@@ -26,6 +26,46 @@ namespace PortableKiosk.Core.Data.Repositories
             return Add(account, plainTextPassword, "CREW");
         }
 
+        public StaffAccount GetByID(int staffAccountID)
+        {
+            ValidateID(staffAccountID);
+
+            const string sql = @"
+                SELECT
+                    StaffAccountID,
+                    FirstName,
+                    MiddleName,
+                    LastName,
+                    Suffix,
+                    Email,
+                    StaffRole,
+                    IsActive,
+                    CreatedAt,
+                    UpdatedAt
+                FROM StaffAccounts
+                WHERE StaffAccountID = @StaffAccountID;";
+
+            using (SqlConnection connection =
+                DatabaseConnection.GetConnection())
+            using (SqlCommand command =
+                new SqlCommand(sql, connection))
+            {
+                command.Parameters.Add(
+                    "@StaffAccountID",
+                    SqlDbType.Int).Value = staffAccountID;
+
+                connection.Open();
+
+                using (SqlDataReader reader =
+                    command.ExecuteReader())
+                {
+                    return reader.Read()
+                        ? Map(reader, false)
+                        : null;
+                }
+            }
+        }
+
         public StaffAccount GetByEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -111,6 +151,107 @@ namespace PortableKiosk.Core.Data.Repositories
             }
 
             return accounts;
+        }
+
+        public bool Update(StaffAccount account)
+        {
+            ValidateID(account == null
+                ? 0
+                : account.StaffAccountID);
+            ValidateAccount(account);
+            ValidateRole(account.StaffRole);
+
+            const string sql = @"
+                UPDATE StaffAccounts
+                SET
+                    FirstName = @FirstName,
+                    MiddleName = @MiddleName,
+                    LastName = @LastName,
+                    Suffix = @Suffix,
+                    Email = @Email,
+                    StaffRole = @StaffRole,
+                    IsActive = @IsActive,
+                    UpdatedAt = SYSUTCDATETIME()
+                WHERE StaffAccountID = @StaffAccountID;";
+
+            using (SqlConnection connection =
+                DatabaseConnection.GetConnection())
+            using (SqlCommand command =
+                new SqlCommand(sql, connection))
+            {
+                command.Parameters.Add(
+                    "@StaffAccountID",
+                    SqlDbType.Int).Value = account.StaffAccountID;
+
+                command.Parameters.Add(
+                    "@FirstName",
+                    SqlDbType.NVarChar,
+                    50).Value = account.FirstName.Trim();
+
+                command.Parameters.Add(
+                    "@MiddleName",
+                    SqlDbType.NVarChar,
+                    50).Value = ToDatabaseValue(account.MiddleName);
+
+                command.Parameters.Add(
+                    "@LastName",
+                    SqlDbType.NVarChar,
+                    50).Value = account.LastName.Trim();
+
+                command.Parameters.Add(
+                    "@Suffix",
+                    SqlDbType.NVarChar,
+                    20).Value = ToDatabaseValue(account.Suffix);
+
+                command.Parameters.Add(
+                    "@Email",
+                    SqlDbType.NVarChar,
+                    256).Value = NormalizeEmail(account.Email);
+
+                command.Parameters.Add(
+                    "@StaffRole",
+                    SqlDbType.NVarChar,
+                    20).Value = account.StaffRole.ToUpperInvariant();
+
+                command.Parameters.Add(
+                    "@IsActive",
+                    SqlDbType.Bit).Value = account.IsActive;
+
+                connection.Open();
+                bool updated = command.ExecuteNonQuery() > 0;
+
+                if (updated)
+                {
+                    account.Email = NormalizeEmail(account.Email);
+                    account.StaffRole =
+                        account.StaffRole.ToUpperInvariant();
+                    account.UpdatedAt = DateTime.UtcNow;
+                }
+
+                return updated;
+            }
+        }
+
+        public bool Delete(int staffAccountID)
+        {
+            ValidateID(staffAccountID);
+
+            const string sql = @"
+                DELETE FROM StaffAccounts
+                WHERE StaffAccountID = @StaffAccountID;";
+
+            using (SqlConnection connection =
+                DatabaseConnection.GetConnection())
+            using (SqlCommand command =
+                new SqlCommand(sql, connection))
+            {
+                command.Parameters.Add(
+                    "@StaffAccountID",
+                    SqlDbType.Int).Value = staffAccountID;
+
+                connection.Open();
+                return command.ExecuteNonQuery() > 0;
+            }
         }
 
         private static int Add(
@@ -282,6 +423,13 @@ namespace PortableKiosk.Core.Data.Repositories
             StaffAccount account,
             string password)
         {
+            ValidateAccount(account);
+            ValidatePassword(password);
+        }
+
+        private static void ValidateAccount(
+            StaffAccount account)
+        {
             if (account == null)
             {
                 throw new ArgumentNullException("account");
@@ -333,6 +481,10 @@ namespace PortableKiosk.Core.Data.Repositories
                     "account");
             }
 
+        }
+
+        private static void ValidatePassword(string password)
+        {
             if (string.IsNullOrEmpty(password) ||
                 password.Length < 8)
             {
@@ -346,6 +498,33 @@ namespace PortableKiosk.Core.Data.Repositories
                 throw new ArgumentException(
                     "Password cannot exceed 100 characters.",
                     "password");
+            }
+        }
+
+        private static void ValidateRole(string staffRole)
+        {
+            if (!string.Equals(
+                    staffRole,
+                    "ADMIN",
+                    StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(
+                    staffRole,
+                    "CREW",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException(
+                    "Staff role must be ADMIN or CREW.",
+                    "staffRole");
+            }
+        }
+
+        private static void ValidateID(int staffAccountID)
+        {
+            if (staffAccountID <= 0)
+            {
+                throw new ArgumentException(
+                    "A valid staff account is required.",
+                    "staffAccountID");
             }
         }
 

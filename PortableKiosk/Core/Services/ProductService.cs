@@ -9,27 +9,29 @@ namespace PortableKiosk.Core.Services
         private readonly ProductRepository productRepository =
             new ProductRepository();
 
-        private readonly ProductVariantRepository variantRepository =
-            new ProductVariantRepository();
-
-        public int AddProduct(Product product)
+        public int Add(Product product)
         {
             return productRepository.Add(product);
         }
 
-        public List<Product> GetProducts()
+        public Product GetByID(int productID)
+        {
+            return productRepository.GetByID(productID);
+        }
+
+        public List<Product> GetAll()
         {
             return productRepository.GetAll();
         }
 
-        public int AddVariant(ProductVariant variant)
+        public bool Update(Product product)
         {
-            return variantRepository.Add(variant);
+            return productRepository.Update(product);
         }
 
-        public List<ProductVariant> GetVariants()
+        public bool Delete(int productID)
         {
-            return variantRepository.GetAll();
+            return productRepository.Delete(productID);
         }
     }
 }

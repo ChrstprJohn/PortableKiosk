@@ -8,8 +8,11 @@ namespace PortableKiosk.UI.Admin
 {
     public partial class CatalogConfig : System.Web.UI.Page
     {
-        private readonly CatalogService catalogService =
-            new CatalogService();
+        private readonly CategoryService categoryService =
+            new CategoryService();
+
+        private readonly SizeService sizeService =
+            new SizeService();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -65,7 +68,7 @@ namespace PortableKiosk.UI.Admin
             try
             {
                 int categoryID =
-                    catalogService.AddCategory(category);
+                    categoryService.Add(category);
 
                 ShowCategorySuccess("Category \"" + category.CategoryName + "\" added successfully (ID: " + categoryID + ").");
                 ClearCategoryForm();
@@ -97,7 +100,7 @@ namespace PortableKiosk.UI.Admin
             try
             {
                 List<Category> categories =
-                    catalogService.GetCategories();
+                    categoryService.GetAll();
 
                 gridCategories.DataSource = categories;
                 gridCategories.DataBind();
@@ -163,7 +166,7 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                int sizeID = catalogService.AddSize(size);
+                int sizeID = sizeService.Add(size);
 
                 ShowSizeSuccess("Size \"" + size.SizeName + "\" added successfully (ID: " + sizeID + ").");
                 ClearSizeForm();
@@ -194,7 +197,7 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
-                List<Size> sizes = catalogService.GetSizes();
+                List<Size> sizes = sizeService.GetAll();
 
                 gridSizes.DataSource = sizes;
                 gridSizes.DataBind();
