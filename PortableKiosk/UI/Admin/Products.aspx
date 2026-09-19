@@ -1,5 +1,5 @@
-﻿<%@ Page
-    Title="Products"
+<%@ Page
+    Title="Products & Variants"
     Language="C#"
     MasterPageFile="~/Shared/Layouts/Admin.Master"
     AutoEventWireup="true"
@@ -11,41 +11,49 @@
     ContentPlaceHolderID="AdminContent"
     runat="server">
 
-    <div class="container mt-4">
+    <div class="container-fluid mt-4">
 
-        <header class="page-heading">
+        <header class="page-heading mb-4 d-flex justify-content-between align-items-center flex-wrap gap-2">
             <div>
-                <h1>Product management</h1>
-                <p>Manage the products shown across kiosk and POS.</p>
+                <h1>Products & Variants Management</h1>
+                <p class="text-muted mb-0">Create base products and manage multiple serving sizes, prices, and images inside each product card.</p>
+            </div>
+            <div>
+                <a href="<%= ResolveUrl("~/UI/Admin/CatalogConfig.aspx") %>" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-gear-fill me-1"></i> Configure Categories & Sizes
+                </a>
             </div>
         </header>
 
-        <!-- ADD PRODUCT FORM -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header">
-                <strong>Add Product</strong>
+        <!-- GLOBAL FEEDBACK MESSAGES -->
+        <asp:Label
+            ID="lblGlobalMessage"
+            runat="server"
+            Visible="false"
+            CssClass="alert alert-info d-block shadow-sm mb-4">
+        </asp:Label>
+
+        <!-- TOP BAR: ADD NEW PRODUCT FORM -->
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <strong><i class="bi bi-plus-circle-fill me-1"></i> Add New Product</strong>
+                <span class="badge bg-light text-primary">Base catalog item</span>
             </div>
 
-            <div class="card-body">
+            <div class="card-body bg-light">
 
                 <asp:ValidationSummary
-                    ID="validationSummary"
+                    ID="validationSummaryProduct"
                     runat="server"
                     ValidationGroup="ProductForm"
                     CssClass="alert alert-danger"
-                    HeaderText="Please correct the following:"
+                    HeaderText="Please correct the following errors:"
                     DisplayMode="BulletList" />
 
-                <asp:Label
-                    ID="lblMessage"
-                    runat="server"
-                    Visible="false">
-                </asp:Label>
-
-                <div class="row">
+                <div class="row g-3 align-items-end">
 
                     <!-- CATEGORY -->
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-3">
                         <asp:Label
                             ID="lblCategory"
                             runat="server"
@@ -67,13 +75,13 @@
                             InitialValue=""
                             ValidationGroup="ProductForm"
                             ErrorMessage="Category is required."
-                            CssClass="text-danger"
+                            CssClass="text-danger small"
                             Display="Dynamic">
                         </asp:RequiredFieldValidator>
                     </div>
 
                     <!-- PRODUCT NAME -->
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4">
                         <asp:Label
                             ID="lblProductName"
                             runat="server"
@@ -87,7 +95,7 @@
                             runat="server"
                             CssClass="form-control"
                             MaxLength="100"
-                            placeholder="Example: Iced Coffee">
+                            placeholder="e.g. Caramel Macchiato, Crispy Chicken">
                         </asp:TextBox>
 
                         <asp:RequiredFieldValidator
@@ -96,13 +104,13 @@
                             ControlToValidate="txtProductName"
                             ValidationGroup="ProductForm"
                             ErrorMessage="Product name is required."
-                            CssClass="text-danger"
+                            CssClass="text-danger small"
                             Display="Dynamic">
                         </asp:RequiredFieldValidator>
                     </div>
 
                     <!-- DISPLAY ORDER -->
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-2">
                         <asp:Label
                             ID="lblDisplayOrder"
                             runat="server"
@@ -125,7 +133,7 @@
                             ControlToValidate="txtDisplayOrder"
                             ValidationGroup="ProductForm"
                             ErrorMessage="Display order is required."
-                            CssClass="text-danger"
+                            CssClass="text-danger small"
                             Display="Dynamic">
                         </asp:RequiredFieldValidator>
 
@@ -137,99 +145,289 @@
                             Type="Integer"
                             MinimumValue="0"
                             MaximumValue="2147483647"
-                            ErrorMessage="Display order must be zero or greater."
-                            CssClass="text-danger"
+                            ErrorMessage="Order must be 0 or greater."
+                            CssClass="text-danger small"
                             Display="Dynamic">
                         </asp:RangeValidator>
                     </div>
 
                     <!-- STATUS -->
-                    <div class="col-md-2 mb-3">
-                        <label class="form-label d-block">
-                            Status
-                        </label>
-
-                        <asp:CheckBox
-                            ID="chkIsAvailable"
-                            runat="server"
-                            Checked="true"
-                            Text=" Available" />
+                    <div class="col-md-1">
+                        <label class="form-label d-block">Status</label>
+                        <div class="form-check mt-2">
+                            <asp:CheckBox
+                                ID="chkIsAvailable"
+                                runat="server"
+                                Checked="true"
+                                CssClass="form-check-input" />
+                            <label class="form-check-label small" for="<%= chkIsAvailable.ClientID %>">Active</label>
+                        </div>
                     </div>
 
-                    <!-- BUTTON -->
-                    <div class="col-md-2 mb-3 d-flex align-items-end">
+                    <!-- SUBMIT BUTTON -->
+                    <div class="col-md-2">
                         <asp:Button
                             ID="btnAddProduct"
                             runat="server"
-                            Text="Add Product"
+                            Text="+ Create Product"
                             CssClass="btn btn-primary w-100"
                             ValidationGroup="ProductForm"
                             OnClick="btnAddProduct_Click" />
                     </div>
 
                 </div>
+
             </div>
         </div>
 
-        <!-- PRODUCT TABLE -->
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <strong>Product List</strong>
-            </div>
-
-            <div class="card-body">
-
-                <asp:Label
-                    ID="lblLoadError"
-                    runat="server"
-                    Visible="false"
-                    CssClass="alert alert-danger d-block">
-                </asp:Label>
-
-                <div class="table-responsive">
-
-                    <asp:GridView
-                        ID="gridProducts"
-                        runat="server"
-                        AutoGenerateColumns="false"
-                        GridLines="None"
-                        CssClass="table table-striped table-hover align-middle"
-                        EmptyDataText="No products have been created.">
-
-                        <Columns>
-                            <asp:BoundField
-                                DataField="ProductID"
-                                HeaderText="ID" />
-
-                            <asp:BoundField
-                                DataField="ProductName"
-                                HeaderText="Product Name" />
-
-                            <asp:BoundField
-                                DataField="CategoryName"
-                                HeaderText="Category" />
-
-                            <asp:BoundField
-                                DataField="DisplayOrder"
-                                HeaderText="Display Order" />
-
-                            <asp:CheckBoxField
-                                DataField="IsAvailable"
-                                HeaderText="Available"
-                                ReadOnly="true" />
-                        </Columns>
-
-                        <HeaderStyle CssClass="table-dark" />
-
-                        <EmptyDataRowStyle
-                            CssClass="text-center text-muted" />
-
-                    </asp:GridView>
-
-                </div>
-            </div>
+        <!-- PRODUCT CARDS SECTION -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Product Catalog & Serving Variants</h4>
+            <asp:Label ID="lblProductStats" runat="server" CssClass="text-muted small"></asp:Label>
         </div>
+
+        <asp:Label
+            ID="lblLoadError"
+            runat="server"
+            Visible="false"
+            CssClass="alert alert-danger d-block">
+        </asp:Label>
+
+        <!-- REPEATER OF PRODUCT CARDS -->
+        <div class="row g-4">
+            <asp:Repeater ID="rptProductCards" runat="server">
+                <ItemTemplate>
+                    <div class="col-12 col-xl-6">
+                        <div class="card shadow-sm h-100 border-1">
+                            
+                            <!-- CARD HEADER -->
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                                <div>
+                                    <span class="badge bg-secondary mb-1"><%# Eval("CategoryName") %></span>
+                                    <h5 class="mb-0 text-dark fw-bold"><%# Eval("ProductName") %></h5>
+                                    <small class="text-muted">ID: #<%# Eval("ProductID") %> &bull; Order: <%# Eval("DisplayOrder") %></small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class='badge <%# (bool)Eval("IsAvailable") ? "bg-success" : "bg-secondary" %>'>
+                                        <%# (bool)Eval("IsAvailable") ? "Active" : "Hidden" %>
+                                    </span>
+                                    <button
+                                        type="button"
+                                        class="btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#addVariantModal"
+                                        onclick='openAddVariantModal(<%# Eval("ProductID") %>, "<%# HttpUtility.JavaScriptStringEncode(Eval("ProductName").ToString()) %>");'>
+                                        <i class="bi bi-plus"></i> Add Variant
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- CARD BODY: NESTED VARIANTS TABLE -->
+                            <div class="card-body p-0">
+                                <%# ((System.Collections.Generic.List<PortableKiosk.Core.Models.ProductVariant>)Eval("Variants")).Count == 0 
+                                    ? "<div class='p-4 text-center text-muted bg-light-subtle small'><i class='bi bi-info-circle me-1'></i> No variants yet. Customers won't see this product in kiosk until you add at least one serving size & price.</div>" 
+                                    : "" %>
+
+                                <asp:Repeater ID="rptInnerVariants" runat="server" DataSource='<%# Eval("Variants") %>'>
+                                    <HeaderTemplate>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0 small">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th style="width: 50px;">Photo</th>
+                                                        <th>Size / Serving</th>
+                                                        <th>Price</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td>
+                                                <%# !string.IsNullOrWhiteSpace(Convert.ToString(Eval("ImagePath"))) 
+                                                    ? "<img src='" + ResolveUrl(Convert.ToString(Eval("ImagePath"))) + "' class='rounded' style='width: 36px; height: 36px; object-fit: cover;' alt='Variant' />" 
+                                                    : "<span class='badge bg-light text-muted border'>No photo</span>" %>
+                                            </td>
+                                            <td class="fw-semibold">
+                                                <%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeName"))) || Convert.ToString(Eval("SizeName")) == "No size" 
+                                                    ? "<span class='text-secondary'>Regular / Standard</span>" 
+                                                    : Eval("SizeName") %>
+                                            </td>
+                                            <td class="text-primary fw-bold">
+                                                ₱<%# string.Format("{0:N2}", Eval("Price")) %>
+                                            </td>
+                                            <td>
+                                                <span class='badge <%# (bool)Eval("IsAvailable") ? "bg-success-subtle text-success" : "bg-secondary-subtle text-secondary" %>'>
+                                                    <%# (bool)Eval("IsAvailable") ? "Available" : "Unavailable" %>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </FooterTemplate>
+                                </asp:Repeater>
+                            </div>
+
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+
+        <!-- EMPTY STATE IF NO PRODUCTS -->
+        <asp:Panel ID="pnlNoProducts" runat="server" Visible="false" CssClass="card shadow-sm p-5 text-center text-muted mt-3">
+            <h5>No products created yet.</h5>
+            <p class="mb-0">Use the form above to add your first product.</p>
+        </asp:Panel>
 
     </div>
+
+    <!-- ADD VARIANT MODAL -->
+    <div class="modal fade" id="addVariantModal" tabindex="-1" aria-labelledby="addVariantModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="addVariantModalLabel">
+                        <i class="bi bi-plus-square-fill me-1"></i> Add Product Variant
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <asp:ValidationSummary
+                        ID="validationSummaryVariant"
+                        runat="server"
+                        ValidationGroup="VariantModalForm"
+                        CssClass="alert alert-danger"
+                        HeaderText="Please correct the following errors:"
+                        DisplayMode="BulletList" />
+
+                    <!-- TARGET PRODUCT INFO -->
+                    <div class="mb-3">
+                        <label class="form-label text-muted small">Target Product</label>
+                        <div id="modalDisplayProductName" class="form-control bg-light fw-bold text-primary"></div>
+                        <asp:HiddenField ID="hfModalProductID" runat="server" />
+                    </div>
+
+                    <!-- SIZE DROPDOWN -->
+                    <div class="mb-3">
+                        <asp:Label
+                            ID="lblModalSize"
+                            runat="server"
+                            AssociatedControlID="ddlModalSize"
+                            CssClass="form-label"
+                            Text="Size / Serving">
+                        </asp:Label>
+
+                        <asp:DropDownList
+                            ID="ddlModalSize"
+                            runat="server"
+                            CssClass="form-select">
+                        </asp:DropDownList>
+                        <small class="text-muted">Choose serving size, or leave as "No size" for standard products.</small>
+                    </div>
+
+                    <!-- PRICE INPUT -->
+                    <div class="mb-3">
+                        <asp:Label
+                            ID="lblModalPrice"
+                            runat="server"
+                            AssociatedControlID="txtModalPrice"
+                            CssClass="form-label"
+                            Text="Price (₱)">
+                        </asp:Label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <asp:TextBox
+                                ID="txtModalPrice"
+                                runat="server"
+                                CssClass="form-control"
+                                TextMode="Number"
+                                step="0.01"
+                                min="0"
+                                placeholder="0.00">
+                            </asp:TextBox>
+                        </div>
+
+                        <asp:RequiredFieldValidator
+                            ID="requiredModalPrice"
+                            runat="server"
+                            ControlToValidate="txtModalPrice"
+                            ValidationGroup="VariantModalForm"
+                            ErrorMessage="Price is required."
+                            CssClass="text-danger small"
+                            Display="Dynamic">
+                        </asp:RequiredFieldValidator>
+
+                        <asp:RangeValidator
+                            ID="rangeModalPrice"
+                            runat="server"
+                            ControlToValidate="txtModalPrice"
+                            ValidationGroup="VariantModalForm"
+                            Type="Double"
+                            MinimumValue="0"
+                            MaximumValue="99999999.99"
+                            ErrorMessage="Price must be 0 or greater."
+                            CssClass="text-danger small"
+                            Display="Dynamic">
+                        </asp:RangeValidator>
+                    </div>
+
+                    <!-- VARIANT IMAGE -->
+                    <div class="mb-3">
+                        <asp:Label
+                            ID="lblModalImage"
+                            runat="server"
+                            AssociatedControlID="uploadModalImage"
+                            CssClass="form-label"
+                            Text="Variant Image (Optional)">
+                        </asp:Label>
+
+                        <asp:FileUpload
+                            ID="uploadModalImage"
+                            runat="server"
+                            CssClass="form-control"
+                            accept=".jpg,.jpeg,.png,.webp" />
+                        <small class="text-muted">JPG, PNG, or WebP. Maximum 3 MB.</small>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div class="mb-3">
+                        <label class="form-label d-block">Status</label>
+                        <div class="form-check">
+                            <asp:CheckBox
+                                ID="chkModalIsAvailable"
+                                runat="server"
+                                Checked="true"
+                                CssClass="form-check-input" />
+                            <label class="form-check-label" for="<%= chkModalIsAvailable.ClientID %>">Available for order</label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <asp:Button
+                        ID="btnSaveModalVariant"
+                        runat="server"
+                        Text="Save Variant"
+                        CssClass="btn btn-primary"
+                        ValidationGroup="VariantModalForm"
+                        OnClick="btnSaveModalVariant_Click" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="<%= ResolveUrl("~/Scripts/app/admin/products.js") %>"></script>
 
 </asp:Content>

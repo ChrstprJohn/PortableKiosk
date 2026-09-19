@@ -152,6 +152,7 @@
     <Content Include="Scripts\jquery-3.7.0.min.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
+    <Content Include="Scripts\app\admin\products.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
     <Content Include="Scripts\WebForms\Focus.js" />
@@ -182,6 +183,7 @@
     <Content Include="UI\Admin\BundleOptionGroups.aspx" />
     <Content Include="UI\Admin\BundleSlots.aspx" />
     <Content Include="UI\Admin\Bundles.aspx" />
+    <Content Include="UI\Admin\CatalogConfig.aspx" />
     <Content Include="UI\Admin\Category.aspx" />
     <Content Include="UI\Admin\Products.aspx" />
     <Content Include="UI\Admin\ProductVariants.aspx" />
@@ -280,6 +282,13 @@
     </Compile>
     <Compile Include="UI\Admin\Bundles.aspx.designer.cs">
       <DependentUpon>Bundles.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\CatalogConfig.aspx.cs">
+      <DependentUpon>CatalogConfig.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\CatalogConfig.aspx.designer.cs">
+      <DependentUpon>CatalogConfig.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Admin\Category.aspx.cs">
       <DependentUpon>Category.aspx</DependentUpon>

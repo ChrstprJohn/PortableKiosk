@@ -18,6 +18,11 @@
             </div>
 
             <nav class="admin-nav">
+                <a ID="lnkCatalogConfig" runat="server"
+                    href="~/UI/Admin/CatalogConfig.aspx">
+                    Catalog setup
+                </a>
+
                 <a ID="lnkCategories" runat="server"
                     href="~/UI/Admin/Category.aspx">
                     Categories
