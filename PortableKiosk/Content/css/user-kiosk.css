@@ -50,18 +50,128 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-body:has(.user-kiosk-shell) {
+body:has(.user-kiosk-shell),
+body:has(.kiosk-attract-page) {
     background: #e2e8f0;
 }
 
-body:has(.user-kiosk-shell) .body-content {
+body:has(.user-kiosk-shell) .body-content,
+body:has(.kiosk-attract-page) .body-content {
     background: #e2e8f0;
     min-height: 100vh;
     padding: 0;
 }
 
-body:has(.menu-layout) {
+body:has(.menu-layout),
+body:has(.kiosk-attract-page) {
     overflow: hidden;
+}
+
+/* ==========================================================================
+   Kiosk Attract Screen (Default / Idle Landing)
+   ========================================================================== */
+.kiosk-attract-page {
+    background: #ffffff;
+    box-shadow: 0 0 40px rgba(15, 23, 42, 0.12);
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0 auto;
+    max-width: 860px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.kiosk-attract-hero {
+    align-items: center;
+    background: #ffffff;
+    display: flex;
+    flex: 1;
+    height: 80%;
+    justify-content: center;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.kiosk-attract-img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    transition: transform 6s cubic-bezier(0.25, 1, 0.5, 1);
+    width: 100%;
+}
+
+.kiosk-attract-page:hover .kiosk-attract-img {
+    transform: scale(1.03);
+}
+
+.kiosk-attract-brand-badge {
+    display: none;
+}
+
+/* Top-left logo on attract page */
+.kiosk-attract-logo {
+    color: var(--kiosk-gold);
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 900;
+    left: clamp(1.25rem, 4vw, 2rem);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    position: absolute;
+    text-shadow: 0 3px 12px rgba(245, 158, 11, 0.35);
+    top: clamp(1rem, 3vw, 1.5rem);
+    user-select: none;
+    z-index: 10;
+}
+
+.kiosk-attract-bottom {
+    align-items: center;
+    background: #ffffff;
+    border-top: 1px solid rgba(226, 232, 240, 0.85);
+    box-shadow: 0 -6px 24px rgba(15, 23, 42, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 108px;
+    padding: clamp(1rem, 2.5vw, 1.5rem) clamp(1.25rem, 4vw, 2.5rem) clamp(1.25rem, 3vw, 2rem);
+    position: relative;
+    width: 100%;
+    z-index: 20;
+}
+
+.kiosk-attract-start-btn {
+    align-items: center;
+    background: linear-gradient(135deg, var(--kiosk-gold), var(--kiosk-gold-dark));
+    border: none;
+    border-radius: var(--kiosk-radius-lg);
+    box-shadow: 0 6px 20px rgba(217, 119, 6, 0.38);
+    color: #ffffff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: inherit;
+    font-size: clamp(1.45rem, 3.2vw, 1.85rem);
+    font-weight: 850;
+    justify-content: center;
+    letter-spacing: -0.01em;
+    min-height: 60px;
+    padding: 0.85rem 2.5rem;
+    text-decoration: none;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
+    max-width: 520px;
+}
+
+.kiosk-attract-start-btn:hover,
+.kiosk-attract-start-btn:focus {
+    color: #ffffff;
+    filter: brightness(1.06);
+    outline: none;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(217, 119, 6, 0.48);
 }
 
 /* ==========================================================================
@@ -1329,7 +1439,7 @@ body:has(.menu-layout) {
     flex-direction: column;
     margin: 0 auto;
     min-height: 100vh;
-    padding: clamp(2rem, 6vh, 4.5rem) clamp(1.25rem, 5vw, 3.5rem);
+    padding: clamp(1.5rem, 5vh, 3rem) clamp(1.25rem, 5vw, 3.5rem);
     text-align: center;
 }
 
@@ -1337,102 +1447,88 @@ body:has(.menu-layout) {
     display: none;
 }
 
-.order-type-brand {
-    align-items: center;
-    color: var(--kiosk-navy);
-    display: flex;
-    flex-direction: column;
-    font-size: clamp(0.85rem, 1.8vw, 1rem);
-    font-weight: 800;
-    gap: 0.55rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
-.order-type-brand-mark {
-    align-items: center;
-    background: linear-gradient(135deg, var(--kiosk-gold), var(--kiosk-gold-dark));
-    border-radius: var(--kiosk-radius-md);
-    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
-    color: #ffffff;
-    display: flex;
-    font-size: clamp(1.1rem, 2.5vw, 1.45rem);
-    font-weight: 850;
-    height: clamp(3.6rem, 8vw, 4.5rem);
-    justify-content: center;
-    width: clamp(4.5rem, 10vw, 5.8rem);
+/* Plain yellow P logo - no container */
+.order-type-logo {
+    color: var(--kiosk-gold);
+    display: block;
+    font-size: clamp(3.5rem, 10vw, 5.5rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: clamp(0.5rem, 2vh, 1rem);
+    text-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+    user-select: none;
 }
 
 .order-type-page h1 {
     color: var(--kiosk-ink);
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin: clamp(2rem, 6vh, 4rem) 0 clamp(1.75rem, 5vh, 3.5rem);
-    max-width: 680px;
+    font-size: clamp(3rem, 9vw, 5.5rem);
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 1.02;
+    margin: 0 0 clamp(1.25rem, 4vh, 2rem);
+    max-width: 640px;
 }
 
 .order-type-options {
     display: grid;
-    gap: clamp(1rem, 3vw, 1.75rem);
+    gap: clamp(0.75rem, 2vw, 1rem);
     grid-template-columns: 1fr 1fr;
-    max-width: 760px;
+    max-width: 520px;
     width: 100%;
 }
 
 .order-type-card {
     align-items: center;
     background: #ffffff;
-    border: 2px solid var(--kiosk-line);
-    border-radius: var(--kiosk-radius-xl);
-    box-shadow: var(--kiosk-shadow-card);
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 1px 4px rgba(15,23,42,0.06);
     color: var(--kiosk-ink);
     display: flex;
     flex-direction: column;
-    font-size: clamp(1.3rem, 2.8vw, 1.75rem);
-    font-weight: 750;
-    justify-content: space-between;
-    min-height: clamp(230px, 35vw, 320px);
-    padding: clamp(1.25rem, 3vw, 2rem);
+    min-height: clamp(240px, 40vw, 340px);
+    overflow: hidden;
+    padding: clamp(0.85rem, 2vw, 1.25rem) clamp(0.85rem, 2vw, 1.25rem) 0;
     text-decoration: none;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 100%;
 }
 
 .order-type-card:hover,
 .order-type-card:focus {
     border-color: var(--kiosk-gold);
-    box-shadow: var(--kiosk-shadow-hover);
+    box-shadow: 0 6px 20px rgba(245,158,11,0.18);
     color: var(--kiosk-ink);
     outline: none;
-    transform: translateY(-3px);
+    transform: translateY(-2px);
 }
 
 .order-type-card-title {
-    line-height: 1.1;
+    color: var(--kiosk-ink);
+    font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    text-align: center;
+    width: 100%;
 }
 
 .order-type-illustration {
-    align-items: center;
-    background: #f8fafc;
-    border-radius: var(--kiosk-radius-lg);
+    align-items: flex-end;
     display: flex;
     flex: 1;
     justify-content: center;
-    margin-top: 1.25rem;
-    max-height: 200px;
+    margin-top: 0.5rem;
+    min-height: 120px;
     width: 100%;
 }
 
 .order-type-illustration svg {
-    fill: none;
-    height: 75%;
-    max-width: 180px;
-    stroke: var(--kiosk-navy);
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 4.5;
-    width: 60%;
+    display: block;
+    height: auto;
+    max-height: 180px;
+    width: 100%;
 }
 
 .payment-placeholder-page,
@@ -1836,6 +1932,11 @@ body:has(.menu-layout) {
     .payment-placeholder-options,
     .fulfillment-options {
         grid-template-columns: 1fr;
+    }
+
+    .order-type-options {
+        grid-template-columns: 1fr 1fr;
+        max-width: 420px;
     }
 
     .mock-payment-actions,
