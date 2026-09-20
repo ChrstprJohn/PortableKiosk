@@ -61,7 +61,6 @@
                 <div class="menu-home">
                     <header class="menu-home-heading">
                         <h1>Must-Try Dinner</h1>
-                        <p>Discover our menu</p>
                     </header>
 
                     <div class="home-category-grid">

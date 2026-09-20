@@ -1111,6 +1111,15 @@ body:has(.user-kiosk-shell) .body-content {
         flex: 0 0 auto;
     }
 
+    .menu-content .product-grid {
+        gap: 0.75rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .menu-content .product-card-link {
+        grid-template-rows: 150px 88px;
+    }
+
     .user-cart-link {
         flex: 1;
     }
@@ -1181,6 +1190,19 @@ body:has(.user-kiosk-shell) .body-content {
 
     .menu-content {
         padding: 1rem 0.7rem;
+    }
+
+    .menu-content .product-grid {
+        gap: 0.55rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .menu-content .product-card-link {
+        grid-template-rows: 125px 82px;
+    }
+
+    .menu-content .product-card-body {
+        padding: 0.7rem;
     }
 
     .menu-sidebar {
