@@ -10,15 +10,23 @@
 
                 <asp:LinkButton ID="btnHome" runat="server" CssClass="menu-nav-item" CausesValidation="false"
                     OnClick="btnHome_Click">
-                    Home
+                    <span class="menu-nav-icon" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                    </span>
+                    <span class="menu-nav-label">Home</span>
                 </asp:LinkButton>
+
+                <div class="menu-sidebar-divider" aria-hidden="true"></div>
 
                 <asp:Repeater ID="rptCategories" runat="server" OnItemCommand="rptCategories_ItemCommand">
                     <ItemTemplate>
                         <asp:LinkButton ID="btnCategory" runat="server"
                             CssClass='<%# GetCategoryCss(Eval("CategoryID")) %>' CommandName="SelectCategory"
                             CommandArgument='<%# Eval("CategoryID") %>' CausesValidation="false">
-                            <%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %>
+                            <span class="menu-nav-icon" aria-hidden="true">
+                                <%# GetCategoryIconSvg(Eval("CategoryName")) %>
+                            </span>
+                            <span class="menu-nav-label"><%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %></span>
                         </asp:LinkButton>
                     </ItemTemplate>
                 </asp:Repeater>

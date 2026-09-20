@@ -301,7 +301,7 @@ body:has(.menu-layout) {
     border-radius: var(--kiosk-radius-xl) var(--kiosk-radius-xl) 0 0;
     border-top: 1px solid var(--kiosk-line);
     bottom: 0;
-    box-shadow: 0 -6px 20px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 -1px 6px rgba(15, 23, 42, 0.05);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -401,7 +401,7 @@ body:has(.menu-layout) {
    ========================================================================== */
 .menu-layout {
     display: grid;
-    grid-template-columns: clamp(140px, 20vw, 210px) minmax(0, 1fr);
+    grid-template-columns: clamp(175px, 26vw, 260px) minmax(0, 1fr);
     height: calc(100vh - 84px);
     height: calc(100dvh - 84px);
     min-height: 0;
@@ -417,14 +417,15 @@ body:has(.menu-layout) {
     border-right: 1px solid var(--kiosk-line);
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.35rem;
     overflow-y: auto;
-    padding: clamp(1.5rem, 3.5vw, 2.25rem) 0.85rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem) 0.65rem;
 }
 
 .menu-sidebar-brand {
     align-items: center;
     background: transparent;
+    border-bottom: 1px solid var(--kiosk-line);
     border-radius: 0;
     box-shadow: none;
     color: var(--kiosk-gold);
@@ -435,43 +436,90 @@ body:has(.menu-layout) {
     justify-content: center;
     letter-spacing: -0.02em;
     line-height: 1;
-    margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
-    padding: 0;
+    margin-bottom: 1.35rem;
+    padding-bottom: 1.1rem;
     user-select: none;
     width: 100%;
+}
+
+.menu-sidebar-divider {
+    border-top: 1px solid var(--kiosk-line);
+    margin: 0.5rem 0.25rem 0.75rem;
 }
 
 .menu-nav-item {
     align-items: center;
     background: transparent;
-    border: 1px solid transparent;
+    border: none;
     border-radius: var(--kiosk-radius-md);
-    color: #64748b;
+    color: #4a5568;
+    cursor: pointer;
     display: flex;
-    font-size: 0.98rem;
-    font-weight: 650;
+    flex-direction: row;
+    gap: 0.75rem;
+    font-size: 0.92rem;
+    font-weight: 600;
     justify-content: flex-start;
-    padding: 0.85rem 1rem;
+    padding: 0.7rem 0.75rem;
+    position: relative;
     text-align: left;
     text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.18s ease;
     width: 100%;
 }
 
 .menu-nav-item:hover,
 .menu-nav-item:focus {
-    background: #f1f5f9;
+    background: #f8fafc;
     color: var(--kiosk-ink);
     outline: none;
 }
 
 .menu-nav-item.active {
     background: var(--kiosk-gold-soft);
-    border: 1px solid #fde68a;
-    border-left: 4px solid var(--kiosk-gold);
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12);
+    border-radius: var(--kiosk-radius-md);
     color: var(--kiosk-ink);
     font-weight: 800;
+}
+
+/* Icon thumbnail - circle with gold bg on active */
+.menu-nav-icon {
+    align-items: center;
+    background: #f1f5f9;
+    border-radius: 50%;
+    color: #64748b;
+    display: flex;
+    flex-shrink: 0;
+    height: 42px;
+    justify-content: center;
+    transition: all 0.18s ease;
+    width: 42px;
+}
+
+.menu-nav-item:hover .menu-nav-icon {
+    background: #e2e8f0;
+    color: var(--kiosk-ink);
+}
+
+.menu-nav-item.active .menu-nav-icon {
+    background: var(--kiosk-gold-soft);
+    border: 1.5px solid #fde68a;
+    color: var(--kiosk-gold-dark);
+}
+
+/* Label with gold underline on active (McDonald's style) */
+.menu-nav-label {
+    display: block;
+    flex: 1;
+    line-height: 1.25;
+    min-width: 0;
+    overflow-wrap: break-word;
+    padding-bottom: 2px;
+    word-break: break-word;
+}
+
+.menu-nav-item.active .menu-nav-label {
+    padding-bottom: 2px;
 }
 
 /* ==========================================================================
@@ -1485,7 +1533,7 @@ body:has(.menu-layout) {
    ========================================================================== */
 @media screen and (max-width: 800px) {
     .menu-layout {
-        grid-template-columns: 130px minmax(0, 1fr);
+        grid-template-columns: 155px minmax(0, 1fr);
     }
 
     .menu-sidebar {
@@ -1543,7 +1591,7 @@ body:has(.menu-layout) {
     }
 
     .menu-layout {
-        grid-template-columns: 104px minmax(0, 1fr);
+        grid-template-columns: 120px minmax(0, 1fr);
     }
 
     .menu-content {
