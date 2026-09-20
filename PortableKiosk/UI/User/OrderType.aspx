@@ -12,7 +12,7 @@
     runat="server">
     <main class="order-type-page" aria-labelledby="orderTypeHeading">
         <div class="order-type-brand" aria-label="Portable Kiosk">
-            <span class="order-type-brand-mark" aria-hidden="true">PK</span>
+            <span class="order-type-brand-mark" aria-hidden="true">P</span>
             <span>Portable Kiosk</span>
         </div>
 

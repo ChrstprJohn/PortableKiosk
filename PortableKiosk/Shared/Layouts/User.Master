@@ -22,7 +22,7 @@
                 class="user-kiosk-brand"
                 href="~/UI/User/Menu.aspx"
                 aria-label="Portable Kiosk menu">
-                <span class="user-kiosk-mark" aria-hidden="true">PK</span>
+                <span class="user-kiosk-mark" aria-hidden="true">P</span>
                 <span>
                     <strong>Portable Kiosk</strong>
                     <small><asp:Literal ID="litOrderType" runat="server" /></small>
@@ -30,24 +30,37 @@
             </a>
 
             <div class="user-kiosk-actions">
-                <a ID="lnkCart" runat="server"
-                    class="user-cart-link"
-                    href="~/UI/User/Cart.aspx">
-                    <span>Cart</span>
-                    <strong>
-                        <asp:Literal ID="litCartCount" runat="server" /> ·
-                        <asp:Literal ID="litCartTotal" runat="server" />
-                    </strong>
+                <a class="user-kiosk-cart-info" href="<%= ResolveUrl("~/UI/User/Cart.aspx") %>" aria-label="View shopping cart">
+                    <span class="user-kiosk-cart-icon-pill" aria-hidden="true">
+                        <svg class="kiosk-bag-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                        </svg>
+                    </span>
+                    <span class="user-kiosk-cart-text">
+                        <small class="user-kiosk-cart-count"><asp:Literal ID="litCartCount" runat="server" /></small>
+                        <strong class="user-kiosk-cart-total"><asp:Literal ID="litCartTotal" runat="server" /></strong>
+                    </span>
                 </a>
 
-                <asp:Button
-                    ID="btnCancelOrder"
-                    runat="server"
-                    Text="Cancel order"
-                    CssClass="user-cancel-button"
-                    CausesValidation="false"
-                    data-confirm-cancel="true"
-                    OnClick="btnCancelOrder_Click" />
+                <div class="user-kiosk-action-buttons">
+                    <asp:Button
+                        ID="btnCancelOrder"
+                        runat="server"
+                        Text="Cancel order"
+                        CssClass="user-cancel-button"
+                        CausesValidation="false"
+                        data-confirm-cancel="true"
+                        OnClick="btnCancelOrder_Click" />
+
+                    <a ID="lnkCart" runat="server"
+                        class="user-checkout-button"
+                        href="~/UI/User/Cart.aspx">
+                        <span>Checkout</span>
+                        <svg class="user-checkout-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                </div>
             </div>
         </header>
 

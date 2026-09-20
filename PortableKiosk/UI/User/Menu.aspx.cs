@@ -257,6 +257,43 @@ namespace PortableKiosk.UI.User
                 Convert.ToDecimal(price));
         }
 
+        protected string GetCategoryIconSvg(object categoryName)
+        {
+            string name = Convert.ToString(categoryName) ?? string.Empty;
+            string lower = name.ToLowerInvariant();
+
+            if (lower.Contains("burger"))
+            {
+                return "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 11h16a1 1 0 0 0 1-1A6 6 0 0 0 3 10a1 1 0 0 0 1 1z\"></path><path d=\"M4 14h16\"></path><path d=\"M5 18h14a2 2 0 0 0 2-2v-1H3v1a2 2 0 0 0 2 2z\"></path></svg>";
+            }
+            if (lower.Contains("chicken") || lower.Contains("poultry") || lower.Contains("wings"))
+            {
+                return "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15 4a5 5 0 0 0-5 5v1a5 5 0 0 0 5 5h1a5 5 0 0 0 5-5V9a5 5 0 0 0-5-5z\"></path><path d=\"M10 15l-4 4\"></path><path d=\"M4 17a2 2 0 1 0 2 2\"></path></svg>";
+            }
+            if (lower.Contains("drink") || lower.Contains("beverage") || lower.Contains("juice") || lower.Contains("soda"))
+            {
+                return "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 21h10\"></path><path d=\"M12 21a7 7 0 0 1-7-7V4h14v10a7 7 0 0 1-7 7z\"></path><line x1=\"6\" y1=\"4\" x2=\"6\" y2=\"2\"></line><line x1=\"18\" y1=\"4\" x2=\"18\" y2=\"2\"></line></svg>";
+            }
+            if (lower.Contains("coffee") || lower.Contains("cafe") || lower.Contains("tea") || lower.Contains("latte"))
+            {
+                return "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 8h1a4 4 0 0 1 0 8h-1\"></path><path d=\"M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z\"></path><line x1=\"6\" y1=\"1\" x2=\"6\" y2=\"4\"></line><line x1=\"10\" y1=\"1\" x2=\"10\" y2=\"4\"></line><line x1=\"14\" y1=\"1\" x2=\"14\" y2=\"4\"></line></svg>";
+            }
+            if (lower.Contains("dessert") || lower.Contains("ice") || lower.Contains("sweet") || lower.Contains("sundae") || lower.Contains("pie"))
+            {
+                return "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M7 11v8a5 5 0 0 0 10 0v-8\"></path><path d=\"M12 2a4 4 0 0 0-4 4v5h8V6a4 4 0 0 0-4-4z\"></path></svg>";
+            }
+            if (lower.Contains("meal") || lower.Contains("happy") || lower.Contains("box") || lower.Contains("combo") || lower.Contains("share"))
+            {
+                return "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\"></path><polyline points=\"3.27 6.96 12 12.01 20.73 6.96\"></polyline><line x1=\"12\" y1=\"22.08\" x2=\"12\" y2=\"12\"></line></svg>";
+            }
+            if (lower.Contains("new") || lower.Contains("offer") || lower.Contains("promo") || lower.Contains("special") || lower.Contains("featured"))
+            {
+                return "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2\"></polygon></svg>";
+            }
+
+            return "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18 2v20\"></path><path d=\"M6 2v20\"></path><path d=\"M4 7h4\"></path><path d=\"M18 7a3 3 0 0 0-3-3v8a3 3 0 0 0 3-3z\"></path></svg>";
+        }
+
         private void BindCategories()
         {
             rptCategories.DataSource = categoryService.GetAvailable();
