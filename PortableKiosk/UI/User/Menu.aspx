@@ -12,6 +12,10 @@
     runat="server">
     <main class="menu-layout" aria-label="Customer menu">
         <aside class="menu-sidebar" aria-label="Menu categories">
+            <div class="menu-sidebar-brand" aria-label="Portable Kiosk">
+                <span aria-hidden="true">PK</span>
+            </div>
+
             <asp:LinkButton
                 ID="btnHome"
                 runat="server"
@@ -223,14 +227,6 @@
                 </div>
 
                 <div class="product-detail-actions">
-                    <asp:LinkButton
-                        ID="btnBackToMenu"
-                        runat="server"
-                        CssClass="kiosk-button"
-                        CausesValidation="false"
-                        OnClick="btnBackToMenu_Click">
-                        Back
-                    </asp:LinkButton>
                     <div class="product-purchase-actions">
                         <div class="quantity-field">
                             <label for="<%= txtQuantity.ClientID %>">Quantity</label>
@@ -247,12 +243,22 @@
                                 <button type="button" data-quantity-action="increase" aria-label="Increase quantity">+</button>
                             </div>
                         </div>
-                        <asp:Button
-                            ID="btnAddToCart"
-                            runat="server"
-                            Text="Add to cart"
-                            CssClass="kiosk-button kiosk-button-primary"
-                            OnClick="btnAddToCart_Click" />
+                        <div class="product-purchase-buttons">
+                            <asp:LinkButton
+                                ID="btnBackToMenu"
+                                runat="server"
+                                CssClass="kiosk-button"
+                                CausesValidation="false"
+                                OnClick="btnBackToMenu_Click">
+                                Back
+                            </asp:LinkButton>
+                            <asp:Button
+                                ID="btnAddToCart"
+                                runat="server"
+                                Text="Add to cart"
+                                CssClass="kiosk-button kiosk-button-primary"
+                                OnClick="btnAddToCart_Click" />
+                        </div>
                     </div>
                 </div>
             </asp:Panel>
