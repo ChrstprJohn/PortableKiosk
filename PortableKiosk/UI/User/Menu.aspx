@@ -12,11 +12,6 @@
     runat="server">
     <main class="menu-layout" aria-label="Customer menu">
         <aside class="menu-sidebar" aria-label="Menu categories">
-            <div class="menu-sidebar-brand" aria-label="Portable Kiosk">
-                <span>PK</span>
-                <strong>Menu</strong>
-            </div>
-
             <asp:LinkButton
                 ID="btnHome"
                 runat="server"
@@ -127,10 +122,8 @@
             <asp:Panel ID="pnlProducts" runat="server" Visible="false">
                 <header class="menu-section-heading">
                     <div>
-                        <p class="kiosk-eyebrow">Browse products</p>
                         <h1><asp:Literal ID="litCategoryName" runat="server" /></h1>
                     </div>
-                    <span>Tap a product to choose its size</span>
                 </header>
 
                 <asp:Panel
@@ -221,22 +214,6 @@
                             </div>
                         </fieldset>
 
-                        <div class="quantity-field">
-                            <label for="<%= txtQuantity.ClientID %>">Quantity</label>
-                            <div class="quantity-control">
-                                <button type="button" data-quantity-action="decrease" aria-label="Decrease quantity">−</button>
-                                <asp:TextBox
-                                    ID="txtQuantity"
-                                    runat="server"
-                                    Text="1"
-                                    TextMode="Number"
-                                    min="1"
-                                    max="99"
-                                    inputmode="numeric" />
-                                <button type="button" data-quantity-action="increase" aria-label="Increase quantity">+</button>
-                            </div>
-                        </div>
-
                         <asp:Label
                             ID="lblProductError"
                             runat="server"
@@ -255,12 +232,29 @@
                         OnClick="btnBackToMenu_Click">
                         Back
                     </asp:LinkButton>
-                    <asp:Button
-                        ID="btnAddToCart"
-                        runat="server"
-                        Text="Add to cart"
-                        CssClass="kiosk-button kiosk-button-primary"
-                        OnClick="btnAddToCart_Click" />
+                    <div class="product-purchase-actions">
+                        <div class="quantity-field">
+                            <label for="<%= txtQuantity.ClientID %>">Quantity</label>
+                            <div class="quantity-control">
+                                <button type="button" data-quantity-action="decrease" aria-label="Decrease quantity">−</button>
+                                <asp:TextBox
+                                    ID="txtQuantity"
+                                    runat="server"
+                                    Text="1"
+                                    TextMode="Number"
+                                    min="1"
+                                    max="99"
+                                    inputmode="numeric" />
+                                <button type="button" data-quantity-action="increase" aria-label="Increase quantity">+</button>
+                            </div>
+                        </div>
+                        <asp:Button
+                            ID="btnAddToCart"
+                            runat="server"
+                            Text="Add to cart"
+                            CssClass="kiosk-button kiosk-button-primary"
+                            OnClick="btnAddToCart_Click" />
+                    </div>
                 </div>
             </asp:Panel>
         </section>

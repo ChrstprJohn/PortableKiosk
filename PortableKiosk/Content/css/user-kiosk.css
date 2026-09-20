@@ -305,31 +305,6 @@ body:has(.user-kiosk-shell) .body-content {
     padding: 1.5rem 1rem;
 }
 
-.menu-sidebar-brand {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.menu-sidebar-brand span {
-    align-items: center;
-    border: 2px solid var(--kiosk-navy);
-    display: flex;
-    font-size: 1.25rem;
-    font-weight: 850;
-    height: 72px;
-    justify-content: center;
-    width: 100%;
-}
-
-.menu-sidebar-brand strong {
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-
 .menu-sidebar-label {
     padding: 0 0.75rem 0.75rem;
 }
@@ -359,6 +334,7 @@ body:has(.user-kiosk-shell) .body-content {
 }
 
 .menu-content {
+    background: #ffffff;
     min-width: 0;
     padding: clamp(1.5rem, 4vw, 3rem);
 }
@@ -756,11 +732,21 @@ body:has(.user-kiosk-shell) .body-content {
 }
 
 .product-detail-actions {
+    align-items: end;
     display: grid;
     gap: 0.75rem;
     grid-template-columns: 1fr 1.5fr;
     margin: clamp(2rem, 7vw, 5rem) 0 0 auto;
     max-width: 520px;
+}
+
+.product-purchase-actions {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.product-purchase-actions .quantity-control {
+    grid-template-columns: 3rem minmax(4rem, 1fr) 3rem;
 }
 
 .cart-page {
@@ -1092,6 +1078,39 @@ body:has(.user-kiosk-shell) .body-content {
         width: 100%;
     }
 
+    .user-kiosk-shell:has(.menu-layout) {
+        padding-bottom: 82px;
+    }
+
+    .user-kiosk-shell:has(.menu-layout) .user-kiosk-header {
+        align-items: center;
+        flex-direction: row;
+        min-height: 72px;
+        padding: 0.75rem 1rem;
+    }
+
+    .user-kiosk-shell:has(.menu-layout) .user-kiosk-actions {
+        align-items: stretch;
+        background: var(--kiosk-navy);
+        bottom: 0;
+        flex-direction: row;
+        left: 0;
+        min-height: 82px;
+        padding: 0.65rem;
+        position: fixed;
+        right: 0;
+        width: 100%;
+        z-index: 1040;
+    }
+
+    .user-kiosk-shell:has(.menu-layout) .user-cart-link {
+        min-width: 0;
+    }
+
+    .user-kiosk-shell:has(.menu-layout) .user-cancel-button {
+        flex: 0 0 auto;
+    }
+
     .user-cart-link {
         flex: 1;
     }
@@ -1115,10 +1134,6 @@ body:has(.user-kiosk-shell) .body-content {
         display: block;
         overflow: visible;
         padding: 1rem 0.6rem;
-    }
-
-    .menu-sidebar-brand span {
-        height: 56px;
     }
 
     .menu-nav-item {
@@ -1147,6 +1162,10 @@ body:has(.user-kiosk-shell) .body-content {
         flex-direction: column;
     }
 
+    .user-kiosk-shell:has(.menu-layout) .user-kiosk-actions {
+        flex-direction: row;
+    }
+
     .order-type-card {
         min-height: 200px;
         padding: 0.8rem;
@@ -1166,14 +1185,6 @@ body:has(.user-kiosk-shell) .body-content {
 
     .menu-sidebar {
         padding: 0.75rem 0.4rem;
-    }
-
-    .menu-sidebar-brand {
-        margin-bottom: 1rem;
-    }
-
-    .menu-sidebar-brand span {
-        height: 48px;
     }
 
     .menu-nav-item {
