@@ -205,6 +205,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Core\Data\DatabaseConnection.cs" />
     <Compile Include="Core\Data\Repositories\CategoryRepository.cs" />
+    <Compile Include="Core\Data\Repositories\OrderItemRepository.cs" />
+    <Compile Include="Core\Data\Repositories\OrderRepository.cs" />
+    <Compile Include="Core\Data\Repositories\PaymentRepository.cs" />
     <Compile Include="Core\Data\Repositories\ProductRepository.cs" />
     <Compile Include="Core\Data\Repositories\ProductVariantRepository.cs" />
     <Compile Include="Core\Data\Repositories\SizeRepository.cs" />
@@ -214,12 +217,16 @@
     <Compile Include="Core\Models\CartItem.cs" />
     <Compile Include="Core\Models\Order.cs" />
     <Compile Include="Core\Models\OrderItem.cs" />
+    <Compile Include="Core\Models\Payment.cs" />
     <Compile Include="Core\Models\Product.cs" />
     <Compile Include="Core\Models\ProductVariant.cs" />
     <Compile Include="Core\Models\Size.cs" />
     <Compile Include="Core\Models\StaffAccount.cs" />
     <Compile Include="Core\Services\CategoryService.cs" />
     <Compile Include="Core\Services\CartService.cs" />
+    <Compile Include="Core\Services\OrderItemService.cs" />
+    <Compile Include="Core\Services\OrderService.cs" />
+    <Compile Include="Core\Services\PaymentService.cs" />
     <Compile Include="Core\Services\ProductService.cs" />
     <Compile Include="Core\Services\ProductVariantService.cs" />
     <Compile Include="Core\Services\SizeService.cs" />

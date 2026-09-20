@@ -1,12 +1,24 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using PortableKiosk.Core.Models;
+using PortableKiosk.Core.Services;
 using PortableKiosk.Shared.Helpers;
+using PaymentModel = PortableKiosk.Core.Models.Payment;
 
 namespace PortableKiosk.UI.User
 {
     public partial class Complete : System.Web.UI.Page
     {
+        private readonly OrderService orderService =
+            new OrderService();
+
+        private readonly OrderItemService orderItemService =
+            new OrderItemService();
+
+        private readonly PaymentService paymentService =
+            new PaymentService();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!KioskSession.HasActiveOrder(Session))
@@ -15,44 +27,38 @@ namespace PortableKiosk.UI.User
                 return;
             }
 
-            Cart cart = KioskSession.GetCart(Session);
-            string paymentMethod =
-                KioskSession.GetPaymentMethod(Session);
-            string fulfillmentMethod =
-                KioskSession.GetFulfillmentMethod(Session);
+            int? completedOrderID =
+                KioskSession.GetCompletedOrderID(Session);
 
-            if (cart.IsEmpty ||
-                string.IsNullOrWhiteSpace(paymentMethod) ||
-                !KioskSession.CanContinueFromPayment(Session))
-            {
-                Redirect("~/UI/User/Cart.aspx");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(fulfillmentMethod))
+            if (!completedOrderID.HasValue)
             {
                 Redirect("~/UI/User/Fulfillment.aspx");
                 return;
             }
 
-            if (string.Equals(
-                    fulfillmentMethod,
-                    "TABLE_SERVICE",
-                    StringComparison.OrdinalIgnoreCase) &&
-                string.IsNullOrWhiteSpace(
-                    KioskSession.GetTableNumber(Session)))
+            if (IsPostBack)
             {
-                Redirect("~/UI/User/TableNumber.aspx");
                 return;
             }
 
-            if (!IsPostBack)
+            Order order = orderService.GetByID(
+                completedOrderID.Value);
+            PaymentModel payment = paymentService.GetByOrderID(
+                completedOrderID.Value);
+            List<OrderItem> items =
+                orderItemService.GetByOrderID(
+                    completedOrderID.Value);
+
+            if (order == null ||
+                payment == null ||
+                items.Count == 0)
             {
-                BindReceipt(
-                    cart,
-                    paymentMethod,
-                    fulfillmentMethod);
+                KioskSession.ClearActiveOrder(Session);
+                Redirect("~/Default.aspx");
+                return;
             }
+
+            BindReceipt(order, items, payment);
         }
 
         protected void btnFinish_Click(
@@ -72,49 +78,47 @@ namespace PortableKiosk.UI.User
         }
 
         private void BindReceipt(
-            Cart cart,
-            string paymentMethod,
-            string fulfillmentMethod)
+            Order order,
+            IList<OrderItem> items,
+            PaymentModel payment)
         {
-            string tableNumber =
-                KioskSession.GetTableNumber(Session);
             bool isTableService = string.Equals(
-                fulfillmentMethod,
+                order.FulfillmentMethod,
                 "TABLE_SERVICE",
                 StringComparison.OrdinalIgnoreCase);
             bool isCashAtCounter = string.Equals(
-                paymentMethod,
+                payment.PaymentMethod,
                 "CASH_COUNTER",
                 StringComparison.OrdinalIgnoreCase);
             bool isTakeout = string.Equals(
-                KioskSession.GetOrderType(Session),
+                order.OrderType,
                 "TAKEOUT",
                 StringComparison.OrdinalIgnoreCase);
 
             litOrderNumber.Text = Server.HtmlEncode(
-                KioskSession.GetOrCreatePreviewOrderNumber(
-                    Session));
+                order.OrderNumber);
             litOrderType.Text = string.Equals(
-                KioskSession.GetOrderType(Session),
+                order.OrderType,
                 "TAKEOUT",
                 StringComparison.OrdinalIgnoreCase)
                     ? "Takeout"
                     : "Dine in";
             litPaymentMethod.Text = string.Equals(
-                paymentMethod,
+                payment.PaymentMethod,
                 "CASH_COUNTER",
                 StringComparison.OrdinalIgnoreCase)
                     ? "Cash at counter"
                     : "Online payment";
 
             pnlTableNumber.Visible = isTableService;
-            litTableNumber.Text = Server.HtmlEncode(tableNumber);
+            litTableNumber.Text = Server.HtmlEncode(
+                order.TableNumber);
 
             if (isTableService && isCashAtCounter)
             {
                 litInstruction.Text = Server.HtmlEncode(
                     "Bring this order number to the counter to pay, then place locator " +
-                    tableNumber +
+                    order.TableNumber +
                     " where the crew can see it. " +
                     (isTakeout
                         ? "Your packed takeout order will be brought to you."
@@ -124,7 +128,7 @@ namespace PortableKiosk.UI.User
             {
                 litInstruction.Text = Server.HtmlEncode(
                     "Payment complete. Place locator " +
-                    tableNumber +
+                    order.TableNumber +
                     " where the crew can see it. " +
                     (isTakeout
                         ? "Your packed takeout order will be brought to you."
@@ -141,10 +145,10 @@ namespace PortableKiosk.UI.User
                     "Payment complete. Please wait near the counter until your order number is called.";
             }
 
-            rptReceiptItems.DataSource = cart.Items;
+            rptReceiptItems.DataSource = items;
             rptReceiptItems.DataBind();
             litReceiptTotal.Text = FormatMoney(
-                cart.TotalAmount);
+                payment.Amount);
         }
 
         private void Redirect(string destination)

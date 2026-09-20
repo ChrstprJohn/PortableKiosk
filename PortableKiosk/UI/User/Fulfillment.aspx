@@ -17,6 +17,13 @@
             <p><asp:Literal ID="litFulfillmentHint" runat="server" /></p>
         </header>
 
+        <asp:Label
+            ID="lblFulfillmentError"
+            runat="server"
+            Visible="false"
+            CssClass="kiosk-alert kiosk-alert-error"
+            role="alert" />
+
         <div class="fulfillment-options">
             <asp:Panel ID="pnlTableService" runat="server">
                 <asp:LinkButton

@@ -220,12 +220,6 @@ CREATE TABLE Orders
             )
         ),
 
-    CONSTRAINT CK_Orders_TakeoutFulfillment
-        CHECK (
-            OrderType = N'DINE_IN'
-            OR FulfillmentMethod = N'COUNTER_PICKUP'
-        ),
-
     CONSTRAINT CK_Orders_KitchenStatus
         CHECK (
             KitchenStatus IN (

@@ -15,8 +15,10 @@ namespace PortableKiosk.Shared.Helpers
         private const string FulfillmentMethodKey =
             "KioskFulfillmentMethod";
         private const string TableNumberKey = "KioskTableNumber";
-        private const string PreviewOrderNumberKey =
-            "KioskPreviewOrderNumber";
+        private const string CompletedOrderIDKey =
+            "KioskCompletedOrderID";
+        private const string CompletedOrderNumberKey =
+            "KioskCompletedOrderNumber";
 
         public static void StartNewOrder(HttpSessionState session)
         {
@@ -112,7 +114,8 @@ namespace PortableKiosk.Shared.Helpers
             session.Remove(OnlinePaymentConfirmedKey);
             session.Remove(FulfillmentMethodKey);
             session.Remove(TableNumberKey);
-            session.Remove(PreviewOrderNumberKey);
+            session.Remove(CompletedOrderIDKey);
+            session.Remove(CompletedOrderNumberKey);
         }
 
         public static void ConfirmMockOnlinePayment(
@@ -189,7 +192,8 @@ namespace PortableKiosk.Shared.Helpers
                 session.Remove(TableNumberKey);
             }
 
-            session.Remove(PreviewOrderNumberKey);
+            session.Remove(CompletedOrderIDKey);
+            session.Remove(CompletedOrderNumberKey);
         }
 
         public static string GetTableNumber(
@@ -213,27 +217,58 @@ namespace PortableKiosk.Shared.Helpers
             }
 
             session[TableNumberKey] = tableNumber.Trim();
-            session.Remove(PreviewOrderNumberKey);
+            session.Remove(CompletedOrderIDKey);
+            session.Remove(CompletedOrderNumberKey);
         }
 
-        public static string GetOrCreatePreviewOrderNumber(
-            HttpSessionState session)
+        public static void MarkOrderPlaced(
+            HttpSessionState session,
+            Order order)
         {
-            string orderNumber = Convert.ToString(
-                session[PreviewOrderNumberKey]);
-
-            if (!string.IsNullOrWhiteSpace(orderNumber))
+            if (session == null)
             {
-                return orderNumber;
+                throw new ArgumentNullException("session");
             }
 
-            int numericPart =
-                Math.Abs(Guid.NewGuid().GetHashCode() % 9000) +
-                1000;
+            if (order == null ||
+                order.OrderID <= 0 ||
+                string.IsNullOrWhiteSpace(order.OrderNumber))
+            {
+                throw new ArgumentException(
+                    "A saved order is required.",
+                    "order");
+            }
 
-            orderNumber = numericPart.ToString();
-            session[PreviewOrderNumberKey] = orderNumber;
-            return orderNumber;
+            session[CompletedOrderIDKey] = order.OrderID;
+            session[CompletedOrderNumberKey] = order.OrderNumber;
+            session[CartKey] = new Cart();
+        }
+
+        public static int? GetCompletedOrderID(
+            HttpSessionState session)
+        {
+            if (session == null ||
+                session[CompletedOrderIDKey] == null)
+            {
+                return null;
+            }
+
+            return Convert.ToInt32(session[CompletedOrderIDKey]);
+        }
+
+        public static string GetCompletedOrderNumber(
+            HttpSessionState session)
+        {
+            return session == null
+                ? null
+                : Convert.ToString(
+                    session[CompletedOrderNumberKey]);
+        }
+
+        public static bool HasCompletedOrder(
+            HttpSessionState session)
+        {
+            return GetCompletedOrderID(session).HasValue;
         }
 
         public static void ClearActiveOrder(HttpSessionState session)
@@ -250,7 +285,8 @@ namespace PortableKiosk.Shared.Helpers
             session.Remove(OnlinePaymentConfirmedKey);
             session.Remove(FulfillmentMethodKey);
             session.Remove(TableNumberKey);
-            session.Remove(PreviewOrderNumberKey);
+            session.Remove(CompletedOrderIDKey);
+            session.Remove(CompletedOrderNumberKey);
         }
     }
 }

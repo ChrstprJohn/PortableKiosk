@@ -56,8 +56,8 @@
             </div>
 
             <p class="receipt-preview-note">
-                Checkout persistence and receipt printing will be connected
-                in the next backend phase.
+                Your order has been saved. Keep this number until your order
+                has been served or collected.
             </p>
 
             <asp:Button
