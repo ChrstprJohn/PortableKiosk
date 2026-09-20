@@ -36,11 +36,18 @@ namespace PortableKiosk.Shared.Layouts
                                 ? "Dine-in order"
                                 : "Choose order type");
 
-            litCartCount.Text = string.Format(
-                CultureInfo.InvariantCulture,
-                "{0} {1}",
-                cart.TotalQuantity,
-                cart.TotalQuantity == 1 ? "item" : "items");
+            int count = cart.TotalQuantity;
+            if (count > 0)
+            {
+                litCartCount.Text = string.Format(
+                    CultureInfo.InvariantCulture,
+                    "<span class=\"user-kiosk-cart-badge\">{0}</span>",
+                    count > 9 ? "9+" : count.ToString(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                litCartCount.Text = string.Empty;
+            }
 
             litCartTotal.Text = string.Format(
                 CultureInfo.GetCultureInfo("en-PH"),

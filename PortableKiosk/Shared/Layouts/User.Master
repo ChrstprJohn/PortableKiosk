@@ -31,15 +31,17 @@
 
             <div class="user-kiosk-actions">
                 <a class="user-kiosk-cart-info" href="<%= ResolveUrl("~/UI/User/Cart.aspx") %>" aria-label="View shopping cart">
-                    <span class="user-kiosk-cart-icon-pill" aria-hidden="true">
-                        <svg class="kiosk-bag-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                            <line x1="3" y1="6" x2="21" y2="6"></line>
-                            <path d="M16 10a4 4 0 0 1-8 0"></path>
-                        </svg>
+                    <span class="user-kiosk-cart-icon-wrapper" aria-hidden="true">
+                        <span class="user-kiosk-cart-icon-pill">
+                            <svg class="kiosk-bag-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+                        </span>
+                        <asp:Literal ID="litCartCount" runat="server" />
                     </span>
                     <span class="user-kiosk-cart-text">
-                        <small class="user-kiosk-cart-count"><asp:Literal ID="litCartCount" runat="server" /></small>
                         <strong class="user-kiosk-cart-total"><asp:Literal ID="litCartTotal" runat="server" /></strong>
                     </span>
                 </a>

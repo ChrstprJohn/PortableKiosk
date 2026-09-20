@@ -48,29 +48,34 @@
                     <div class="menu-home">
                         <header class="menu-home-heading">
                             <h1>Must-try Dinner</h1>
-                            <h2 class="menu-home-subheading">Discover our Menu</h2>
                         </header>
 
-                        <div class="home-category-grid">
-                            <asp:Repeater ID="rptHomeCategories" runat="server"
-                                OnItemCommand="rptCategories_ItemCommand">
-                                <ItemTemplate>
-                                    <asp:LinkButton ID="btnHomeCategory" runat="server" CssClass="home-category-card"
-                                        CommandName="SelectCategory" CommandArgument='<%# Eval("CategoryID") %>'
-                                        CausesValidation="false">
-                                        <span class="home-category-name">
-                                            <%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %>
-                                        </span>
-                                        <span class="home-category-icon" aria-hidden="true">
-                                            <%# GetCategoryIconSvg(Eval("CategoryName")) %>
-                                        </span>
-                                    </asp:LinkButton>
-                                </ItemTemplate>
-                            </asp:Repeater>
-                        </div>
+                        <section class="home-category-section" aria-labelledby="discoverHeading">
+                            <div class="home-section-header">
+                                <h2 id="discoverHeading" class="menu-home-subheading">Discover our Menu</h2>
+                            </div>
+
+                            <div class="home-category-grid">
+                                <asp:Repeater ID="rptHomeCategories" runat="server"
+                                    OnItemCommand="rptCategories_ItemCommand">
+                                    <ItemTemplate>
+                                        <asp:LinkButton ID="btnHomeCategory" runat="server" CssClass="home-category-card"
+                                            CommandName="SelectCategory" CommandArgument='<%# Eval("CategoryID") %>'
+                                            CausesValidation="false">
+                                            <span class="home-category-name">
+                                                <%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %>
+                                            </span>
+                                            <span class="home-category-icon" aria-hidden="true">
+                                                <%# GetCategoryIconSvg(Eval("CategoryName")) %>
+                                            </span>
+                                        </asp:LinkButton>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </div>
+                        </section>
 
                         <section class="best-seller-section" aria-labelledby="bestSellerHeading">
-                            <div class="best-seller-header">
+                            <div class="home-section-header best-seller-header">
                                 <h2 id="bestSellerHeading">Best Seller</h2>
                             </div>
                             <div class="best-seller-grid">
