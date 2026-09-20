@@ -117,6 +117,8 @@ CREATE TABLE Products
 
     ProductName NVARCHAR(100) NOT NULL,
 
+    ProductDescription NVARCHAR(500) NULL,
+
     IsAvailable BIT NOT NULL
         DEFAULT 1,
 
@@ -174,13 +176,14 @@ CREATE TABLE Orders
     OrderType NVARCHAR(10) NOT NULL
         DEFAULT N'DINE_IN',
 
-    PaymentStatus NVARCHAR(20) NOT NULL
-        DEFAULT N'UNPAID',
+    FulfillmentMethod NVARCHAR(20) NOT NULL,
+
+    TableNumber NVARCHAR(20) NULL,
 
     KitchenStatus NVARCHAR(20) NOT NULL
-        DEFAULT N'NONE',
+        DEFAULT N'QUEUED',
 
-    ExpiresAt DATETIME2 NOT NULL,
+    ExpiresAt DATETIME2 NULL,
 
     CreatedAt DATETIME2 NOT NULL
         DEFAULT SYSUTCDATETIME(),
@@ -196,22 +199,98 @@ CREATE TABLE Orders
             )
         ),
 
-    CONSTRAINT CK_Orders_PaymentStatus
+    CONSTRAINT CK_Orders_FulfillmentMethod
         CHECK (
-            PaymentStatus IN (
-                N'UNPAID',
-                N'PAID'
+            FulfillmentMethod IN (
+                N'TABLE_SERVICE',
+                N'COUNTER_PICKUP'
             )
+        ),
+
+    CONSTRAINT CK_Orders_FulfillmentTable
+        CHECK (
+            (
+                FulfillmentMethod = N'TABLE_SERVICE'
+                AND LEN(LTRIM(RTRIM(TableNumber))) > 0
+            )
+            OR
+            (
+                FulfillmentMethod = N'COUNTER_PICKUP'
+                AND TableNumber IS NULL
+            )
+        ),
+
+    CONSTRAINT CK_Orders_TakeoutFulfillment
+        CHECK (
+            OrderType = N'DINE_IN'
+            OR FulfillmentMethod = N'COUNTER_PICKUP'
         ),
 
     CONSTRAINT CK_Orders_KitchenStatus
         CHECK (
             KitchenStatus IN (
-                N'NONE',
+                N'QUEUED',
                 N'PREPARING',
-                N'SERVING'
+                N'READY',
+                N'COMPLETED',
+                N'CANCELLED'
             )
         )
+);
+GO
+
+/* =========================================================
+   PAYMENTS
+   ========================================================= */
+
+CREATE TABLE Payments
+(
+    PaymentID INT IDENTITY(1, 1) PRIMARY KEY,
+
+    OrderID INT NOT NULL,
+
+    PaymentMethod NVARCHAR(20) NOT NULL,
+
+    PaymentStatus NVARCHAR(20) NOT NULL
+        DEFAULT N'PENDING',
+
+    Amount DECIMAL(10, 2) NOT NULL,
+
+    TransactionReference NVARCHAR(100) NULL,
+
+    PaidAt DATETIME2 NULL,
+
+    CreatedAt DATETIME2 NOT NULL
+        DEFAULT SYSUTCDATETIME(),
+
+    CONSTRAINT UQ_Payments_Order
+        UNIQUE (OrderID),
+
+    CONSTRAINT CK_Payments_PaymentMethod
+        CHECK (
+            PaymentMethod IN (
+                N'CASHLESS',
+                N'CASH_COUNTER'
+            )
+        ),
+
+    CONSTRAINT CK_Payments_PaymentStatus
+        CHECK (
+            PaymentStatus IN (
+                N'PENDING',
+                N'PAID',
+                N'FAILED',
+                N'CANCELLED'
+            )
+        ),
+
+    CONSTRAINT CK_Payments_Amount
+        CHECK (Amount >= 0),
+
+    CONSTRAINT FK_Payments_Orders
+        FOREIGN KEY (OrderID)
+        REFERENCES Orders(OrderID)
+        ON DELETE CASCADE
 );
 GO
 
@@ -226,10 +305,6 @@ CREATE TABLE OrderItems
     OrderID INT NOT NULL,
 
     ProductVariantID INT NOT NULL,
-
-    ItemName NVARCHAR(100) NOT NULL,
-
-    SizeName NVARCHAR(50) NULL,
 
     UnitPrice DECIMAL(10, 2) NOT NULL,
 
