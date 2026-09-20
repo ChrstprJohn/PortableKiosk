@@ -80,6 +80,20 @@ namespace PortableKiosk.Core.Services
             return variantRepository.GetByProductID(productID);
         }
 
+        public List<ProductVariant> GetAvailableByProductID(
+            int productID)
+        {
+            return variantRepository.GetAvailableByProductID(
+                productID);
+        }
+
+        public ProductVariant GetAvailableByID(
+            int productVariantID)
+        {
+            return variantRepository.GetAvailableByID(
+                productVariantID);
+        }
+
         public bool Update(ProductVariant variant)
         {
             if (variant == null)

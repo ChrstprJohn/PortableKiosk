@@ -116,6 +116,7 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\css\user-kiosk.css" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -154,6 +155,8 @@
     <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
     <Content Include="Scripts\app\admin\catalog-config.js" />
     <Content Include="Scripts\app\admin\products.js" />
+    <Content Include="Scripts\app\user\kiosk.js" />
+    <Content Include="Scripts\app\user\menu.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
     <Content Include="Scripts\WebForms\Focus.js" />
@@ -178,6 +181,7 @@
     <Content Include="Scripts\app\common\modal.js" />
     <Content Include="Shared\Controls\ModalDialog.ascx" />
     <Content Include="Shared\Layouts\Admin.Master" />
+    <Content Include="Shared\Layouts\User.Master" />
     <Content Include="Site.Master" />
     <Content Include="UI\Account\AdminLogin.aspx" />
     <Content Include="UI\Account\SignOut.aspx" />
@@ -185,6 +189,14 @@
     <Content Include="UI\Admin\Products.aspx" />
     <Content Include="UI\Admin\StaffAccounts.aspx" />
     <Content Include="UI\POS\Index.aspx" />
+    <Content Include="UI\User\Cart.aspx" />
+    <Content Include="UI\User\Complete.aspx" />
+    <Content Include="UI\User\Fulfillment.aspx" />
+    <Content Include="UI\User\Menu.aspx" />
+    <Content Include="UI\User\OnlinePayment.aspx" />
+    <Content Include="UI\User\OrderType.aspx" />
+    <Content Include="UI\User\Payment.aspx" />
+    <Content Include="UI\User\TableNumber.aspx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
   </ItemGroup>
@@ -198,6 +210,8 @@
     <Compile Include="Core\Data\Repositories\SizeRepository.cs" />
     <Compile Include="Core\Data\Repositories\StaffAccountRepository.cs" />
     <Compile Include="Core\Models\Category.cs" />
+    <Compile Include="Core\Models\Cart.cs" />
+    <Compile Include="Core\Models\CartItem.cs" />
     <Compile Include="Core\Models\Order.cs" />
     <Compile Include="Core\Models\OrderItem.cs" />
     <Compile Include="Core\Models\Product.cs" />
@@ -205,6 +219,7 @@
     <Compile Include="Core\Models\Size.cs" />
     <Compile Include="Core\Models\StaffAccount.cs" />
     <Compile Include="Core\Services\CategoryService.cs" />
+    <Compile Include="Core\Services\CartService.cs" />
     <Compile Include="Core\Services\ProductService.cs" />
     <Compile Include="Core\Services\ProductVariantService.cs" />
     <Compile Include="Core\Services\SizeService.cs" />
@@ -234,6 +249,14 @@
     <Compile Include="Shared\Layouts\Admin.Master.designer.cs">
       <DependentUpon>Admin.Master</DependentUpon>
     </Compile>
+    <Compile Include="Shared\Layouts\User.Master.cs">
+      <DependentUpon>User.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Shared\Layouts\User.Master.designer.cs">
+      <DependentUpon>User.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Shared\Helpers\KioskSession.cs" />
     <Compile Include="Shared\Security\PasswordHasher.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
@@ -283,6 +306,62 @@
     </Compile>
     <Compile Include="UI\POS\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User\Cart.aspx.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\User\Cart.aspx.designer.cs">
+      <DependentUpon>Cart.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User\Complete.aspx.cs">
+      <DependentUpon>Complete.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\User\Complete.aspx.designer.cs">
+      <DependentUpon>Complete.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User\Fulfillment.aspx.cs">
+      <DependentUpon>Fulfillment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\User\Fulfillment.aspx.designer.cs">
+      <DependentUpon>Fulfillment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User\Menu.aspx.cs">
+      <DependentUpon>Menu.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\User\Menu.aspx.designer.cs">
+      <DependentUpon>Menu.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User\OnlinePayment.aspx.cs">
+      <DependentUpon>OnlinePayment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\User\OnlinePayment.aspx.designer.cs">
+      <DependentUpon>OnlinePayment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User\OrderType.aspx.cs">
+      <DependentUpon>OrderType.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\User\OrderType.aspx.designer.cs">
+      <DependentUpon>OrderType.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User\Payment.aspx.cs">
+      <DependentUpon>Payment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\User\Payment.aspx.designer.cs">
+      <DependentUpon>Payment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\User\TableNumber.aspx.cs">
+      <DependentUpon>TableNumber.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\User\TableNumber.aspx.designer.cs">
+      <DependentUpon>TableNumber.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

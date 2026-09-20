@@ -13,6 +13,8 @@
 
         public string ProductName { get; set; }
 
+        public string ProductDescription { get; set; }
+
         public bool IsAvailable { get; set; }
 
         // Used when displaying products.

@@ -19,9 +19,21 @@ namespace PortableKiosk.Core.Services
             return productRepository.GetByID(productID);
         }
 
+        public Product GetAvailableByID(int productID)
+        {
+            return productRepository.GetAvailableByID(productID);
+        }
+
         public List<Product> GetAll()
         {
             return productRepository.GetAll();
+        }
+
+        public List<Product> GetAvailableByCategoryID(
+            int categoryID)
+        {
+            return productRepository.GetAvailableByCategoryID(
+                categoryID);
         }
 
         public bool Update(Product product)

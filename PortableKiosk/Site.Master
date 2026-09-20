@@ -14,6 +14,7 @@
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
 
 </head>
 <body>
@@ -45,5 +46,6 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
     </asp:PlaceHolder>
+    <asp:ContentPlaceHolder ID="ScriptsContent" runat="server" />
 </body>
 </html>

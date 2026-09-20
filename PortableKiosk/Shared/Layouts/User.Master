@@ -1,0 +1,64 @@
+<%@ Master
+    Language="C#"
+    MasterPageFile="~/Site.Master"
+    AutoEventWireup="true"
+    CodeBehind="User.Master.cs"
+    Inherits="PortableKiosk.Shared.Layouts.UserLayout" %>
+
+<asp:Content
+    ID="UserHead"
+    ContentPlaceHolderID="HeadContent"
+    runat="server">
+    <link href="<%= ResolveUrl("~/Content/css/user-kiosk.css") %>" rel="stylesheet" />
+</asp:Content>
+
+<asp:Content
+    ID="UserBody"
+    ContentPlaceHolderID="MainContent"
+    runat="server">
+    <div class="user-kiosk-shell">
+        <header class="user-kiosk-header">
+            <a ID="lnkMenu" runat="server"
+                class="user-kiosk-brand"
+                href="~/UI/User/Menu.aspx"
+                aria-label="Portable Kiosk menu">
+                <span class="user-kiosk-mark" aria-hidden="true">PK</span>
+                <span>
+                    <strong>Portable Kiosk</strong>
+                    <small><asp:Literal ID="litOrderType" runat="server" /></small>
+                </span>
+            </a>
+
+            <div class="user-kiosk-actions">
+                <a ID="lnkCart" runat="server"
+                    class="user-cart-link"
+                    href="~/UI/User/Cart.aspx">
+                    <span>Cart</span>
+                    <strong>
+                        <asp:Literal ID="litCartCount" runat="server" /> ·
+                        <asp:Literal ID="litCartTotal" runat="server" />
+                    </strong>
+                </a>
+
+                <asp:Button
+                    ID="btnCancelOrder"
+                    runat="server"
+                    Text="Cancel order"
+                    CssClass="user-cancel-button"
+                    CausesValidation="false"
+                    data-confirm-cancel="true"
+                    OnClick="btnCancelOrder_Click" />
+            </div>
+        </header>
+
+        <asp:ContentPlaceHolder ID="UserContent" runat="server" />
+    </div>
+</asp:Content>
+
+<asp:Content
+    ID="UserScripts"
+    ContentPlaceHolderID="ScriptsContent"
+    runat="server">
+    <script src="<%= ResolveUrl("~/Scripts/app/user/kiosk.js") %>"></script>
+    <asp:ContentPlaceHolder ID="UserScriptsContent" runat="server" />
+</asp:Content>

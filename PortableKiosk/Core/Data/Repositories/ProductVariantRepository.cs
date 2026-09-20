@@ -279,6 +279,71 @@ namespace PortableKiosk.Core.Data.Repositories
             return variants;
         }
 
+        public List<ProductVariant> GetAvailableByProductID(
+            int productID)
+        {
+            if (productID <= 0)
+            {
+                throw new ArgumentException(
+                    "A valid product is required.",
+                    "productID");
+            }
+
+            const string sql = @"
+                SELECT
+                    pv.ProductVariantID,
+                    pv.ProductID,
+                    pv.SizeID,
+                    pv.Price,
+                    pv.ImagePath,
+                    pv.IsAvailable,
+                    p.ProductName,
+                    c.CategoryName,
+                    s.SizeName
+                FROM ProductVariants AS pv
+                INNER JOIN Products AS p
+                    ON p.ProductID = pv.ProductID
+                INNER JOIN Categories AS c
+                    ON c.CategoryID = p.CategoryID
+                LEFT JOIN Sizes AS s
+                    ON s.SizeID = pv.SizeID
+                WHERE pv.ProductID = @ProductID
+                    AND pv.IsAvailable = 1
+                    AND p.IsAvailable = 1
+                    AND c.IsAvailable = 1
+                ORDER BY
+                    CASE WHEN pv.SizeID IS NULL THEN 0 ELSE 1 END,
+                    pv.Price ASC,
+                    s.SizeName ASC,
+                    pv.ProductVariantID ASC;";
+
+            List<ProductVariant> variants =
+                new List<ProductVariant>();
+
+            using (SqlConnection connection =
+                DatabaseConnection.GetConnection())
+            using (SqlCommand command =
+                new SqlCommand(sql, connection))
+            {
+                command.Parameters.Add(
+                    "@ProductID",
+                    SqlDbType.Int).Value = productID;
+
+                connection.Open();
+
+                using (SqlDataReader reader =
+                    command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        variants.Add(Map(reader));
+                    }
+                }
+            }
+
+            return variants;
+        }
+
         public ProductVariant GetByID(int productVariantID)
         {
             ValidateID(productVariantID);
@@ -302,6 +367,53 @@ namespace PortableKiosk.Core.Data.Repositories
                 LEFT JOIN Sizes AS s
                     ON s.SizeID = pv.SizeID
                 WHERE pv.ProductVariantID = @ProductVariantID;";
+
+            using (SqlConnection connection =
+                DatabaseConnection.GetConnection())
+            using (SqlCommand command =
+                new SqlCommand(sql, connection))
+            {
+                command.Parameters.Add(
+                    "@ProductVariantID",
+                    SqlDbType.Int).Value = productVariantID;
+
+                connection.Open();
+
+                using (SqlDataReader reader =
+                    command.ExecuteReader())
+                {
+                    return reader.Read() ? Map(reader) : null;
+                }
+            }
+        }
+
+        public ProductVariant GetAvailableByID(
+            int productVariantID)
+        {
+            ValidateID(productVariantID);
+
+            const string sql = @"
+                SELECT
+                    pv.ProductVariantID,
+                    pv.ProductID,
+                    pv.SizeID,
+                    pv.Price,
+                    pv.ImagePath,
+                    pv.IsAvailable,
+                    p.ProductName,
+                    c.CategoryName,
+                    s.SizeName
+                FROM ProductVariants AS pv
+                INNER JOIN Products AS p
+                    ON p.ProductID = pv.ProductID
+                INNER JOIN Categories AS c
+                    ON c.CategoryID = p.CategoryID
+                LEFT JOIN Sizes AS s
+                    ON s.SizeID = pv.SizeID
+                WHERE pv.ProductVariantID = @ProductVariantID
+                    AND pv.IsAvailable = 1
+                    AND p.IsAvailable = 1
+                    AND c.IsAvailable = 1;";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())

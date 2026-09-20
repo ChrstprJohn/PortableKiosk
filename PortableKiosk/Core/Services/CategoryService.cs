@@ -24,6 +24,11 @@ namespace PortableKiosk.Core.Services
             return categoryRepository.GetAll();
         }
 
+        public List<Category> GetAvailable()
+        {
+            return categoryRepository.GetAvailable();
+        }
+
         public bool Update(Category category)
         {
             return categoryRepository.Update(category);

@@ -181,14 +181,34 @@ textarea {
 }
 
 .kiosk-idle-footer {
+    align-items: center;
     color: #aeb9cc;
+    display: flex;
     font-size: 0.82rem;
     font-weight: 650;
+    gap: 1.5rem;
+    justify-content: space-between;
     letter-spacing: 0.08em;
     margin: 0;
     position: relative;
     text-transform: uppercase;
     z-index: 1;
+}
+
+.kiosk-start-button {
+    background: var(--gold);
+    border: 0;
+    border-radius: 0.8rem;
+    color: #172033;
+    font-size: 1.15rem;
+    font-weight: 750;
+    min-height: 3.75rem;
+    padding: 0.9rem 2rem;
+}
+
+.kiosk-start-button:hover,
+.kiosk-start-button:focus {
+    background: #ffd363;
 }
 
 .auth-shell {

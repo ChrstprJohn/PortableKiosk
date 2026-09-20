@@ -96,6 +96,38 @@ namespace PortableKiosk.Core.Data.Repositories
             return categories;
         }
 
+        public List<Category> GetAvailable()
+        {
+            const string sql = @"
+                SELECT
+                    CategoryID,
+                    CategoryName,
+                    IsAvailable
+                FROM Categories
+                WHERE IsAvailable = 1
+                ORDER BY CategoryName ASC, CategoryID ASC;";
+
+            List<Category> categories = new List<Category>();
+
+            using (SqlConnection connection =
+                DatabaseConnection.GetConnection())
+            using (SqlCommand command =
+                new SqlCommand(sql, connection))
+            {
+                connection.Open();
+
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        categories.Add(Map(reader));
+                    }
+                }
+            }
+
+            return categories;
+        }
+
         public bool Update(Category category)
         {
             Validate(category);

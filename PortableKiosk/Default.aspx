@@ -10,16 +10,24 @@
         <section class="kiosk-idle-message">
             <h1 id="idleHeading">Ready when you are.</h1>
             <p>
-                Welcome to Portable Kiosk. This screen is the starting point
-                for the customer ordering experience.
+                Browse the menu, choose your favorites, and build your order
+                at your own pace.
             </p>
 
-            <div class="kiosk-idle-status" role="status">
-                <span aria-hidden="true"></span>
-                Kiosk ready
-            </div>
+            <asp:Button
+                ID="btnStartOrder"
+                runat="server"
+                Text="Start order"
+                CssClass="kiosk-start-button"
+                OnClick="btnStartOrder_Click" />
         </section>
 
-        <p class="kiosk-idle-footer">Customer home</p>
+        <div class="kiosk-idle-footer">
+            <span class="kiosk-idle-status" role="status">
+                <span aria-hidden="true"></span>
+                Kiosk ready
+            </span>
+            <span>Tap Start order to begin</span>
+        </div>
     </main>
 </asp:Content>
