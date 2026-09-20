@@ -5,31 +5,33 @@
         <main class="menu-layout" aria-label="Customer menu">
             <aside class="menu-sidebar" aria-label="Menu categories">
                 <div class="menu-sidebar-brand" aria-label="Portable Kiosk">
-                    <span aria-hidden="true">P</span>
+                    <span class="menu-brand-letter" aria-hidden="true">P</span>
                 </div>
 
-                <asp:LinkButton ID="btnHome" runat="server" CssClass="menu-nav-item" CausesValidation="false"
-                    OnClick="btnHome_Click">
-                    <span class="menu-nav-icon" aria-hidden="true">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                    </span>
-                    <span class="menu-nav-label">Home</span>
-                </asp:LinkButton>
+                <div class="menu-home-card">
+                    <asp:LinkButton ID="btnHome" runat="server" CssClass="menu-nav-item" CausesValidation="false"
+                        OnClick="btnHome_Click">
+                        <span class="menu-nav-icon menu-home-icon" aria-hidden="true">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/></svg>
+                        </span>
+                        <span class="menu-nav-label">Home</span>
+                    </asp:LinkButton>
+                </div>
 
-                <div class="menu-sidebar-divider" aria-hidden="true"></div>
-
-                <asp:Repeater ID="rptCategories" runat="server" OnItemCommand="rptCategories_ItemCommand">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="btnCategory" runat="server"
-                            CssClass='<%# GetCategoryCss(Eval("CategoryID")) %>' CommandName="SelectCategory"
-                            CommandArgument='<%# Eval("CategoryID") %>' CausesValidation="false">
-                            <span class="menu-nav-icon" aria-hidden="true">
-                                <%# GetCategoryIconSvg(Eval("CategoryName")) %>
-                            </span>
-                            <span class="menu-nav-label"><%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %></span>
-                        </asp:LinkButton>
-                    </ItemTemplate>
-                </asp:Repeater>
+                <div class="menu-categories-card">
+                    <asp:Repeater ID="rptCategories" runat="server" OnItemCommand="rptCategories_ItemCommand">
+                        <ItemTemplate>
+                            <asp:LinkButton ID="btnCategory" runat="server"
+                                CssClass='<%# GetCategoryCss(Eval("CategoryID")) %>' CommandName="SelectCategory"
+                                CommandArgument='<%# Eval("CategoryID") %>' CausesValidation="false">
+                                <span class="menu-nav-icon" aria-hidden="true">
+                                    <%# GetCategoryIconSvg(Eval("CategoryName")) %>
+                                </span>
+                                <span class="menu-nav-label"><%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %></span>
+                            </asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </div>
             </aside>
 
             <section class="menu-content">
