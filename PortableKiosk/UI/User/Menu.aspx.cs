@@ -140,7 +140,7 @@ namespace PortableKiosk.UI.User
             int.TryParse(hfSelectedProductID.Value, out productID);
 
             if (!int.TryParse(
-                    rblVariants.SelectedValue,
+                    hfSelectedVariantID.Value,
                     out productVariantID) ||
                 !int.TryParse(txtQuantity.Text, out quantity))
             {
@@ -184,6 +184,21 @@ namespace PortableKiosk.UI.User
             }
         }
 
+        protected void btnBackToMenu_Click(
+            object sender,
+            EventArgs e)
+        {
+            if (SelectedCategoryID > 0)
+            {
+                BindProducts(SelectedCategoryID);
+                BindCategories();
+                return;
+            }
+
+            ShowHome();
+            BindCategories();
+        }
+
         protected string GetCategoryCss(object categoryID)
         {
             int parsedCategoryID;
@@ -222,7 +237,23 @@ namespace PortableKiosk.UI.User
         {
             return string.Format(
                 CultureInfo.GetCultureInfo("en-PH"),
-                "From ₱{0:N2}",
+                "₱{0:N2}",
+                Convert.ToDecimal(price));
+        }
+
+        protected string GetVariantSizeName(object sizeName)
+        {
+            string value = Convert.ToString(sizeName);
+            return string.IsNullOrWhiteSpace(value)
+                ? "Standard"
+                : value;
+        }
+
+        protected string FormatVariantPrice(object price)
+        {
+            return string.Format(
+                CultureInfo.GetCultureInfo("en-PH"),
+                "₱{0:N2}",
                 Convert.ToDecimal(price));
         }
 
@@ -239,10 +270,71 @@ namespace PortableKiosk.UI.User
         private void ShowHome()
         {
             SelectedCategoryID = 0;
+            BindHomeContent();
             pnlHome.Visible = true;
             pnlProducts.Visible = false;
+            pnlProductDetail.Visible = false;
             pnlAddSuccess.Visible = false;
             lblMenuError.Visible = false;
+        }
+
+        private void BindHomeContent()
+        {
+            List<Category> categories = categoryService
+                .GetAvailable()
+                .Take(4)
+                .ToList();
+
+            rptHomeCategories.DataSource = categories;
+            rptHomeCategories.DataBind();
+
+            List<MenuProductViewModel> featuredProducts =
+                new List<MenuProductViewModel>();
+
+            foreach (Category category in categories)
+            {
+                foreach (Product product in productService
+                    .GetAvailableByCategoryID(category.CategoryID))
+                {
+                    List<ProductVariant> variants = variantService
+                        .GetAvailableByProductID(product.ProductID);
+
+                    if (variants.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    ProductVariant imageVariant = variants.FirstOrDefault(
+                        variant => !string.IsNullOrWhiteSpace(
+                            variant.ImagePath));
+
+                    featuredProducts.Add(new MenuProductViewModel
+                    {
+                        ProductID = product.ProductID,
+                        CategoryName = product.CategoryName,
+                        ProductName = product.ProductName,
+                        ProductDescription = product.ProductDescription,
+                        StartingPrice = variants.Min(
+                            variant => variant.Price),
+                        ImagePath = imageVariant == null
+                            ? null
+                            : imageVariant.ImagePath
+                    });
+
+                    if (featuredProducts.Count == 3)
+                    {
+                        break;
+                    }
+                }
+
+                if (featuredProducts.Count == 3)
+                {
+                    break;
+                }
+            }
+
+            rptBestSellers.DataSource = featuredProducts;
+            rptBestSellers.DataBind();
         }
 
         private void BindProducts(int categoryID)
@@ -287,6 +379,7 @@ namespace PortableKiosk.UI.User
             SelectedCategoryID = categoryID;
             pnlHome.Visible = false;
             pnlProducts.Visible = true;
+            pnlProductDetail.Visible = false;
             pnlNoProducts.Visible = menuProducts.Count == 0;
             pnlAddSuccess.Visible = false;
             lblMenuError.Visible = false;
@@ -320,70 +413,26 @@ namespace PortableKiosk.UI.User
                 return;
             }
 
-            ProductVariant imageVariant = variants.FirstOrDefault(
-                variant =>
-                    !string.IsNullOrWhiteSpace(
-                        variant.ImagePath));
-
-            litSelectedProductName.Text =
-                Server.HtmlEncode(product.ProductName);
-            litSelectedProductDescription.Text =
-                Server.HtmlEncode(
-                    GetProductDescription(
-                        product.ProductDescription));
             hfSelectedProductID.Value =
                 product.ProductID.ToString(
                     CultureInfo.InvariantCulture);
 
-            imgSelectedProduct.Visible = imageVariant != null;
-            pnlSelectedProductPlaceholder.Visible =
-                imageVariant == null;
-
-            if (imageVariant != null)
-            {
-                imgSelectedProduct.ImageUrl =
-                    ResolveUrl(imageVariant.ImagePath);
-                imgSelectedProduct.AlternateText =
-                    product.ProductName;
-            }
-
-            rblVariants.Items.Clear();
-
-            foreach (ProductVariant variant in variants)
-            {
-                string sizeName =
-                    string.IsNullOrWhiteSpace(variant.SizeName)
-                        ? "Standard"
-                        : variant.SizeName;
-
-                string optionText = string.Format(
-                    CultureInfo.GetCultureInfo("en-PH"),
-                    "{0} — ₱{1:N2}",
-                    sizeName,
-                    variant.Price);
-
-                rblVariants.Items.Add(new ListItem(
-                    HttpUtility.HtmlEncode(optionText),
-                    variant.ProductVariantID.ToString(
-                        CultureInfo.InvariantCulture)));
-            }
-
-            rblVariants.SelectedIndex = 0;
+            rptVariants.DataSource = variants;
+            rptVariants.DataBind();
+            hfSelectedVariantID.Value = variants[0]
+                .ProductVariantID
+                .ToString(CultureInfo.InvariantCulture);
             txtQuantity.Text = "1";
             lblProductError.Visible =
                 !string.IsNullOrWhiteSpace(errorMessage);
             lblProductError.Text =
                 Server.HtmlEncode(errorMessage);
 
-            ScriptManager.RegisterStartupScript(
-                this,
-                GetType(),
-                "open-product-modal",
-                "window.addEventListener('load', function () { " +
-                "if (window.kioskMenu) { " +
-                "window.kioskMenu.openProductModal(); " +
-                "} });",
-                true);
+            pnlHome.Visible = false;
+            pnlProducts.Visible = false;
+            pnlProductDetail.Visible = true;
+            pnlAddSuccess.Visible = false;
+            lblMenuError.Visible = false;
         }
 
         private void ShowMenuError(string message)

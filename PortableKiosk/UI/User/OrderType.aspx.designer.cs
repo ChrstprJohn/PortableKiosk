@@ -8,8 +8,8 @@ namespace PortableKiosk.UI.User
 {
     public partial class OrderType
     {
-        protected global::System.Web.UI.WebControls.Button btnDineIn;
+        protected global::System.Web.UI.WebControls.LinkButton btnDineIn;
 
-        protected global::System.Web.UI.WebControls.Button btnTakeout;
+        protected global::System.Web.UI.WebControls.LinkButton btnTakeout;
     }
 }

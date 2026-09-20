@@ -3,7 +3,7 @@
 
     function getQuantityInput() {
         return document.querySelector(
-            "#productModal input[type='number']");
+            ".product-detail-page input[type='number']");
     }
 
     function changeQuantity(change) {
@@ -37,17 +37,30 @@
                 : -1);
     });
 
-    window.kioskMenu = {
-        openProductModal: function () {
-            var modalElement = document.getElementById("productModal");
+    function syncVariantSelection() {
+        var selectedVariant = document.getElementById(
+            "hfSelectedVariantID");
+        var choices = document.querySelectorAll(
+            "[data-variant-choice]");
 
-            if (!modalElement || !window.bootstrap) {
-                return;
-            }
-
-            window.bootstrap.Modal
-                .getOrCreateInstance(modalElement)
-                .show();
+        if (!selectedVariant || choices.length === 0) {
+            return;
         }
-    };
+
+        var matchingChoice = document.querySelector(
+            "[data-variant-choice][value='" +
+            selectedVariant.value + "']");
+
+        (matchingChoice || choices[0]).checked = true;
+
+        choices.forEach(function (choice) {
+            choice.addEventListener("change", function () {
+                if (choice.checked) {
+                    selectedVariant.value = choice.value;
+                }
+            });
+        });
+    }
+
+    syncVariantSelection();
 }());

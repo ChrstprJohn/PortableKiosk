@@ -12,7 +12,10 @@
     runat="server">
     <main class="menu-layout" aria-label="Customer menu">
         <aside class="menu-sidebar" aria-label="Menu categories">
-            <p class="menu-sidebar-label">Discover our menu</p>
+            <div class="menu-sidebar-brand" aria-label="Portable Kiosk">
+                <span>PK</span>
+                <strong>Menu</strong>
+            </div>
 
             <asp:LinkButton
                 ID="btnHome"
@@ -61,13 +64,63 @@
 
             <asp:Panel ID="pnlHome" runat="server">
                 <div class="menu-home">
-                    <p class="kiosk-eyebrow">Menu home</p>
-                    <h1>What would you like today?</h1>
-                    <p>
-                        Choose a category from the left to start browsing.
-                        This home area is ready for promotions and featured
-                        items later.
-                    </p>
+                    <header class="menu-home-heading">
+                        <h1>Must-Try Dinner</h1>
+                        <p>Discover our menu</p>
+                    </header>
+
+                    <div class="home-category-grid">
+                        <asp:Repeater
+                            ID="rptHomeCategories"
+                            runat="server"
+                            OnItemCommand="rptCategories_ItemCommand">
+                            <ItemTemplate>
+                                <asp:LinkButton
+                                    ID="btnHomeCategory"
+                                    runat="server"
+                                    CssClass="home-category-card"
+                                    CommandName="SelectCategory"
+                                    CommandArgument='<%# Eval("CategoryID") %>'
+                                    CausesValidation="false">
+                                    <span><%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %></span>
+                                    <span class="home-category-icon" aria-hidden="true">→</span>
+                                </asp:LinkButton>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </div>
+
+                    <section class="best-seller-section" aria-labelledby="bestSellerHeading">
+                        <h2 id="bestSellerHeading">Best Seller</h2>
+                        <div class="best-seller-grid">
+                            <asp:Repeater
+                                ID="rptBestSellers"
+                                runat="server"
+                                OnItemCommand="rptProducts_ItemCommand">
+                                <ItemTemplate>
+                                    <article class="best-seller-card">
+                                        <asp:LinkButton
+                                            ID="btnBestSeller"
+                                            runat="server"
+                                            CssClass="best-seller-link"
+                                            CommandName="SelectProduct"
+                                            CommandArgument='<%# Eval("ProductID") %>'
+                                            CausesValidation="false">
+                                            <span class="best-seller-media">
+                                                <asp:Image
+                                                    runat="server"
+                                                    Visible='<%# HasImage(Eval("ImagePath")) %>'
+                                                    ImageUrl='<%# ResolveProductImage(Eval("ImagePath")) %>'
+                                                    AlternateText='<%# Convert.ToString(Eval("ProductName")) %>' />
+                                                <span runat="server" visible='<%# !HasImage(Eval("ImagePath")) %>' class="product-image-placeholder">PK</span>
+                                            </span>
+                                            <strong><%# Server.HtmlEncode(Convert.ToString(Eval("ProductName"))) %></strong>
+                                            <span><%# FormatStartingPrice(Eval("StartingPrice")) %></span>
+                                        </asp:LinkButton>
+                                    </article>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </div>
+                    </section>
                 </div>
             </asp:Panel>
 
@@ -96,96 +149,76 @@
                         OnItemCommand="rptProducts_ItemCommand">
                         <ItemTemplate>
                             <article class="product-card">
-                                <div class="product-card-media">
-                                    <asp:PlaceHolder
-                                        runat="server"
-                                        Visible='<%# HasImage(Eval("ImagePath")) %>'>
-                                        <img
-                                            src='<%# ResolveProductImage(Eval("ImagePath")) %>'
-                                            alt='<%# System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("ProductName"))) %>' />
-                                    </asp:PlaceHolder>
-                                    <asp:PlaceHolder
-                                        runat="server"
-                                        Visible='<%# !HasImage(Eval("ImagePath")) %>'>
-                                        <span class="product-image-placeholder" aria-hidden="true">PK</span>
-                                    </asp:PlaceHolder>
-                                </div>
-
-                                <div class="product-card-body">
-                                    <p class="product-card-category">
-                                        <%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %>
-                                    </p>
-                                    <h2><%# Server.HtmlEncode(Convert.ToString(Eval("ProductName"))) %></h2>
-                                    <p class="product-card-description">
-                                        <%# Server.HtmlEncode(GetProductDescription(Eval("ProductDescription"))) %>
-                                    </p>
-                                    <div class="product-card-footer">
-                                        <strong><%# FormatStartingPrice(Eval("StartingPrice")) %></strong>
-                                        <asp:LinkButton
-                                            ID="btnSelectProduct"
+                                <asp:LinkButton
+                                    ID="btnSelectProduct"
+                                    runat="server"
+                                    CssClass="product-card-link"
+                                    CommandName="SelectProduct"
+                                    CommandArgument='<%# Eval("ProductID") %>'
+                                    CausesValidation="false">
+                                    <span class="product-card-media">
+                                        <asp:Image
                                             runat="server"
-                                            CssClass="kiosk-button kiosk-button-primary"
-                                            CommandName="SelectProduct"
-                                            CommandArgument='<%# Eval("ProductID") %>'
-                                            CausesValidation="false">
-                                            View options
-                                        </asp:LinkButton>
-                                    </div>
-                                </div>
+                                            Visible='<%# HasImage(Eval("ImagePath")) %>'
+                                            ImageUrl='<%# ResolveProductImage(Eval("ImagePath")) %>'
+                                            AlternateText='<%# Convert.ToString(Eval("ProductName")) %>' />
+                                        <span runat="server" visible='<%# !HasImage(Eval("ImagePath")) %>' class="product-image-placeholder" aria-hidden="true">PK</span>
+                                    </span>
+                                    <span class="product-card-body">
+                                        <strong class="product-card-name"><%# Server.HtmlEncode(Convert.ToString(Eval("ProductName"))) %></strong>
+                                        <span class="product-card-price"><%# FormatStartingPrice(Eval("StartingPrice")) %></span>
+                                    </span>
+                                </asp:LinkButton>
                             </article>
                         </ItemTemplate>
                     </asp:Repeater>
                 </div>
             </asp:Panel>
-        </section>
-    </main>
 
-    <div
-        class="modal fade kiosk-product-modal"
-        id="productModal"
-        tabindex="-1"
-        aria-labelledby="productModalTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <div>
-                        <p class="kiosk-eyebrow">Choose your option</p>
-                        <h2 class="modal-title" id="productModalTitle">
-                            <asp:Literal ID="litSelectedProductName" runat="server" />
-                        </h2>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Back to menu"></button>
-                </div>
+            <asp:Panel
+                ID="pnlProductDetail"
+                runat="server"
+                Visible="false"
+                CssClass="product-detail-page">
+                <header class="product-detail-heading">
+                    <h1>Sizes</h1>
+                </header>
 
-                <div class="modal-body product-detail-layout">
-                    <div class="product-detail-media">
-                        <asp:Image
-                            ID="imgSelectedProduct"
-                            runat="server"
-                            AlternateText="Selected product" />
-                        <asp:Panel
-                            ID="pnlSelectedProductPlaceholder"
-                            runat="server"
-                            CssClass="product-image-placeholder product-image-placeholder-large">
-                            PK
-                        </asp:Panel>
-                    </div>
-
+                <div class="product-detail-layout">
                     <div class="product-detail-options">
-                        <p class="product-detail-description">
-                            <asp:Literal ID="litSelectedProductDescription" runat="server" />
-                        </p>
-
                         <asp:HiddenField ID="hfSelectedProductID" runat="server" />
+                        <asp:HiddenField ID="hfSelectedVariantID" runat="server" ClientIDMode="Static" />
 
                         <fieldset>
-                            <legend>Size</legend>
-                            <asp:RadioButtonList
-                                ID="rblVariants"
-                                runat="server"
-                                CssClass="variant-options"
-                                RepeatLayout="Flow" />
+                            <legend class="visually-hidden">Choose one size</legend>
+                            <div class="variant-options">
+                                <asp:Repeater ID="rptVariants" runat="server">
+                                    <ItemTemplate>
+                                        <label class="variant-card">
+                                            <input
+                                                type="radio"
+                                                name="variantChoice"
+                                                value='<%# Eval("ProductVariantID") %>'
+                                                data-variant-choice="true" />
+                                            <span class="variant-card-content">
+                                                <asp:Image
+                                                    runat="server"
+                                                    Visible='<%# HasImage(Eval("ImagePath")) %>'
+                                                    CssClass="variant-image"
+                                                    ImageUrl='<%# ResolveProductImage(Eval("ImagePath")) %>'
+                                                    AlternateText='<%# Convert.ToString(Eval("SizeName")) %>' />
+                                                <span
+                                                    runat="server"
+                                                    visible='<%# !HasImage(Eval("ImagePath")) %>'
+                                                    class="variant-image-placeholder"
+                                                    aria-hidden="true">PK</span>
+                                                <strong class="variant-name"><%# Server.HtmlEncode(GetVariantSizeName(Eval("SizeName"))) %></strong>
+                                                <span class="variant-price"><%# FormatVariantPrice(Eval("Price")) %></span>
+                                            </span>
+                                        </label>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </div>
                         </fieldset>
 
                         <div class="quantity-field">
@@ -213,8 +246,15 @@
                     </div>
                 </div>
 
-                <div class="modal-footer product-detail-actions">
-                    <button type="button" class="kiosk-button" data-bs-dismiss="modal">Back</button>
+                <div class="product-detail-actions">
+                    <asp:LinkButton
+                        ID="btnBackToMenu"
+                        runat="server"
+                        CssClass="kiosk-button"
+                        CausesValidation="false"
+                        OnClick="btnBackToMenu_Click">
+                        Back
+                    </asp:LinkButton>
                     <asp:Button
                         ID="btnAddToCart"
                         runat="server"
@@ -222,9 +262,9 @@
                         CssClass="kiosk-button kiosk-button-primary"
                         OnClick="btnAddToCart_Click" />
                 </div>
-            </div>
-        </div>
-    </div>
+            </asp:Panel>
+        </section>
+    </main>
 </asp:Content>
 
 <asp:Content

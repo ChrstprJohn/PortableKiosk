@@ -22,18 +22,19 @@ namespace PortableKiosk.UI.User
         protected global::System.Web.UI.WebControls.Repeater rptCategories;
         protected global::System.Web.UI.WebControls.Label lblMenuError;
         protected global::System.Web.UI.WebControls.Panel pnlHome;
+        protected global::System.Web.UI.WebControls.Repeater rptHomeCategories;
+        protected global::System.Web.UI.WebControls.Repeater rptBestSellers;
         protected global::System.Web.UI.WebControls.Panel pnlProducts;
         protected global::System.Web.UI.WebControls.Literal litCategoryName;
         protected global::System.Web.UI.WebControls.Panel pnlNoProducts;
         protected global::System.Web.UI.WebControls.Repeater rptProducts;
-        protected global::System.Web.UI.WebControls.Literal litSelectedProductName;
-        protected global::System.Web.UI.WebControls.Image imgSelectedProduct;
-        protected global::System.Web.UI.WebControls.Panel pnlSelectedProductPlaceholder;
-        protected global::System.Web.UI.WebControls.Literal litSelectedProductDescription;
+        protected global::System.Web.UI.WebControls.Panel pnlProductDetail;
         protected global::System.Web.UI.WebControls.HiddenField hfSelectedProductID;
-        protected global::System.Web.UI.WebControls.RadioButtonList rblVariants;
+        protected global::System.Web.UI.WebControls.HiddenField hfSelectedVariantID;
+        protected global::System.Web.UI.WebControls.Repeater rptVariants;
         protected global::System.Web.UI.WebControls.TextBox txtQuantity;
         protected global::System.Web.UI.WebControls.Label lblProductError;
+        protected global::System.Web.UI.WebControls.LinkButton btnBackToMenu;
         protected global::System.Web.UI.WebControls.Button btnAddToCart;
     }
 }
