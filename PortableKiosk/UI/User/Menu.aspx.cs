@@ -172,11 +172,16 @@ namespace PortableKiosk.UI.User
                     BindProducts(categoryID);
                     BindCategories();
                 }
+                else
+                {
+                    ShowHome();
+                    BindCategories();
+                }
 
                 pnlAddSuccess.Visible = true;
                 litAddSuccess.Text = string.Format(
                     CultureInfo.InvariantCulture,
-                    " {0} ({1}) × {2} was added successfully.",
+                    "{0} ({1}) × {2} was added successfully.",
                     Server.HtmlEncode(addedItem.ProductName),
                     Server.HtmlEncode(addedItem.DisplaySize),
                     quantity);

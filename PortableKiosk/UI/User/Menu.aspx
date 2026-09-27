@@ -35,10 +35,24 @@
             </aside>
 
             <section class="menu-content min-h-0 min-w-0 overflow-y-auto overscroll-contain bg-slate-50 px-[clamp(0.6rem,3.5cqw,6rem)] pt-[clamp(1.25rem,4vh,6rem)] pb-[clamp(5.5rem,14vh,28rem)] max-[480px]:px-2.5 max-[480px]:pt-6 max-[480px]:pb-24">
-                <asp:Panel ID="pnlAddSuccess" runat="server" Visible="false" CssClass="kiosk-alert kiosk-alert-success"
-                    role="status">
-                    <strong>Added to cart.</strong>
-                    <asp:Literal ID="litAddSuccess" runat="server" />
+                <asp:Panel ID="pnlAddSuccess" runat="server" Visible="false"
+                    CssClass="cart-add-success-modal fixed inset-0 z-[2000] flex items-center justify-center overflow-y-auto bg-slate-950/75 p-[clamp(1rem,4cqw,4rem)] backdrop-blur-[8px]"
+                    role="dialog" aria-modal="true" aria-labelledby="addSuccessHeading" tabindex="-1">
+                    <div class="w-full max-w-[min(92vw,72rem)] rounded-[clamp(1.5rem,3.5cqw,3rem)] bg-white p-[clamp(1.5rem,5cqw,4.5rem)] text-center shadow-[0_24px_80px_rgba(15,23,42,0.32)]">
+                        <span class="mx-auto mb-[clamp(1.25rem,3cqw,2.5rem)] flex size-[clamp(4.5rem,10cqw,9rem)] items-center justify-center rounded-full bg-emerald-50 text-emerald-600" aria-hidden="true">
+                            <svg class="size-[56%]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 6 9 17l-5-5"></path>
+                            </svg>
+                        </span>
+                        <h2 id="addSuccessHeading" class="mb-[clamp(0.75rem,2cqw,1.5rem)] text-[clamp(2rem,5.5cqw,5rem)] font-black leading-tight tracking-tight text-slate-900">Added to cart</h2>
+                        <p class="mx-auto mb-[clamp(1.5rem,3.5cqw,3rem)] max-w-4xl text-[clamp(1.125rem,2.6cqw,2.25rem)] font-semibold leading-snug text-slate-600">
+                            <asp:Literal ID="litAddSuccess" runat="server" />
+                        </p>
+                        <button type="button" data-add-success-dismiss="true"
+                            class="inline-flex min-h-[clamp(3.5rem,8cqw,7rem)] w-full items-center justify-center rounded-[clamp(0.75rem,2cqw,1.75rem)] bg-[linear-gradient(135deg,#f59e0b,#d97706)] px-[clamp(1.5rem,4cqw,4rem)] text-[clamp(1.05rem,2.3cqw,1.9rem)] font-black text-white shadow-[0_8px_24px_rgba(217,119,6,0.32)] transition-all hover:brightness-105 focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/40">
+                            Continue browsing
+                        </button>
+                    </div>
                 </asp:Panel>
 
                 <asp:Label ID="lblMenuError" runat="server" Visible="false" CssClass="kiosk-alert kiosk-alert-error"
@@ -226,4 +240,54 @@
 
     <asp:Content ID="MenuScripts" ContentPlaceHolderID="UserScriptsContent" runat="server">
         <script src="<%= ResolveUrl("~/Scripts/app/user/menu.js") %>"></script>
+    <script>
+        (function () {
+            var successDialog = document.querySelector(
+                ".cart-add-success-modal");
+            var dismissButton = successDialog && successDialog.querySelector(
+                "[data-add-success-dismiss]");
+
+            if (!successDialog) {
+                return;
+            }
+
+            successDialog.addEventListener("modal:hidden", function () {
+                var menuContent = document.querySelector(".menu-content");
+
+                if (menuContent) {
+                    menuContent.setAttribute("tabindex", "-1");
+                    menuContent.focus({ preventScroll: true });
+                }
+            });
+
+            if (dismissButton) {
+                dismissButton.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (window.AppModal) {
+                        window.AppModal.close(successDialog);
+                    } else {
+                        successDialog.classList.remove("flex");
+                        successDialog.classList.add("hidden");
+                        successDialog.style.display = "none";
+                        successDialog.setAttribute("aria-hidden", "true");
+                        successDialog.removeAttribute("aria-modal");
+                        document.body.style.overflow = "";
+
+                        var menuContent = document.querySelector(".menu-content");
+
+                        if (menuContent) {
+                            menuContent.setAttribute("tabindex", "-1");
+                            menuContent.focus({ preventScroll: true });
+                        }
+                    }
+                });
+            }
+
+            if (window.AppModal) {
+                window.AppModal.open(successDialog);
+            }
+        }());
+    </script>
     </asp:Content>
