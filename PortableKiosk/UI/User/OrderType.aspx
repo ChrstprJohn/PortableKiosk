@@ -12,7 +12,7 @@
     runat="server">
     <main class="flex min-h-screen min-h-dvh w-full flex-col items-center justify-center bg-[radial-gradient(ellipse_at_50%_30%,#fffdf6_0%,#fff_65%)] px-[clamp(1.25rem,6vw,4rem)] pt-[clamp(1.5rem,5vh,6rem)] pb-[clamp(0.5rem,1.25vh,1.5rem)] text-center max-[540px]:px-5 max-[540px]:pt-[0.9rem] max-[540px]:pb-2 kiosk-mobile:justify-center" aria-labelledby="orderTypeHeading">
 
-        <span class="mb-[clamp(0.35rem,1vh,0.75rem)] select-none text-[clamp(3.25rem,7vh,5rem)] font-black leading-none tracking-[-0.04em] text-[#f59e0b] drop-shadow-[0_4px_16px_rgba(245,158,11,0.3)] kiosk-portrait:text-[clamp(4rem,min(8vw,7vh),10rem)] kiosk-short:mb-[0.4rem] kiosk-short:text-[clamp(2.75rem,7vh,3.75rem)]" aria-label="Portable Kiosk">P</span>
+        <span class="mb-[clamp(0.35rem,1vh,0.75rem)] select-none text-[clamp(3.25rem,7vh,5rem)] font-black leading-none tracking-[-0.04em] text-[#f59e0b] drop-shadow-[0_4px_16px_rgba(245,158,11,0.3)] kiosk-portrait:text-[clamp(4.5rem,min(12vw,10vh),18rem)] kiosk-short:mb-[0.4rem] kiosk-short:text-[clamp(2.75rem,7vh,3.75rem)]" aria-label="Portable Kiosk">P</span>
 
         <h1 id="orderTypeHeading" class="mb-[clamp(2rem,3.5vh,3rem)] max-w-[760px] text-[clamp(2.65rem,6vw,5rem)] font-black leading-[1.04] tracking-[-0.05em] text-slate-900 kiosk-portrait:max-w-[1600px] kiosk-portrait:mb-[clamp(2rem,4.5vh,5rem)] kiosk-portrait:text-[clamp(2.75rem,min(10vw,7vh),12rem)] kiosk-mobile:mb-8 kiosk-mobile:max-w-full kiosk-mobile:text-[clamp(2rem,10vw,3.5rem)] kiosk-short:mb-8 kiosk-short:text-[clamp(2.4rem,6vw,3.75rem)]">How would you<br />like to eat?</h1>
 
