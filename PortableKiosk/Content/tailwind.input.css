@@ -155,4 +155,38 @@
         border-radius: clamp(7.5px, 2.239cqw, 18px);
         font-size: clamp(12px, 2.736cqw, 22px);
     }
+
+    .cart-fluid .cart-fluid-footer-actions .cart-fluid-action-button {
+        min-height: clamp(35.2px, 5.2vh, 192px);
+        padding-block: clamp(4px, 1.4cqw, 24px);
+        border-radius: clamp(8px, 3cqw, 80px);
+        font-weight: 700;
+    }
+
+    .cart-fluid .cart-fluid-footer-actions > a.cart-fluid-action-button {
+        padding-inline: clamp(6.4px, 2.5cqw, 56px);
+        font-size: clamp(12px, 2.2cqw, 64px);
+    }
+
+    .cart-fluid .cart-fluid-footer-actions > input.cart-fluid-action-button {
+        padding-inline: clamp(8px, 3cqw, 64px);
+        font-size: clamp(12px, 2.4cqw, 68px);
+    }
+
+    @media (max-width: 480px) {
+        .cart-fluid .cart-fluid-footer-actions .cart-fluid-action-button {
+            min-height: 2.2rem;
+            padding-block: 0.25rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .cart-fluid .cart-fluid-footer-actions > a.cart-fluid-action-button {
+            padding-inline: 0.5rem;
+        }
+
+        .cart-fluid .cart-fluid-footer-actions > input.cart-fluid-action-button {
+            padding-inline: 0.625rem;
+        }
+    }
 }
