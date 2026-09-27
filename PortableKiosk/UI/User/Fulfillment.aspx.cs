@@ -43,18 +43,6 @@ namespace PortableKiosk.UI.User
                             : "~/UI/User/Payment.aspx");
                 return;
             }
-
-            string orderType =
-                KioskSession.GetOrderType(Session);
-            bool isDineIn = string.Equals(
-                orderType,
-                "DINE_IN",
-                StringComparison.OrdinalIgnoreCase);
-
-            pnlTableService.Visible = true;
-            litFulfillmentHint.Text = isDineIn
-                ? "Choose table service or counter pickup."
-                : "Your order will be packed to go. Choose where you would like to receive it.";
         }
 
         protected void btnTableService_Click(

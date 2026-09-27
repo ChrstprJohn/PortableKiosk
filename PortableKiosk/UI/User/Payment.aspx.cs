@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using PortableKiosk.Core.Models;
 using PortableKiosk.Shared.Helpers;
 
@@ -22,11 +21,6 @@ namespace PortableKiosk.UI.User
                 Redirect("~/UI/User/Cart.aspx");
                 return;
             }
-
-            litCheckoutTotal.Text = string.Format(
-                CultureInfo.GetCultureInfo("en-PH"),
-                "₱{0:N2}",
-                cart.TotalAmount);
         }
 
         protected void btnCashless_Click(

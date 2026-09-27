@@ -12,6 +12,5 @@ namespace PortableKiosk.UI.User
 
         protected global::System.Web.UI.WebControls.LinkButton btnCashCounter;
 
-        protected global::System.Web.UI.WebControls.Literal litCheckoutTotal;
     }
 }

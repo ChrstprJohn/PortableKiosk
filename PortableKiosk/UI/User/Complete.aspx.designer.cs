@@ -10,12 +10,6 @@ namespace PortableKiosk.UI.User
     {
         protected global::System.Web.UI.WebControls.Literal litOrderNumber;
         protected global::System.Web.UI.WebControls.Literal litInstruction;
-        protected global::System.Web.UI.WebControls.Literal litOrderType;
-        protected global::System.Web.UI.WebControls.Literal litPaymentMethod;
-        protected global::System.Web.UI.WebControls.Panel pnlTableNumber;
-        protected global::System.Web.UI.WebControls.Literal litTableNumber;
-        protected global::System.Web.UI.WebControls.Repeater rptReceiptItems;
-        protected global::System.Web.UI.WebControls.Literal litReceiptTotal;
         protected global::System.Web.UI.WebControls.Button btnFinish;
     }
 }

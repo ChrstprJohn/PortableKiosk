@@ -39,8 +39,15 @@ namespace PortableKiosk.Shared.Layouts
                 pagePath.EndsWith(
                     "/UI/User/Cart",
                     StringComparison.OrdinalIgnoreCase);
+            bool isCheckoutFlowPage =
+                IsUserPage(requestPath, pagePath, "Payment.aspx") ||
+                IsUserPage(requestPath, pagePath, "OnlinePayment.aspx") ||
+                IsUserPage(requestPath, pagePath, "Fulfillment.aspx") ||
+                IsUserPage(requestPath, pagePath, "TableNumber.aspx") ||
+                IsUserPage(requestPath, pagePath, "Complete.aspx");
 
-            userKioskHeader.Visible = !isOrderTypePage && !isCartPage;
+            userKioskHeader.Visible =
+                !isOrderTypePage && !isCartPage && !isCheckoutFlowPage;
             if (isMenuPage)
             {
                 userKioskShell.Attributes["class"] =
@@ -63,9 +70,30 @@ namespace PortableKiosk.Shared.Layouts
                     "user-kiosk-shell @container/menu relative mx-auto h-dvh min-h-0 w-full max-w-none overflow-x-hidden overflow-y-auto bg-slate-50 text-slate-900 shadow-[0_0_40px_rgba(15,23,42,0.12)]";
                 userKioskHeader.Attributes["class"] = "hidden";
             }
+            else if (isCheckoutFlowPage)
+            {
+                userKioskShell.Attributes["class"] =
+                    "user-kiosk-shell relative mx-auto min-h-screen min-h-dvh w-full max-w-none overflow-x-hidden bg-slate-50 text-slate-900";
+                userKioskHeader.Attributes["class"] = "hidden";
+            }
 
             RefreshCartSummary();
             base.OnPreRender(e);
+        }
+
+        private static bool IsUserPage(
+            string requestPath,
+            string pagePath,
+            string pageName)
+        {
+            string suffix = "/UI/User/" + pageName;
+
+            return requestPath.EndsWith(
+                    suffix,
+                    StringComparison.OrdinalIgnoreCase) ||
+                pagePath.EndsWith(
+                    suffix,
+                    StringComparison.OrdinalIgnoreCase);
         }
 
         public void RefreshCartSummary()
