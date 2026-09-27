@@ -14,3 +14,145 @@
 @custom-variant kiosk-4k (@media (min-width: 2560px));
 @custom-variant kiosk-mobile (@media (max-width: 540px));
 @custom-variant kiosk-short (@media (max-height: 760px));
+
+@layer utilities {
+    .cart-fluid.cart-fluid {
+        /* The large 900px portrait preview is the reference size. */
+        padding-inline: clamp(18px, 5.333vw, 48px);
+        padding-top: clamp(22px, 6.444vw, 58px);
+        padding-bottom: clamp(151px, 40vw, 360px);
+    }
+
+    .cart-fluid .cart-fluid-header {
+        margin-bottom: clamp(27px, 7.96cqw, 64px);
+    }
+
+    .cart-fluid .cart-fluid-heading {
+        font-size: clamp(38px, 11.194cqw, 90px);
+    }
+
+    .cart-fluid .cart-fluid-empty {
+        padding: clamp(20px, 5.97cqw, 48px);
+        border-radius: clamp(13px, 3.0cqw, 24px);
+    }
+
+    .cart-fluid .cart-fluid-empty-icon {
+        width: clamp(60px, 17.91cqw, 144px);
+        height: clamp(60px, 17.91cqw, 144px);
+        margin-bottom: clamp(10px, 2.985cqw, 24px);
+    }
+
+    .cart-fluid .cart-fluid-empty-heading {
+        font-size: clamp(22px, 6.468cqw, 52px);
+    }
+
+    .cart-fluid .cart-fluid-empty-copy {
+        font-size: clamp(14px, 2.861cqw, 23px);
+    }
+
+    .cart-fluid .cart-fluid-items {
+        gap: clamp(10px, 2.985cqw, 24px);
+    }
+
+    .cart-fluid .cart-fluid-item {
+        gap: clamp(10px, 2.985cqw, 24px);
+        padding: clamp(10px, 2.985cqw, 24px);
+        border-radius: clamp(10px, 2.985cqw, 24px);
+    }
+
+    .cart-fluid .cart-fluid-item-info {
+        gap: clamp(8px, 2.8cqw, 22.5px);
+    }
+
+    .cart-fluid .cart-fluid-image {
+        width: clamp(48px, 12.935cqw, 104px);
+        height: clamp(48px, 12.935cqw, 104px);
+        border-radius: clamp(5px, 1.493cqw, 12px);
+    }
+
+    .cart-fluid .cart-fluid-product {
+        gap: clamp(4px, 0.995cqw, 8px);
+    }
+
+    .cart-fluid .cart-fluid-product-name {
+        font-size: clamp(16px, 3.607cqw, 29px);
+    }
+
+    .cart-fluid .cart-fluid-variant,
+    .cart-fluid .cart-fluid-detail {
+        font-size: clamp(12px, 1.99cqw, 16px);
+    }
+
+    .cart-fluid .cart-fluid-variant {
+        padding: clamp(2px, 0.498cqw, 4px) clamp(4px, 0.995cqw, 8px);
+    }
+
+    .cart-fluid .cart-fluid-controls {
+        gap: clamp(7px, 1.99cqw, 16px);
+    }
+
+    @media (max-width: 639px) {
+        .cart-fluid .cart-fluid-controls {
+            padding-top: clamp(5px, 1.493cqw, 12px);
+        }
+    }
+
+    .cart-fluid .cart-fluid-stepper {
+        border-radius: clamp(5px, 1.493cqw, 12px);
+    }
+
+    .cart-fluid .cart-fluid-stepper > a,
+    .cart-fluid .cart-fluid-stepper > span {
+        height: clamp(40px, 9.95cqw, 80px);
+        min-width: clamp(24px, 5.97cqw, 48px);
+        font-size: clamp(14px, 2.488cqw, 20px);
+    }
+
+    .cart-fluid .cart-fluid-stepper > a {
+        width: clamp(24px, 5.97cqw, 48px);
+    }
+
+    .cart-fluid .cart-fluid-line-total {
+        min-width: clamp(64px, 12.438cqw, 100px);
+        font-size: clamp(16px, 3.607cqw, 29px);
+    }
+
+    .cart-fluid .cart-fluid-remove {
+        gap: clamp(2.5px, 0.746cqw, 6px);
+        padding: clamp(2px, 0.622cqw, 5px) clamp(4px, 1.244cqw, 10px);
+        font-size: clamp(12px, 1.99cqw, 16px);
+    }
+
+    .cart-fluid .cart-fluid-remove svg {
+        width: clamp(12px, 2.239cqw, 18px);
+        height: clamp(12px, 2.239cqw, 18px);
+    }
+
+    .cart-fluid .cart-fluid-footer {
+        padding: clamp(15px, 4.478cqw, 36px) clamp(22px, 6.716cqw, 54px);
+        padding-bottom: max(clamp(15px, 4.478cqw, 36px), env(safe-area-inset-bottom));
+    }
+
+    .cart-fluid .cart-fluid-footer-inner {
+        gap: clamp(8px, 2.488cqw, 20px);
+    }
+
+    .cart-fluid .cart-fluid-footer-actions {
+        gap: clamp(8px, 2.239cqw, 18px);
+    }
+
+    .cart-fluid .cart-fluid-total-label {
+        font-size: clamp(14px, 2.985cqw, 24px);
+    }
+
+    .cart-fluid .cart-fluid-total {
+        font-size: clamp(22px, 5.224cqw, 42px);
+    }
+
+    .cart-fluid .cart-fluid-action-button {
+        min-height: clamp(52px, 13.433cqw, 108px);
+        padding-inline: clamp(10px, 2.985cqw, 24px);
+        border-radius: clamp(7.5px, 2.239cqw, 18px);
+        font-size: clamp(12px, 2.736cqw, 22px);
+    }
+}
