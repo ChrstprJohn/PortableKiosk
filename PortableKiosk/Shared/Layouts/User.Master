@@ -15,7 +15,7 @@
     ID="UserBody"
     ContentPlaceHolderID="MainContent"
     runat="server">
-    <div id="userKioskShell" runat="server" class="user-kiosk-shell group/menu relative mx-auto min-h-screen min-h-dvh w-full max-w-[860px] overflow-x-hidden bg-slate-50 text-slate-900 shadow-[0_0_40px_rgba(15,23,42,0.12)]">
+    <div id="userKioskShell" runat="server" class="user-kiosk-shell group/menu @container/menu relative mx-auto min-h-screen min-h-dvh w-full max-w-[860px] kiosk-portrait:has-[.menu-layout]:!max-w-none overflow-x-hidden bg-slate-50 text-slate-900 shadow-[0_0_40px_rgba(15,23,42,0.12)]">
         <header id="userKioskHeader" runat="server" class="user-kiosk-header flex min-h-[84px] items-center justify-between gap-6 bg-slate-900 px-[clamp(1rem,3vw,2rem)] py-4 text-white">
             <a ID="lnkMenu" runat="server"
                 class="user-kiosk-brand inline-flex items-center gap-3 text-white no-underline transition-opacity hover:opacity-95"
@@ -28,10 +28,10 @@
                 </span>
             </a>
 
-            <div id="userKioskActions" runat="server" class="user-kiosk-actions flex items-center justify-between gap-[clamp(0.5rem,2vw,1.25rem)]">
-                <a class="user-kiosk-cart-info inline-flex items-center gap-[clamp(0.75rem,2.2vw,1.25rem)] rounded-[14px] px-1 py-1 text-slate-900 no-underline transition-opacity hover:opacity-95" href="<%= ResolveUrl("~/UI/User/Cart.aspx") %>" aria-label="View shopping cart">
+            <div id="userKioskActions" runat="server" class="user-kiosk-actions flex items-center justify-between gap-[clamp(0.5rem,2cqw,1.25rem)]">
+                <a class="user-kiosk-cart-info inline-flex items-center gap-[clamp(0.5rem,2.2cqw,1.25rem)] rounded-[clamp(0.625rem,0.75cqw,1.25rem)] px-1 py-1 text-slate-900 no-underline transition-opacity hover:opacity-95 group-has-[.menu-layout]/menu:gap-[clamp(0.5rem,2.5cqw,1.75rem)]" href="<%= ResolveUrl("~/UI/User/Cart.aspx") %>" aria-label="View shopping cart">
                     <span class="user-kiosk-cart-icon-wrapper relative inline-flex shrink-0 items-center justify-center" aria-hidden="true">
-                        <span class="user-kiosk-cart-icon-pill flex h-[clamp(2.4rem,5vw,4.75rem)] w-[clamp(2.4rem,5vw,4.75rem)] shrink-0 items-center justify-center rounded-[14px] border border-amber-200 bg-amber-50 text-amber-700 [&_svg]:h-[clamp(1.125rem,2.5vw,2.5rem)] [&_svg]:w-[clamp(1.125rem,2.5vw,2.5rem)]">
+                        <span class="user-kiosk-cart-icon-pill flex h-[clamp(2.4rem,5cqw,4.75rem)] w-[clamp(2.4rem,5cqw,4.75rem)] shrink-0 items-center justify-center rounded-[clamp(0.625rem,0.75cqw,1.25rem)] border border-amber-200 bg-amber-50 text-amber-700 [&_svg]:h-[clamp(1.25rem,2.5cqw,2.5rem)] [&_svg]:w-[clamp(1.25rem,2.5cqw,2.5rem)] group-has-[.menu-layout]/menu:h-[clamp(2.4rem,8cqw,12rem)] group-has-[.menu-layout]/menu:w-[clamp(2.4rem,8cqw,12rem)] group-has-[.menu-layout]/menu:rounded-[clamp(0.625rem,3cqw,5rem)] group-has-[.menu-layout]/menu:[&_svg]:h-[clamp(1.25rem,4cqw,6rem)] group-has-[.menu-layout]/menu:[&_svg]:w-[clamp(1.25rem,4cqw,6rem)]">
                             <svg class="kiosk-bag-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                                 <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -41,26 +41,26 @@
                         <asp:Literal ID="litCartCount" runat="server" />
                     </span>
                     <span class="user-kiosk-cart-text inline-flex items-center">
-                        <strong class="user-kiosk-cart-total whitespace-nowrap text-[clamp(1.25rem,2.4vw,3.5rem)] font-black leading-none tracking-tight text-slate-900"><asp:Literal ID="litCartTotal" runat="server" /></strong>
+                        <strong class="user-kiosk-cart-total whitespace-nowrap text-[clamp(1.1rem,2.4cqw,3.5rem)] font-black leading-none tracking-tight text-slate-900 group-has-[.menu-layout]/menu:text-[clamp(1.1rem,4cqw,6rem)]"><asp:Literal ID="litCartTotal" runat="server" /></strong>
                     </span>
                 </a>
 
-                <div class="user-kiosk-action-buttons flex items-center gap-[clamp(0.35rem,1.5vw,1.5rem)]">
+                <div class="user-kiosk-action-buttons flex items-center gap-[clamp(0.25rem,1.5cqw,1.5rem)] group-has-[.menu-layout]/menu:gap-[clamp(0.25rem,1.75cqw,1.75rem)]">
                     <asp:Button
                         ID="btnCancelOrder"
                         runat="server"
                         Text="Cancel order"
-                        CssClass="user-cancel-button inline-flex min-h-[clamp(2.4rem,4.8vh,5rem)] items-center justify-center whitespace-nowrap rounded-[14px] border border-slate-300 bg-white px-[clamp(0.65rem,2vw,2rem)] py-[clamp(0.4rem,1.5vh,1rem)] text-[clamp(0.78rem,1.35vw,1.85rem)] font-bold text-slate-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-4 focus-visible:outline-red-500/30"
+                        CssClass="user-cancel-button inline-flex min-h-[clamp(2.4rem,4.8vh,5rem)] items-center justify-center whitespace-nowrap rounded-[clamp(0.625rem,0.75cqw,1.25rem)] border border-slate-300 bg-white px-[clamp(0.5rem,2cqw,2rem)] py-[clamp(0.35rem,1.2cqw,1rem)] text-[clamp(0.875rem,1.35cqw,1.85rem)] font-bold text-slate-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus-visible:outline focus-visible:outline-4 focus-visible:outline-red-500/30 max-[360px]:px-1 group-has-[.menu-layout]/menu:min-h-[clamp(2.4rem,5.8vh,12rem)] group-has-[.menu-layout]/menu:rounded-[clamp(0.625rem,3cqw,5rem)] group-has-[.menu-layout]/menu:px-[clamp(0.5rem,3cqw,3.5rem)] group-has-[.menu-layout]/menu:py-[clamp(0.35rem,1.6cqw,1.5rem)] group-has-[.menu-layout]/menu:text-[clamp(0.875rem,2.6cqw,4rem)] group-has-[.menu-layout]/menu:max-[360px]:px-1"
                         CausesValidation="false"
                         data-confirm-cancel="true"
                         OnClick="btnCancelOrder_Click" />
 
                     <a ID="lnkCart" runat="server"
-                        class="user-checkout-button group/cart inline-flex min-h-[clamp(2.4rem,4.8vh,5rem)] items-center justify-center gap-[clamp(0.25rem,0.7vw,0.8rem)] whitespace-nowrap rounded-[14px] bg-[linear-gradient(135deg,#f59e0b,#d97706)] px-[clamp(0.85rem,2.5vw,2.5rem)] py-[clamp(0.4rem,1.5vh,1rem)] text-[clamp(0.82rem,1.5vw,2rem)] font-bold tracking-tight text-white no-underline shadow-[0_4px_14px_rgba(217,119,6,0.35)] transition-[filter,transform] hover:-translate-y-0.5 hover:brightness-105 hover:text-white focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/40"
+                        class="user-checkout-button group/cart inline-flex min-h-[clamp(2.4rem,4.8vh,5rem)] items-center justify-center gap-[clamp(0.25rem,0.7cqw,0.8rem)] whitespace-nowrap rounded-[clamp(0.625rem,0.75cqw,1.25rem)] bg-[linear-gradient(135deg,#f59e0b,#d97706)] px-[clamp(0.65rem,2.5cqw,2.5rem)] py-[clamp(0.35rem,1.2cqw,1rem)] text-[clamp(0.875rem,1.5cqw,2rem)] font-bold tracking-tight text-white no-underline shadow-[0_4px_14px_rgba(217,119,6,0.35)] transition-[filter,transform] hover:-translate-y-0.5 hover:brightness-105 hover:text-white focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/40 max-[360px]:px-1 group-has-[.menu-layout]/menu:min-h-[clamp(2.4rem,5.8vh,12rem)] group-has-[.menu-layout]/menu:rounded-[clamp(0.625rem,3cqw,5rem)] group-has-[.menu-layout]/menu:px-[clamp(0.65rem,3.5cqw,4rem)] group-has-[.menu-layout]/menu:py-[clamp(0.35rem,1.6cqw,1.5rem)] group-has-[.menu-layout]/menu:text-[clamp(0.875rem,2.8cqw,4.25rem)] group-has-[.menu-layout]/menu:max-[360px]:px-1"
                         aria-label="Checkout"
                         href="~/UI/User/Cart.aspx">
                         <span>Checkout</span>
-                        <svg class="user-checkout-arrow transition-transform group-hover/cart:translate-x-1" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        <svg class="user-checkout-arrow h-[clamp(0.875rem,1.5cqw,1.5rem)] w-[clamp(0.875rem,1.5cqw,1.5rem)] transition-transform group-hover/cart:translate-x-1 group-has-[.menu-layout]/menu:h-[clamp(0.875rem,2.8cqw,3rem)] group-has-[.menu-layout]/menu:w-[clamp(0.875rem,2.8cqw,3rem)]" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </a>
                 </div>
             </div>

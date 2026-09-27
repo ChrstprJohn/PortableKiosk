@@ -12,7 +12,7 @@
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
-    <link href="<%= ResolveUrl("~/Content/tailwind.css") %>" rel="stylesheet" />
+    <asp:PlaceHolder ID="TailwindStyleSlot" runat="server" />
     <script src="<%= ResolveUrl("~/Scripts/app/common/modal.js") %>"></script>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
