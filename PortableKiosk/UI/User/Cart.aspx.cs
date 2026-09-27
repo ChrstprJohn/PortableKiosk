@@ -63,6 +63,47 @@ namespace PortableKiosk.UI.User
                 }
                 else if (string.Equals(
                     e.CommandName,
+                    "IncreaseQuantity",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    CartItem item = cart.Items.Find(
+                        current => current.ProductVariantID == productVariantID);
+
+                    if (item != null && item.Quantity < 99)
+                    {
+                        cartService.UpdateQuantity(
+                            cart,
+                            productVariantID,
+                            item.Quantity + 1);
+                    }
+                }
+                else if (string.Equals(
+                    e.CommandName,
+                    "DecreaseQuantity",
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    CartItem item = cart.Items.Find(
+                        current => current.ProductVariantID == productVariantID);
+
+                    if (item != null)
+                    {
+                        if (item.Quantity > 1)
+                        {
+                            cartService.UpdateQuantity(
+                                cart,
+                                productVariantID,
+                                item.Quantity - 1);
+                        }
+                        else
+                        {
+                            cartService.RemoveItem(
+                                cart,
+                                productVariantID);
+                        }
+                    }
+                }
+                else if (string.Equals(
+                    e.CommandName,
                     "UpdateQuantity",
                     StringComparison.OrdinalIgnoreCase))
                 {

@@ -14,7 +14,7 @@ namespace PortableKiosk.UI.User
     public partial class Menu : Page
     {
         private const string MenuNavItemClasses =
-            "menu-nav-item flex w-full items-center gap-[clamp(0.2rem,1.3cqw,1.75rem)] rounded-r-[clamp(0.4rem,2.5cqw,4rem)] px-[clamp(0.2rem,1.5cqw,2.25rem)] py-[clamp(0.3rem,1.5cqw,2.5rem)] max-[420px]:px-1 max-[420px]:py-1.5 text-left text-[clamp(0.625rem,2.2cqw,4rem)] max-[420px]:text-[0.625rem] font-semibold leading-tight text-slate-600 no-underline transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30";
+            "menu-nav-item flex w-full items-center gap-[clamp(0.2rem,1.3cqw,1.75rem)] kiosk-portrait:gap-[clamp(0.6rem,1.5vw,1.75rem)] rounded-r-[clamp(0.4rem,2.5cqw,4rem)] kiosk-portrait:rounded-r-[clamp(0.8rem,2vw,2.5rem)] px-[clamp(0.2rem,1.5cqw,2.25rem)] kiosk-portrait:px-[clamp(0.75rem,1.8vw,2.25rem)] py-[clamp(0.3rem,1.5cqw,2.5rem)] kiosk-portrait:py-[clamp(0.75rem,1.6vh,2rem)] max-[420px]:px-1 max-[420px]:py-1.5 text-left text-[clamp(0.625rem,2.2cqw,4rem)] kiosk-portrait:text-[clamp(1.05rem,2vw,2.1rem)] max-[420px]:text-[0.625rem] font-semibold leading-tight text-slate-600 no-underline transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30";
 
         private readonly CategoryService categoryService =
             new CategoryService();

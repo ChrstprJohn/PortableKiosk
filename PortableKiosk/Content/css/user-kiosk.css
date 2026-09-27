@@ -320,3 +320,41 @@ body:has(.kiosk-attract-page) {
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================================================
+   Cart Badge
+   ========================================================================== */
+.user-kiosk-cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    z-index: 10;
+    display: flex;
+    aspect-ratio: 1 / 1;
+    width: clamp(1.4rem, 3.2cqw, 3.5rem);
+    height: clamp(1.4rem, 3.2cqw, 3.5rem);
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 2px solid #ffffff;
+    background-color: #ef4444;
+    padding: 0;
+    font-size: clamp(0.8rem, 1.6cqw, 1.8rem);
+    font-weight: 900;
+    line-height: 1;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
+    pointer-events: none;
+}
+
+@media (max-width: 480px) {
+    .user-kiosk-cart-badge {
+        top: -3px;
+        right: -3px;
+        width: 1.15rem;
+        height: 1.15rem;
+        font-size: 0.65rem;
+        border-width: 1.5px;
+    }
+}
+

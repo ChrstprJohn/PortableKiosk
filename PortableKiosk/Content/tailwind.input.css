@@ -11,5 +11,6 @@
 
 @custom-variant kiosk-landscape (@media (orientation: landscape) and (min-width: 700px));
 @custom-variant kiosk-portrait (@media (orientation: portrait) and (min-width: 700px));
+@custom-variant kiosk-4k (@media (min-width: 2560px));
 @custom-variant kiosk-mobile (@media (max-width: 540px));
 @custom-variant kiosk-short (@media (max-height: 760px));

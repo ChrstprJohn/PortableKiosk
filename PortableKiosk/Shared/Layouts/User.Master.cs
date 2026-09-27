@@ -91,7 +91,7 @@ namespace PortableKiosk.Shared.Layouts
             {
                 litCartCount.Text = string.Format(
                     CultureInfo.InvariantCulture,
-                    "<span class=\"user-kiosk-cart-badge absolute -right-1 -top-1 z-[2] inline-flex h-[clamp(1rem,1.5cqw,1.5rem)] min-w-[clamp(1rem,1.5cqw,1.5rem)] items-center justify-center rounded-full border-2 border-white bg-red-500 px-[clamp(0.2rem,0.3cqw,0.4rem)] text-[clamp(0.6rem,0.75cqw,0.9rem)] font-extrabold leading-none text-white shadow-[0_2px_6px_rgba(239,68,68,0.45)]\">{0}</span>",
+                    "<span class=\"user-kiosk-cart-badge\">{0}</span>",
                     count > 9 ? "9+" : count.ToString(CultureInfo.InvariantCulture));
             }
             else
