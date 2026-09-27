@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.SqlClient;
 using PortableKiosk.Core.Models;
 using PortableKiosk.Core.Services;
@@ -82,7 +82,7 @@ namespace PortableKiosk.UI.Account
         {
             lblMessage.Text = message;
             lblMessage.CssClass =
-                "alert alert-danger d-block";
+                "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800";
             lblMessage.Visible = true;
         }
 

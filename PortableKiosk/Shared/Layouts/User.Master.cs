@@ -8,12 +8,26 @@ namespace PortableKiosk.Shared.Layouts
 {
     public partial class UserLayout : MasterPage
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-        }
-
         protected override void OnPreRender(EventArgs e)
         {
+            string requestPath = Request.Url.AbsolutePath;
+            string pagePath = Page.AppRelativeVirtualPath ?? string.Empty;
+            bool isOrderTypePage =
+                requestPath.EndsWith(
+                    "/UI/User/OrderType.aspx",
+                    StringComparison.OrdinalIgnoreCase) ||
+                pagePath.EndsWith(
+                    "/UI/User/OrderType.aspx",
+                    StringComparison.OrdinalIgnoreCase);
+
+            userKioskHeader.Visible = !isOrderTypePage;
+            userKioskHeader.Attributes["class"] = isOrderTypePage
+                ? "user-kiosk-header hidden"
+                : "user-kiosk-header";
+            userKioskShell.Attributes["class"] = isOrderTypePage
+                ? "user-kiosk-shell max-w-none"
+                : "user-kiosk-shell max-w-[860px]";
+
             RefreshCartSummary();
             base.OnPreRender(e);
         }

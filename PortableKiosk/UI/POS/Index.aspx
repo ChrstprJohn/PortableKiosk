@@ -25,7 +25,7 @@
 
             <div class="pos-header-actions">
                 <asp:Button ID="btnSignOut" runat="server"
-                    Text="Sign out" CssClass="btn btn-light"
+                    Text="Sign out" CssClass="inline-flex items-center justify-center rounded-lg border px-4 py-2 font-semibold transition-colors border-slate-200 bg-white text-slate-800 hover:bg-slate-100"
                     CausesValidation="false"
                     OnClick="btnSignOut_Click" />
             </div>

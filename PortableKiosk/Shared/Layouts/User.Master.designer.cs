@@ -8,6 +8,10 @@ namespace PortableKiosk.Shared.Layouts
 {
     public partial class UserLayout
     {
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl userKioskShell;
+
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl userKioskHeader;
+
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkMenu;
 
         protected global::System.Web.UI.WebControls.Literal litOrderType;

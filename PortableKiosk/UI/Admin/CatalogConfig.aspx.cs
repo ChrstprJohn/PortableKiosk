@@ -244,14 +244,14 @@ namespace PortableKiosk.UI.Admin
         private void ShowCategorySuccess(string message)
         {
             lblCategoryMessage.Text = message;
-            lblCategoryMessage.CssClass = "alert alert-success d-block";
+            lblCategoryMessage.CssClass = "block rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800";
             lblCategoryMessage.Visible = true;
         }
 
         private void ShowCategoryError(string message)
         {
             lblCategoryMessage.Text = message;
-            lblCategoryMessage.CssClass = "alert alert-danger d-block";
+            lblCategoryMessage.CssClass = "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800";
             lblCategoryMessage.Visible = true;
         }
 
@@ -449,14 +449,14 @@ namespace PortableKiosk.UI.Admin
         private void ShowSizeSuccess(string message)
         {
             lblSizeMessage.Text = message;
-            lblSizeMessage.CssClass = "alert alert-success d-block";
+            lblSizeMessage.CssClass = "block rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800";
             lblSizeMessage.Visible = true;
         }
 
         private void ShowSizeError(string message)
         {
             lblSizeMessage.Text = message;
-            lblSizeMessage.CssClass = "alert alert-danger d-block";
+            lblSizeMessage.CssClass = "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800";
             lblSizeMessage.Visible = true;
         }
 

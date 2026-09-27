@@ -1,0 +1,15 @@
+@import "tailwindcss" source(none);
+@source "../Default.aspx";
+@source "../Site.Master";
+@source "../UI";
+@source "../Shared";
+@source "../Scripts/app";
+
+/* The kiosk-specific visuals and Web Forms selectors live in these source files. */
+@import "./Site.css";
+@import "./css/user-kiosk.css";
+
+@custom-variant kiosk-landscape (@media (orientation: landscape) and (min-width: 700px));
+@custom-variant kiosk-portrait (@media (orientation: portrait) and (min-width: 700px));
+@custom-variant kiosk-mobile (@media (max-width: 540px));
+@custom-variant kiosk-short (@media (max-height: 760px));

@@ -877,14 +877,14 @@ namespace PortableKiosk.UI.Admin
         private void ShowSuccess(string message)
         {
             lblGlobalMessage.Text = "<i class=\"bi bi-check-circle-fill me-1\"></i> " + message;
-            lblGlobalMessage.CssClass = "alert alert-success d-block shadow-sm mb-4";
+            lblGlobalMessage.CssClass = "block rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 shadow-sm mb-4";
             lblGlobalMessage.Visible = true;
         }
 
         private void ShowError(string message)
         {
             lblGlobalMessage.Text = "<i class=\"bi bi-exclamation-triangle-fill me-1\"></i> " + message;
-            lblGlobalMessage.CssClass = "alert alert-danger d-block shadow-sm mb-4";
+            lblGlobalMessage.CssClass = "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800 shadow-sm mb-4";
             lblGlobalMessage.Visible = true;
         }
 

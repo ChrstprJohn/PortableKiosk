@@ -12,7 +12,8 @@
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
 
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="<%= ResolveUrl("~/Content/tailwind.css") %>" rel="stylesheet" />
+    <script src="<%= ResolveUrl("~/Scripts/app/common/modal.js") %>"></script>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
 
@@ -43,9 +44,6 @@
             </asp:ContentPlaceHolder>
         </div>
     </form>
-    <asp:PlaceHolder runat="server">
-        <%: Scripts.Render("~/Scripts/bootstrap.js") %>
-    </asp:PlaceHolder>
     <asp:ContentPlaceHolder ID="ScriptsContent" runat="server" />
 </body>
 </html>

@@ -1,165 +1,106 @@
-/**
- * AppModal - Reusable Popup & Modal Utility
- * Allows opening/closing existing modals or creating dynamic alert/confirm dialogs from JS.
- */
+/** Dialog behavior for Tailwind-styled Web Forms pages. */
 window.AppModal = (function () {
     'use strict';
+    var active = null;
+    var previousFocus = null;
 
-    function open(modalId) {
-        var el = document.getElementById(modalId);
-        if (!el) return;
-        var modal = bootstrap.Modal.getOrCreateInstance(el);
-        if (modal) modal.show();
+    function element(id) {
+        return typeof id === 'string' ? document.getElementById(id.replace(/^#/, '')) : id;
     }
-
-    function close(modalId) {
-        var el = document.getElementById(modalId);
-        if (!el) return;
-        var modal = bootstrap.Modal.getInstance(el);
-        if (modal) modal.hide();
+    function open(id) {
+        var dialog = element(id);
+        if (!dialog) return;
+        if (active && active !== dialog) close(active);
+        previousFocus = document.activeElement;
+        active = dialog;
+        dialog.classList.remove('hidden');
+        dialog.classList.add('flex');
+        dialog.setAttribute('role', 'dialog');
+        dialog.setAttribute('aria-modal', 'true');
+        dialog.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        var focusTarget = dialog.querySelector('[autofocus], button, input, select, textarea, a[href]');
+        (focusTarget || dialog).focus();
+        dialog.dispatchEvent(new CustomEvent('modal:shown'));
     }
+    function close(id) {
+        var dialog = element(id);
+        if (!dialog) return;
+        dialog.classList.remove('flex');
+        dialog.classList.add('hidden');
+        dialog.setAttribute('aria-hidden', 'true');
+        dialog.removeAttribute('aria-modal');
+        if (active === dialog) {
+            active = null;
+            document.body.style.overflow = '';
+            if (previousFocus && previousFocus.isConnected) previousFocus.focus();
+            previousFocus = null;
+        }
+        dialog.dispatchEvent(new CustomEvent('modal:hidden'));
+    }
+    document.addEventListener('click', function (event) {
+        var trigger = event.target.closest('[data-modal-toggle]');
+        if (trigger) {
+            event.preventDefault();
+            open(trigger.getAttribute('data-modal-target'));
+            return;
+        }
+        var dismiss = event.target.closest('[data-modal-dismiss]');
+        if (dismiss) { close(dismiss.closest('[role="dialog"]')); return; }
+        if (active && event.target === active && active.dataset.modalBackdrop !== 'static') close(active);
+    });
+    document.addEventListener('keydown', function (event) {
+        if (!active) return;
+        if (event.key === 'Escape' && active.dataset.modalKeyboard !== 'false') close(active);
+        if (event.key !== 'Tab') return;
+        var focusable = Array.from(active.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'));
+        if (!focusable.length) return;
+        var first = focusable[0], last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    });
 
-    /**
-     * Shows a dynamic popup alert dialog
-     * @param {Object} options - { title, message, variant ('primary'|'danger'|'success'|'warning'|'dark'), buttonText, onConfirm }
-     */
-    function alert(options) {
-        options = Object.assign({
-            title: 'Notice',
-            message: '',
-            variant: 'primary',
-            buttonText: 'OK',
-            onConfirm: null
-        }, options);
-
-        var dialogId = 'app-dynamic-alert-' + Date.now();
-        var headerBg = 'bg-' + options.variant;
-        var headerText = (options.variant === 'light' || options.variant === 'warning') ? 'text-dark' : 'text-white';
-        var closeBtnClass = (options.variant === 'light' || options.variant === 'warning') ? '' : 'btn-close-white';
-
-        var html = `
-        <div class="modal fade" id="${dialogId}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content shadow border-0">
-                    <div class="modal-header ${headerBg} ${headerText}">
-                        <h5 class="modal-title">${escapeHtml(options.title)}</h5>
-                        <button type="button" class="btn-close ${closeBtnClass}" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body py-4">
-                        ${options.message}
-                    </div>
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-${options.variant}" data-bs-dismiss="modal" id="${dialogId}-btn-ok">${escapeHtml(options.buttonText)}</button>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-
+    var variants = {
+        primary: {header: 'bg-blue-700 text-white', button: 'border-blue-700 bg-blue-700 text-white hover:bg-blue-800'},
+        danger: {header: 'bg-red-700 text-white', button: 'border-red-700 bg-red-700 text-white hover:bg-red-800'},
+        success: {header: 'bg-emerald-700 text-white', button: 'border-emerald-700 bg-emerald-700 text-white hover:bg-emerald-800'},
+        warning: {header: 'bg-amber-300 text-slate-900', button: 'border-amber-500 bg-amber-400 text-slate-900 hover:bg-amber-500'},
+        dark: {header: 'bg-slate-900 text-white', button: 'border-slate-900 bg-slate-900 text-white hover:bg-slate-800'},
+        light: {header: 'bg-slate-100 text-slate-900', button: 'border-slate-300 bg-white text-slate-900 hover:bg-slate-100'}
+    };
+    function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+            return {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;'}[char];
+        }).replace(/'/g, '&#39;');
+    }
+    function create(options, isConfirm) {
+        var id = 'app-dynamic-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+        var style = variants[options.variant] || variants.primary;
+        var button = 'inline-flex items-center justify-center rounded-lg border px-4 py-2 font-semibold transition-colors';
+        var cancel = '<button type="button" class="' + button + ' border-slate-600 bg-slate-600 text-white hover:bg-slate-700" data-modal-dismiss="true" data-action="cancel">' + escapeHtml(options.cancelText) + '</button>';
+        var html = '<div id="' + id + '" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 p-4" tabindex="-1" aria-hidden="true" data-modal-backdrop="static">' +
+            '<div class="w-full max-w-lg"><div class="flex max-h-[90vh] flex-col overflow-hidden rounded-xl bg-white shadow-xl">' +
+            '<div class="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4 ' + style.header + '">' +
+            '<h2 class="text-lg font-semibold">' + escapeHtml(options.title) + '</h2>' +
+            '<button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-2xl leading-none hover:bg-black/10" data-modal-dismiss="true" aria-label="Close">&times;</button></div>' +
+            '<div class="overflow-y-auto p-5">' + options.message + '</div>' +
+            '<div class="flex flex-wrap justify-end gap-2 border-t border-slate-200 bg-slate-50 px-5 py-4">' + (isConfirm ? cancel : '') +
+            '<button type="button" class="' + button + ' ' + style.button + '" data-modal-dismiss="true" data-action="confirm">' + escapeHtml(isConfirm ? options.confirmText : options.buttonText) + '</button>' +
+            '</div></div></div></div>';
         document.body.insertAdjacentHTML('beforeend', html);
-        var modalEl = document.getElementById(dialogId);
-        var modal = new bootstrap.Modal(modalEl);
-
-        var okBtn = document.getElementById(dialogId + '-btn-ok');
-        if (okBtn) {
-            okBtn.addEventListener('click', function () {
-                if (typeof options.onConfirm === 'function') {
-                    options.onConfirm();
-                }
-            });
-        }
-
-        modalEl.addEventListener('hidden.bs.modal', function () {
-            modalEl.remove();
+        var dialog = document.getElementById(id);
+        dialog.querySelector('[data-action="confirm"]').addEventListener('click', function () {
+            if (typeof options.onConfirm === 'function') options.onConfirm();
         });
-
-        modal.show();
-    }
-
-    /**
-     * Shows a dynamic confirmation popup dialog
-     * @param {Object} options - { title, message, variant, confirmText, cancelText, onConfirm, onCancel }
-     */
-    function confirm(options) {
-        options = Object.assign({
-            title: 'Confirm Action',
-            message: 'Are you sure you want to proceed?',
-            variant: 'danger',
-            confirmText: 'Confirm',
-            cancelText: 'Cancel',
-            onConfirm: null,
-            onCancel: null
-        }, options);
-
-        var dialogId = 'app-dynamic-confirm-' + Date.now();
-        var headerBg = 'bg-' + options.variant;
-        var headerText = (options.variant === 'light' || options.variant === 'warning') ? 'text-dark' : 'text-white';
-        var closeBtnClass = (options.variant === 'light' || options.variant === 'warning') ? '' : 'btn-close-white';
-
-        var html = `
-        <div class="modal fade" id="${dialogId}" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content shadow border-0">
-                    <div class="modal-header ${headerBg} ${headerText}">
-                        <h5 class="modal-title">${escapeHtml(options.title)}</h5>
-                        <button type="button" class="btn-close ${closeBtnClass}" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body py-4">
-                        ${options.message}
-                    </div>
-                    <div class="modal-footer bg-light">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="${dialogId}-btn-cancel">${escapeHtml(options.cancelText)}</button>
-                        <button type="button" class="btn btn-${options.variant}" data-bs-dismiss="modal" id="${dialogId}-btn-confirm">${escapeHtml(options.confirmText)}</button>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-
-        document.body.insertAdjacentHTML('beforeend', html);
-        var modalEl = document.getElementById(dialogId);
-        var modal = new bootstrap.Modal(modalEl);
-
-        var confirmBtn = document.getElementById(dialogId + '-btn-confirm');
-        var cancelBtn = document.getElementById(dialogId + '-btn-cancel');
-
-        if (confirmBtn) {
-            confirmBtn.addEventListener('click', function () {
-                if (typeof options.onConfirm === 'function') {
-                    options.onConfirm();
-                }
-            });
-        }
-
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', function () {
-                if (typeof options.onCancel === 'function') {
-                    options.onCancel();
-                }
-            });
-        }
-
-        modalEl.addEventListener('hidden.bs.modal', function () {
-            modalEl.remove();
+        if (isConfirm) dialog.querySelector('[data-action="cancel"]').addEventListener('click', function () {
+            if (typeof options.onCancel === 'function') options.onCancel();
         });
-
-        modal.show();
+        dialog.addEventListener('modal:hidden', function () { dialog.remove(); }, {once:true});
+        open(dialog);
     }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
-
     return {
-        open: open,
-        close: close,
-        show: open,
-        hide: close,
-        alert: alert,
-        confirm: confirm
+        open: open, show: open, close: close, hide: close,
+        alert: function (options) { create(Object.assign({title:'Notice', message:'', variant:'primary', buttonText:'OK'}, options), false); },
+        confirm: function (options) { create(Object.assign({title:'Confirm Action', message:'Are you sure you want to proceed?', variant:'danger', confirmText:'Confirm', cancelText:'Cancel'}, options), true); }
     };
 })();

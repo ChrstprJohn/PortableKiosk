@@ -9,15 +9,14 @@
     ID="UserHead"
     ContentPlaceHolderID="HeadContent"
     runat="server">
-    <link href="<%= ResolveUrl("~/Content/css/user-kiosk.css") %>" rel="stylesheet" />
 </asp:Content>
 
 <asp:Content
     ID="UserBody"
     ContentPlaceHolderID="MainContent"
     runat="server">
-    <div class="user-kiosk-shell">
-        <header class="user-kiosk-header">
+    <div id="userKioskShell" runat="server" class="user-kiosk-shell max-w-[860px]">
+        <header id="userKioskHeader" runat="server" class="user-kiosk-header">
             <a ID="lnkMenu" runat="server"
                 class="user-kiosk-brand"
                 href="~/UI/User/Menu.aspx"

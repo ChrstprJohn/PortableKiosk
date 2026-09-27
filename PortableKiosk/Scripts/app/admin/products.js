@@ -8,8 +8,8 @@
     }
 
     function getProductName(button) {
-        var card = button ? button.closest('.card') : null;
-        var heading = card ? card.querySelector('.card-header h5') : null;
+        var card = button ? button.closest('[data-existing-size-keys]') : null;
+        var heading = card ? card.querySelector('[data-product-name]') : null;
         return heading ? heading.textContent.trim() : 'Selected product';
     }
 
@@ -44,7 +44,7 @@
     function refreshRows() {
         var rows = getRows();
         var visibleRows = rows.filter(function (row) {
-            return !row.classList.contains('d-none');
+            return !row.classList.contains('hidden');
         });
         var chosenSizes = visibleRows.map(function (row) {
             var size = row.querySelector('.bulk-variant-size');
@@ -62,7 +62,7 @@
             }
 
             if (remove) {
-                remove.classList.toggle('d-none', visibleRows.length === 1);
+                remove.classList.toggle('hidden', visibleRows.length === 1);
             }
 
             if (size) {
@@ -100,7 +100,7 @@
             document.getElementById('existingVariantNotice');
         if (existingNotice) {
             existingNotice.classList.toggle(
-                'd-none',
+                'hidden',
                 existingSizeKeys.length === 0
             );
         }
@@ -109,7 +109,7 @@
     function resetVariantRows() {
         getRows().forEach(function (row, index) {
             resetRow(row);
-            row.classList.toggle('d-none', index !== 0);
+            row.classList.toggle('hidden', index !== 0);
         });
 
         refreshRows();
@@ -185,7 +185,7 @@
         }
 
         if (preview && image) {
-            preview.classList.toggle('d-none', !imageUrl);
+            preview.classList.toggle('hidden', !imageUrl);
             image.src = imageUrl || '';
         }
     };
@@ -209,11 +209,11 @@
         var addButton = event.target.closest('#btnAddAnotherVariant');
         if (addButton) {
             var nextRow = getRows().find(function (row) {
-                return row.classList.contains('d-none');
+                return row.classList.contains('hidden');
             });
 
             if (nextRow) {
-                nextRow.classList.remove('d-none');
+                nextRow.classList.remove('hidden');
                 refreshRows();
 
                 var nextSize = nextRow.querySelector('.bulk-variant-size');
@@ -232,7 +232,7 @@
 
         var row = removeButton.closest('.bulk-variant-row');
         var visibleRows = getRows().filter(function (candidate) {
-            return !candidate.classList.contains('d-none');
+            return !candidate.classList.contains('hidden');
         });
 
         if (!row || visibleRows.length === 1) {
@@ -240,7 +240,7 @@
         }
 
         resetRow(row);
-        row.classList.add('d-none');
+        row.classList.add('hidden');
         refreshRows();
     });
 

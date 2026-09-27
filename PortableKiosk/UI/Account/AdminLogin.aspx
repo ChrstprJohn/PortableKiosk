@@ -42,7 +42,7 @@
                 ID="validationSummary"
                 runat="server"
                 ValidationGroup="StaffLoginForm"
-                CssClass="alert alert-danger"
+                CssClass="rounded-lg border px-4 py-3 border-red-200 bg-red-50 text-red-800"
                 HeaderText="Check the following:"
                 DisplayMode="BulletList" />
 
@@ -57,14 +57,14 @@
                     ID="lblEmail"
                     runat="server"
                     AssociatedControlID="txtEmail"
-                    CssClass="form-label"
+                    CssClass="mb-1 block text-sm font-semibold text-slate-700"
                     Text="Email address">
                 </asp:Label>
 
                 <asp:TextBox
                     ID="txtEmail"
                     runat="server"
-                    CssClass="form-control form-control-lg"
+                    CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200 px-4 py-3 text-lg"
                     TextMode="Email"
                     MaxLength="256"
                     autocomplete="username"
@@ -98,14 +98,14 @@
                     ID="lblPassword"
                     runat="server"
                     AssociatedControlID="txtPassword"
-                    CssClass="form-label"
+                    CssClass="mb-1 block text-sm font-semibold text-slate-700"
                     Text="Password">
                 </asp:Label>
 
                 <asp:TextBox
                     ID="txtPassword"
                     runat="server"
-                    CssClass="form-control form-control-lg"
+                    CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200 px-4 py-3 text-lg"
                     TextMode="Password"
                     MaxLength="100"
                     autocomplete="current-password"
@@ -123,12 +123,12 @@
                 </asp:RequiredFieldValidator>
             </div>
 
-            <div class="d-grid">
+            <div class="grid">
                 <asp:Button
                     ID="btnLogin"
                     runat="server"
                     Text="Continue to workspace"
-                    CssClass="btn btn-primary btn-lg"
+                    CssClass="inline-flex items-center justify-center rounded-lg border px-4 py-2 font-semibold transition-colors border-blue-700 bg-blue-700 text-white hover:bg-blue-800 px-5 py-3 text-lg"
                     ValidationGroup="StaffLoginForm"
                     OnClick="btnLogin_Click" />
             </div>

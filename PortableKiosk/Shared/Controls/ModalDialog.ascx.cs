@@ -58,7 +58,7 @@ namespace PortableKiosk.Shared.Controls
         public string BodyCssClass { get; set; } = string.Empty;
 
         [Category("Appearance")]
-        public string FooterCssClass { get; set; } = "bg-light";
+        public string FooterCssClass { get; set; } = "bg-slate-50";
 
         [PersistenceMode(PersistenceMode.InnerProperty)]
         [TemplateContainer(typeof(ModalContentContainer))]
@@ -105,26 +105,24 @@ namespace PortableKiosk.Shared.Controls
 
         public string GetDialogClasses()
         {
-            string classes = string.Empty;
-            if (Centered) classes += " modal-dialog-centered";
-            if (Scrollable) classes += " modal-dialog-scrollable";
+            string classes = "max-w-lg";
 
             switch (Size?.ToLowerInvariant())
             {
                 case "sm":
                 case "small":
-                    classes += " modal-sm";
+                    classes = "max-w-sm";
                     break;
                 case "lg":
                 case "large":
-                    classes += " modal-lg";
+                    classes = "max-w-3xl";
                     break;
                 case "xl":
                 case "extralarge":
-                    classes += " modal-xl";
+                    classes = "max-w-5xl";
                     break;
                 case "fullscreen":
-                    classes += " modal-fullscreen";
+                    classes = "max-w-none";
                     break;
             }
 
@@ -136,20 +134,20 @@ namespace PortableKiosk.Shared.Controls
             switch (HeaderVariant?.ToLowerInvariant())
             {
                 case "dark":
-                    return "bg-dark text-white";
+                    return "bg-slate-900 text-white";
                 case "danger":
-                    return "bg-danger text-white";
+                    return "bg-red-700 text-white";
                 case "success":
-                    return "bg-success text-white";
+                    return "bg-emerald-700 text-white";
                 case "warning":
-                    return "bg-warning text-dark";
+                    return "bg-amber-300 text-slate-900";
                 case "info":
-                    return "bg-info text-white";
+                    return "bg-sky-700 text-white";
                 case "light":
-                    return "bg-light text-dark";
+                    return "bg-slate-100 text-slate-900";
                 case "primary":
                 default:
-                    return "bg-primary text-white";
+                    return "bg-blue-700 text-white";
             }
         }
 
@@ -158,7 +156,7 @@ namespace PortableKiosk.Shared.Controls
         /// </summary>
         public void Show()
         {
-            string script = $"var el = document.getElementById('{ClientModalID}'); if(el) {{ var m = bootstrap.Modal.getOrCreateInstance(el); if(m) m.show(); }}";
+            string script = $"AppModal.open('{ClientModalID}');";
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), $"ShowModal_{ClientModalID}_{Guid.NewGuid():N}", script, true);
         }
 
@@ -167,7 +165,7 @@ namespace PortableKiosk.Shared.Controls
         /// </summary>
         public void Hide()
         {
-            string script = $"var el = document.getElementById('{ClientModalID}'); if(el) {{ var m = bootstrap.Modal.getInstance(el); if(m) m.hide(); }}";
+            string script = $"AppModal.close('{ClientModalID}');";
             ScriptManager.RegisterStartupScript(Page, Page.GetType(), $"HideModal_{ClientModalID}_{Guid.NewGuid():N}", script, true);
         }
     }

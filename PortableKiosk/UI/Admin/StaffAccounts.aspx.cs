@@ -192,7 +192,7 @@ namespace PortableKiosk.UI.Admin
         {
             lblMessage.Text = message;
             lblMessage.CssClass =
-                "alert alert-success d-block";
+                "block rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800";
             lblMessage.Visible = true;
         }
 
@@ -200,7 +200,7 @@ namespace PortableKiosk.UI.Admin
         {
             lblMessage.Text = message;
             lblMessage.CssClass =
-                "alert alert-danger d-block";
+                "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800";
             lblMessage.Visible = true;
         }
 
