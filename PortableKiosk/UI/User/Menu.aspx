@@ -150,37 +150,38 @@
                     </div>
                 </asp:Panel>
 
-                <asp:Panel ID="pnlProductDetail" runat="server" Visible="false" CssClass="product-detail-page">
-                    <header class="product-detail-heading">
-                        <h1>Sizes</h1>
+                <asp:Panel ID="pnlProductDetail" runat="server" Visible="false" CssClass="product-detail-page min-h-full w-full">
+                    <header class="product-detail-heading mb-[clamp(1rem,3cqw,4rem)]">
+                        <h1 class="m-0 text-[clamp(2rem,7.3cqw,10rem)] font-black leading-[1.04] tracking-[-0.045em] text-slate-900">Sizes</h1>
                     </header>
 
-                    <div class="product-detail-layout">
-                        <div class="product-detail-options">
+                    <div class="product-detail-layout w-full">
+                        <div class="product-detail-options w-full">
                             <asp:HiddenField ID="hfSelectedProductID" runat="server" />
                             <asp:HiddenField ID="hfSelectedVariantID" runat="server" ClientIDMode="Static" />
 
                             <fieldset>
-                                <legend class="visually-hidden">Choose one size</legend>
-                                <div class="variant-options">
+                                <legend class="mb-[clamp(0.75rem,1.8vh,1.75rem)] block text-[clamp(1.25rem,4.4cqw,6rem)] font-extrabold leading-tight tracking-[-0.035em] text-slate-900">Choose one size</legend>
+                                <div class="variant-options grid grid-cols-3 gap-[clamp(0.45rem,1.4cqw,2rem)] kiosk-mobile:grid-cols-2">
                                     <asp:Repeater ID="rptVariants" runat="server">
                                         <ItemTemplate>
-                                            <label class="variant-card">
+                                            <label class="variant-card group relative flex h-full min-w-0 cursor-pointer flex-col overflow-hidden rounded-[clamp(0.75rem,2.2cqw,4rem)] border border-slate-200 bg-white p-[clamp(0.25rem,0.8cqw,1.25rem)] shadow-[0_2px_8px_rgba(15,23,42,0.04)] transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-amber-400 hover:shadow-[0_10px_24px_-4px_rgba(15,23,42,0.08)] has-checked:border-amber-500 has-checked:bg-amber-50 has-checked:shadow-[0_0_0_1px_#f59e0b,0_6px_16px_rgba(245,158,11,0.28)]">
                                                 <input type="radio" name="variantChoice"
                                                     value='<%# Eval("ProductVariantID") %>'
-                                                    data-variant-choice="true" />
-                                                <span class="variant-card-content">
+                                                    data-variant-choice="true"
+                                                    class="absolute right-[clamp(0.5rem,1.6cqw,2.5rem)] top-[clamp(0.5rem,1.6cqw,2.5rem)] z-[2] m-0 size-[clamp(1rem,2.2cqw,3.5rem)] accent-amber-600" />
+                                                <span class="variant-card-content flex h-full min-h-0 w-full flex-col gap-[clamp(0.35rem,1cqw,1.5rem)]">
                                                     <asp:Image runat="server"
                                                         Visible='<%# HasImage(Eval("ImagePath")) %>'
-                                                        CssClass="variant-image"
+                                                        CssClass="variant-image aspect-square h-auto w-full rounded-[clamp(0.5rem,1.8cqw,3rem)] bg-slate-100 object-cover"
                                                         ImageUrl='<%# ResolveProductImage(Eval("ImagePath")) %>'
                                                         AlternateText='<%# Convert.ToString(Eval("SizeName")) %>' />
                                                     <span runat="server" visible='<%# !HasImage(Eval("ImagePath")) %>'
-                                                        class="variant-image-placeholder" aria-hidden="true">PK</span>
-                                                    <strong class="variant-name">
+                                                        class="variant-image-placeholder flex aspect-square w-full items-center justify-center overflow-hidden rounded-[clamp(0.5rem,1.8cqw,3rem)] bg-slate-100 text-[clamp(1.5rem,5cqw,7rem)] font-black text-amber-500" aria-hidden="true">PK</span>
+                                                    <strong class="variant-name break-words px-[clamp(0.25rem,0.85cqw,1.25rem)] py-[clamp(0.35rem,1.25vh,1.5rem)] text-center text-[clamp(0.875rem,3cqw,4rem)] font-bold leading-tight text-slate-900">
                                                         <%# Server.HtmlEncode(GetVariantSizeName(Eval("SizeName"))) %>
                                                     </strong>
-                                                    <span class="variant-price">
+                                                    <span class="variant-price px-[clamp(0.25rem,0.85cqw,1.25rem)] pb-[clamp(0.35rem,1.25vh,1.5rem)] text-center text-[clamp(0.875rem,2.8cqw,3.75rem)] font-extrabold text-amber-800">
                                                         <%# FormatVariantPrice(Eval("Price")) %>
                                                     </span>
                                                 </span>
@@ -196,25 +197,25 @@
                     </div>
 
                     <div class="product-detail-actions">
-                        <div class="product-purchase-actions">
-                            <div class="quantity-field">
-                                <label for="<%= txtQuantity.ClientID %>">Quantity</label>
-                                <div class="quantity-control">
-                                    <button type="button" data-quantity-action="decrease"
+                        <div class="product-purchase-actions fixed inset-x-0 bottom-0 z-[1041] grid min-h-[clamp(4rem,10vh,26rem)] w-full grid-cols-1 gap-[clamp(0.5rem,1.5cqw,2rem)] border-t border-slate-200 bg-white/95 px-[clamp(0.75rem,4cqw,6rem)] py-[clamp(0.625rem,2.2vh,2.5rem)] shadow-[0_-1px_6px_rgba(15,23,42,0.05)] backdrop-blur-[16px]">
+                            <div class="quantity-field flex items-center justify-between gap-[clamp(0.5rem,2cqw,2rem)]">
+                                <label class="text-[clamp(0.875rem,2.6cqw,3.75rem)] font-bold text-slate-900" for="<%= txtQuantity.ClientID %>">Quantity</label>
+                                <div class="quantity-control inline-grid grid-cols-[clamp(2.5rem,5.8cqw,8rem)_clamp(3rem,7cqw,10rem)_clamp(2.5rem,5.8cqw,8rem)] overflow-hidden rounded-[clamp(0.5rem,1.5cqw,2.5rem)] border border-slate-200 bg-white shadow-sm">
+                                    <button class="flex h-[clamp(2.75rem,5.8vh,12rem)] items-center justify-center bg-slate-100 text-[clamp(1.25rem,3cqw,4rem)] font-bold text-slate-900 transition-colors hover:bg-slate-200" type="button" data-quantity-action="decrease"
                                         aria-label="Decrease quantity">−</button>
                                     <asp:TextBox ID="txtQuantity" runat="server" Text="1" TextMode="Number" min="1"
-                                        max="99" inputmode="numeric" />
-                                    <button type="button" data-quantity-action="increase"
+                                        max="99" inputmode="numeric" CssClass="h-[clamp(2.75rem,5.8vh,12rem)] w-full border-x border-slate-200 bg-white p-0 text-center text-[clamp(1rem,2.8cqw,4rem)] font-bold text-slate-900" />
+                                    <button class="flex h-[clamp(2.75rem,5.8vh,12rem)] items-center justify-center bg-slate-100 text-[clamp(1.25rem,3cqw,4rem)] font-bold text-slate-900 transition-colors hover:bg-slate-200" type="button" data-quantity-action="increase"
                                         aria-label="Increase quantity">+</button>
                                 </div>
                             </div>
-                            <div class="product-purchase-buttons">
-                                <asp:LinkButton ID="btnBackToMenu" runat="server" CssClass="kiosk-button"
+                            <div class="product-purchase-buttons grid grid-cols-[minmax(0,1fr)_minmax(0,1.8fr)] gap-[clamp(0.5rem,1.5cqw,2rem)]">
+                                <asp:LinkButton ID="btnBackToMenu" runat="server" CssClass="inline-flex min-h-[clamp(2.75rem,5.8vh,12rem)] items-center justify-center whitespace-nowrap rounded-[clamp(0.625rem,2cqw,3rem)] border border-slate-300 bg-white px-[clamp(0.75rem,2.6cqw,3.5rem)] text-[clamp(0.875rem,2.6cqw,3.75rem)] font-bold text-slate-700 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50"
                                     CausesValidation="false" OnClick="btnBackToMenu_Click">
                                     Back
                                 </asp:LinkButton>
                                 <asp:Button ID="btnAddToCart" runat="server" Text="Add to cart"
-                                    CssClass="kiosk-button kiosk-button-primary" OnClick="btnAddToCart_Click" />
+                                    CssClass="inline-flex min-h-[clamp(2.75rem,5.8vh,12rem)] items-center justify-center whitespace-nowrap rounded-[clamp(0.625rem,2cqw,3rem)] bg-[linear-gradient(135deg,#f59e0b,#d97706)] px-[clamp(0.75rem,3cqw,4rem)] text-[clamp(0.875rem,2.8cqw,4rem)] font-bold tracking-tight text-white shadow-[0_4px_14px_rgba(217,119,6,0.35)] transition-[filter,transform] hover:-translate-y-0.5 hover:brightness-105" OnClick="btnAddToCart_Click" />
                             </div>
                         </div>
                     </div>
