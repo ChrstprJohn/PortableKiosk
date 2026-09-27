@@ -14,7 +14,7 @@ namespace PortableKiosk.UI.User
     public partial class Menu : Page
     {
         private const string MenuNavItemClasses =
-            "menu-nav-item flex w-full items-center gap-[clamp(0.25rem,1.3cqw,1.75rem)] rounded-r-[clamp(0.5rem,2.5cqw,4rem)] px-[clamp(0.25rem,1.65cqw,2.25rem)] py-[clamp(0.35rem,1.7cqw,2.5rem)] text-left text-[clamp(0.6875rem,2.4cqw,4rem)] font-semibold leading-tight text-slate-600 no-underline transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30";
+            "menu-nav-item flex w-full items-center gap-[clamp(0.2rem,1.3cqw,1.75rem)] rounded-r-[clamp(0.4rem,2.5cqw,4rem)] px-[clamp(0.2rem,1.5cqw,2.25rem)] py-[clamp(0.3rem,1.5cqw,2.5rem)] max-[420px]:px-1 max-[420px]:py-1.5 text-left text-[clamp(0.625rem,2.2cqw,4rem)] max-[420px]:text-[0.625rem] font-semibold leading-tight text-slate-600 no-underline transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30";
 
         private readonly CategoryService categoryService =
             new CategoryService();

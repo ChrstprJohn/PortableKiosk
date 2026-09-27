@@ -146,9 +146,6 @@ namespace PortableKiosk.UI.User
             rptCartItems.DataSource = cart.Items;
             rptCartItems.DataBind();
 
-            litTotalQuantity.Text =
-                cart.TotalQuantity.ToString(
-                    CultureInfo.InvariantCulture);
             litTotalAmount.Text = FormatMoney(
                 cart.TotalAmount);
         }

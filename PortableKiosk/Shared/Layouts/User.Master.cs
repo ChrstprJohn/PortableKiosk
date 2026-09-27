@@ -26,8 +26,21 @@ namespace PortableKiosk.Shared.Layouts
                 pagePath.EndsWith(
                     "/UI/User/OrderType.aspx",
                     StringComparison.OrdinalIgnoreCase);
+            bool isCartPage =
+                requestPath.EndsWith(
+                    "/UI/User/Cart.aspx",
+                    StringComparison.OrdinalIgnoreCase) ||
+                requestPath.EndsWith(
+                    "/UI/User/Cart",
+                    StringComparison.OrdinalIgnoreCase) ||
+                pagePath.EndsWith(
+                    "/UI/User/Cart.aspx",
+                    StringComparison.OrdinalIgnoreCase) ||
+                pagePath.EndsWith(
+                    "/UI/User/Cart",
+                    StringComparison.OrdinalIgnoreCase);
 
-            userKioskHeader.Visible = !isOrderTypePage;
+            userKioskHeader.Visible = !isOrderTypePage && !isCartPage;
             if (isMenuPage)
             {
                 userKioskShell.Attributes["class"] =
@@ -36,12 +49,18 @@ namespace PortableKiosk.Shared.Layouts
                     "user-kiosk-header h-0 min-h-0 bg-transparent p-0";
                 lnkMenu.Attributes["class"] = "hidden";
                 userKioskActions.Attributes["class"] =
-                    "user-kiosk-actions fixed inset-x-0 bottom-0 z-[1040] flex min-h-[clamp(4rem,10vh,26rem)] w-full items-center justify-between gap-[clamp(0.5rem,2.5cqw,2rem)] rounded-t-[clamp(1rem,3cqw,5rem)] border-t border-slate-200 bg-white/95 px-[clamp(0.75rem,4cqw,6rem)] py-[clamp(0.5rem,2.8vh,3rem)] shadow-[0_-1px_6px_rgba(15,23,42,0.05)] backdrop-blur-[16px] max-[360px]:px-2 group-has-[.product-detail-page]/menu:hidden";
+                    "user-kiosk-actions fixed inset-x-0 bottom-0 z-[1040] flex min-h-[clamp(3.5rem,9vh,26rem)] max-[480px]:min-h-[3.5rem] w-full items-center justify-between gap-[clamp(0.35rem,2cqw,2rem)] rounded-t-[clamp(0.75rem,3cqw,5rem)] border-t border-slate-200 bg-white/95 px-[clamp(0.5rem,3.5cqw,6rem)] py-[clamp(0.4rem,2vh,3rem)] max-[480px]:px-3 max-[480px]:py-2 shadow-[0_-1px_6px_rgba(15,23,42,0.05)] backdrop-blur-[16px] max-[360px]:px-2 group-has-[.product-detail-page]/menu:hidden";
             }
             else if (isOrderTypePage)
             {
                 userKioskShell.Attributes["class"] =
                     "user-kiosk-shell relative mx-auto min-h-screen min-h-dvh w-full max-w-none overflow-x-hidden bg-slate-50 text-slate-900 shadow-[0_0_40px_rgba(15,23,42,0.12)]";
+                userKioskHeader.Attributes["class"] = "hidden";
+            }
+            else if (isCartPage)
+            {
+                userKioskShell.Attributes["class"] =
+                    "user-kiosk-shell @container/menu relative mx-auto h-dvh min-h-0 w-full max-w-none overflow-x-hidden overflow-y-auto bg-slate-50 text-slate-900 shadow-[0_0_40px_rgba(15,23,42,0.12)]";
                 userKioskHeader.Attributes["class"] = "hidden";
             }
 
