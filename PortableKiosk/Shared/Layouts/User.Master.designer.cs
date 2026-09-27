@@ -12,6 +12,8 @@ namespace PortableKiosk.Shared.Layouts
 
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl userKioskHeader;
 
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl userKioskActions;
+
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkMenu;
 
         protected global::System.Web.UI.WebControls.Literal litOrderType;

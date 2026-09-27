@@ -13,6 +13,9 @@ namespace PortableKiosk.UI.User
 {
     public partial class Menu : Page
     {
+        private const string MenuNavItemClasses =
+            "menu-nav-item flex w-full items-center gap-[clamp(0.3rem,0.8vw,1rem)] rounded-r-[clamp(0.875rem,1vw,1.5rem)] px-[clamp(0.4rem,1.2vw,1.5rem)] py-[clamp(0.45rem,1.2vh,1.5rem)] text-left text-[clamp(0.72rem,1.35vw,1.55rem)] font-semibold leading-tight text-slate-600 no-underline transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30";
+
         private readonly CategoryService categoryService =
             new CategoryService();
 
@@ -207,8 +210,8 @@ namespace PortableKiosk.UI.User
                 out parsedCategoryID);
 
             return parsedCategoryID == SelectedCategoryID
-                ? "menu-nav-item active"
-                : "menu-nav-item";
+                ? MenuNavItemClasses + " active bg-amber-50 font-extrabold text-slate-900 ring-2 ring-inset ring-amber-300"
+                : MenuNavItemClasses;
         }
 
         protected bool HasImage(object imagePath)
@@ -300,8 +303,8 @@ namespace PortableKiosk.UI.User
             rptCategories.DataBind();
 
             btnHome.CssClass = SelectedCategoryID == 0
-                ? "menu-nav-item active"
-                : "menu-nav-item";
+                ? MenuNavItemClasses + " active bg-amber-50 font-extrabold text-slate-900 ring-2 ring-inset ring-amber-300"
+                : MenuNavItemClasses;
         }
 
         private void ShowHome()
