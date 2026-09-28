@@ -146,6 +146,7 @@
     <Content Include="UI\Account\AdminLogin.aspx" />
     <Content Include="UI\Account\SignOut.aspx" />
     <Content Include="UI\Admin\CatalogConfig.aspx" />
+    <Content Include="UI\Admin\Orders.aspx" />
     <Content Include="UI\Admin\Products.aspx" />
     <Content Include="UI\Admin\StaffAccounts.aspx" />
     <Content Include="UI\POS\Index.aspx" />
@@ -251,6 +252,13 @@
     </Compile>
     <Compile Include="UI\Admin\CatalogConfig.aspx.designer.cs">
       <DependentUpon>CatalogConfig.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Orders.aspx.cs">
+      <DependentUpon>Orders.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Orders.aspx.designer.cs">
+      <DependentUpon>Orders.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Admin\Products.aspx.cs">
       <DependentUpon>Products.aspx</DependentUpon>
