@@ -2,6 +2,7 @@ using System;
 
 namespace PortableKiosk.Core.Models
 {
+    [Serializable]
     public class Order
     {
         public Order()

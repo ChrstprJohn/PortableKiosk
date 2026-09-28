@@ -139,6 +139,7 @@
     <Content Include="Scripts\WebForms\WebForms.js" />
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\app\common\modal.js" />
+    <Content Include="Scripts\app\pos\register.js" />
     <Content Include="Shared\Controls\ModalDialog.ascx" />
     <Content Include="Shared\Layouts\Admin.Master" />
     <Content Include="Shared\Layouts\User.Master" />
@@ -168,6 +169,7 @@
     <Compile Include="Core\Data\Repositories\OrderItemRepository.cs" />
     <Compile Include="Core\Data\Repositories\OrderRepository.cs" />
     <Compile Include="Core\Data\Repositories\PaymentRepository.cs" />
+    <Compile Include="Core\Data\Repositories\PosRepository.cs" />
     <Compile Include="Core\Data\Repositories\ProductRepository.cs" />
     <Compile Include="Core\Data\Repositories\ProductVariantRepository.cs" />
     <Compile Include="Core\Data\Repositories\SizeRepository.cs" />
@@ -178,6 +180,9 @@
     <Compile Include="Core\Models\Order.cs" />
     <Compile Include="Core\Models\OrderItem.cs" />
     <Compile Include="Core\Models\Payment.cs" />
+    <Compile Include="Core\Models\PosCatalogItem.cs" />
+    <Compile Include="Core\Models\PosReceipt.cs" />
+    <Compile Include="Core\Models\PosSale.cs" />
     <Compile Include="Core\Models\Product.cs" />
     <Compile Include="Core\Models\ProductVariant.cs" />
     <Compile Include="Core\Models\Size.cs" />
@@ -187,6 +192,7 @@
     <Compile Include="Core\Services\OrderItemService.cs" />
     <Compile Include="Core\Services\OrderService.cs" />
     <Compile Include="Core\Services\PaymentService.cs" />
+    <Compile Include="Core\Services\PosService.cs" />
     <Compile Include="Core\Services\ProductService.cs" />
     <Compile Include="Core\Services\ProductVariantService.cs" />
     <Compile Include="Core\Services\SizeService.cs" />
@@ -347,7 +353,6 @@
     <Folder Include="Scripts\app\account\" />
     <Folder Include="Scripts\app\admin\" />
     <Folder Include="Scripts\app\common\" />
-    <Folder Include="Scripts\app\pos\" />
     <Folder Include="Scripts\app\user\" />
     <Folder Include="Shared\Layouts\" />
     <Folder Include="Shared\Security\" />

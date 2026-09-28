@@ -58,6 +58,9 @@ namespace PortableKiosk.UI.Account
                 Session["StaffDisplayName"] =
                     staff.DisplayName;
 
+                Session["StaffLastName"] =
+                    staff.LastName;
+
                 Session["StaffEmail"] =
                     staff.Email;
 
