@@ -157,7 +157,15 @@ BEGIN TRY
         p.ProductID,
         s.SizeID,
         v.Price,
-        NULL,
+        CONCAT(
+            N'~/Content/images/products/',
+            LOWER(REPLACE(seed.ProductName, N' ', N'-')),
+            N'/',
+            LOWER(REPLACE(seed.ProductName, N' ', N'-')),
+            N'-',
+            LOWER(REPLACE(v.SizeName, N' ', N'-')),
+            N'.jpg'
+        ),
         1
     FROM @CatalogSeed AS seed
     INNER JOIN dbo.Categories AS c

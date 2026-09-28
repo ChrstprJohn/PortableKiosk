@@ -100,26 +100,29 @@ namespace PortableKiosk.Shared.Layouts
             string pagePath =
                 Request.AppRelativeCurrentExecutionFilePath;
 
-            lnkCatalogConfig.Attributes["class"] =
-                pagePath.EndsWith(
-                    "CatalogConfig.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
+            SetCurrentPage(lnkCatalogConfig, pagePath.EndsWith(
+                "CatalogConfig.aspx",
+                StringComparison.OrdinalIgnoreCase));
+            SetCurrentPage(lnkProducts, pagePath.EndsWith(
+                "Products.aspx",
+                StringComparison.OrdinalIgnoreCase));
+            SetCurrentPage(lnkStaff, pagePath.EndsWith(
+                "StaffAccounts.aspx",
+                StringComparison.OrdinalIgnoreCase));
+        }
 
-            lnkProducts.Attributes["class"] =
-                pagePath.EndsWith(
-                    "Products.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
-
-            lnkStaff.Attributes["class"] =
-                pagePath.EndsWith(
-                    "StaffAccounts.aspx",
-                    StringComparison.OrdinalIgnoreCase)
-                        ? "active"
-                        : string.Empty;
+        private static void SetCurrentPage(
+            System.Web.UI.HtmlControls.HtmlAnchor link,
+            bool isCurrentPage)
+        {
+            if (isCurrentPage)
+            {
+                link.Attributes["aria-current"] = "page";
+            }
+            else
+            {
+                link.Attributes.Remove("aria-current");
+            }
         }
 
         private void Redirect(string destination)

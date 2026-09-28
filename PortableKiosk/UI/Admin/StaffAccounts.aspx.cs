@@ -30,8 +30,14 @@ namespace PortableKiosk.UI.Admin
         {
             lblMessage.Visible = false;
 
-            if (!EnsureAdminAccess() || !Page.IsValid)
+            if (!EnsureAdminAccess())
             {
+                return;
+            }
+
+            if (!Page.IsValid)
+            {
+                ReopenAddStaffModal();
                 return;
             }
 
@@ -40,7 +46,7 @@ namespace PortableKiosk.UI.Admin
                 txtConfirmPassword.Text,
                 StringComparison.Ordinal))
             {
-                ShowError("Passwords do not match.");
+                ShowStaffFormError("Passwords do not match.");
                 return;
             }
 
@@ -56,31 +62,23 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                int accountID;
-
                 if (string.Equals(
                     ddlRole.SelectedValue,
                     "ADMIN",
                     StringComparison.Ordinal))
                 {
-                    accountID = staffAccountService.AddAdmin(
+                    staffAccountService.AddAdmin(
                         account,
                         txtPassword.Text);
                 }
                 else
                 {
-                    accountID = staffAccountService.AddCrew(
+                    staffAccountService.AddCrew(
                         account,
                         txtPassword.Text);
                 }
 
-                ShowSuccess(
-                    account.DisplayName +
-                    " was created as " +
-                    account.StaffRole +
-                    ". Account ID: " +
-                    accountID +
-                    ".");
+                ShowSuccess(account.DisplayName + " added.");
 
                 ClearForm();
                 LoadStaff();
@@ -90,23 +88,22 @@ namespace PortableKiosk.UI.Admin
                 if (exception.Number == 2601 ||
                     exception.Number == 2627)
                 {
-                    ShowError(
+                    ShowStaffFormError(
                         "That email address already belongs to a staff account.");
                 }
                 else
                 {
-                    ShowError(
+                    ShowStaffFormError(
                         "The staff account could not be created. Try again.");
                 }
             }
             catch (ArgumentException exception)
             {
-                ShowError(exception.Message);
+                ShowStaffFormError(exception.Message);
             }
             catch (Exception)
             {
-                ShowError(
-                    "An unexpected error occurred while creating the account.");
+                ShowStaffFormError("The staff account could not be created.");
             }
         }
 
@@ -116,15 +113,15 @@ namespace PortableKiosk.UI.Admin
                 Convert.ToString(role),
                 "ADMIN",
                 StringComparison.OrdinalIgnoreCase)
-                    ? "role-badge role-admin"
-                    : "role-badge role-crew";
+                    ? "inline-flex items-center rounded-md border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700"
+                    : "inline-flex items-center rounded-md border border-slate-200 bg-white px-2 py-0.5 text-xs font-medium text-slate-600";
         }
 
         protected string GetStatusCss(object isActive)
         {
             return Convert.ToBoolean(isActive)
-                ? "status-badge status-active"
-                : "status-badge status-inactive";
+                ? "inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700"
+                : "inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600";
         }
 
         protected string GetStatusText(object isActive)
@@ -192,7 +189,7 @@ namespace PortableKiosk.UI.Admin
         {
             lblMessage.Text = message;
             lblMessage.CssClass =
-                "block rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800";
+                "mb-4 block rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800";
             lblMessage.Visible = true;
         }
 
@@ -200,8 +197,18 @@ namespace PortableKiosk.UI.Admin
         {
             lblMessage.Text = message;
             lblMessage.CssClass =
-                "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800";
+                "mb-4 block rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800";
             lblMessage.Visible = true;
+        }
+
+        private void ShowStaffFormError(string message)
+        {
+            ShowError(message);
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenAddStaffModal",
+                "AppModal.open('addStaffModal');",
+                true);
         }
 
         private void Redirect(string destination)

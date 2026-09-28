@@ -48,6 +48,7 @@ namespace PortableKiosk.UI.Admin
 
             if (!Page.IsValid)
             {
+                ReopenAddCategoryModal();
                 return;
             }
 
@@ -76,15 +77,27 @@ namespace PortableKiosk.UI.Admin
                 {
                     ShowCategoryError("The category could not be saved due to a database error.");
                 }
+                ReopenAddCategoryModal();
             }
             catch (ArgumentException ex)
             {
                 ShowCategoryError(ex.Message);
+                ReopenAddCategoryModal();
             }
             catch (Exception)
             {
                 ShowCategoryError("An unexpected error occurred while saving the category.");
+                ReopenAddCategoryModal();
             }
+        }
+
+        private void ReopenAddCategoryModal()
+        {
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenAddCategoryModal",
+                "AppModal.open('addCategoryModal');",
+                true);
         }
 
         protected void btnUpdateCategory_Click(
@@ -244,14 +257,14 @@ namespace PortableKiosk.UI.Admin
         private void ShowCategorySuccess(string message)
         {
             lblCategoryMessage.Text = message;
-            lblCategoryMessage.CssClass = "block rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800";
+            lblCategoryMessage.CssClass = "mb-4 block rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800";
             lblCategoryMessage.Visible = true;
         }
 
         private void ShowCategoryError(string message)
         {
             lblCategoryMessage.Text = message;
-            lblCategoryMessage.CssClass = "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800";
+            lblCategoryMessage.CssClass = "mb-4 block rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800";
             lblCategoryMessage.Visible = true;
         }
 
@@ -265,6 +278,7 @@ namespace PortableKiosk.UI.Admin
 
             if (!Page.IsValid)
             {
+                ReopenAddSizeModal();
                 return;
             }
 
@@ -291,15 +305,27 @@ namespace PortableKiosk.UI.Admin
                 {
                     ShowSizeError("The size could not be saved due to a database error.");
                 }
+                ReopenAddSizeModal();
             }
             catch (ArgumentException ex)
             {
                 ShowSizeError(ex.Message);
+                ReopenAddSizeModal();
             }
             catch (Exception)
             {
                 ShowSizeError("An unexpected error occurred while saving the size.");
+                ReopenAddSizeModal();
             }
+        }
+
+        private void ReopenAddSizeModal()
+        {
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenAddSizeModal",
+                "AppModal.open('addSizeModal');",
+                true);
         }
 
         protected void btnUpdateSize_Click(
@@ -449,14 +475,14 @@ namespace PortableKiosk.UI.Admin
         private void ShowSizeSuccess(string message)
         {
             lblSizeMessage.Text = message;
-            lblSizeMessage.CssClass = "block rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800";
+            lblSizeMessage.CssClass = "mb-4 block rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800";
             lblSizeMessage.Visible = true;
         }
 
         private void ShowSizeError(string message)
         {
             lblSizeMessage.Text = message;
-            lblSizeMessage.CssClass = "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800";
+            lblSizeMessage.CssClass = "mb-4 block rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800";
             lblSizeMessage.Visible = true;
         }
 

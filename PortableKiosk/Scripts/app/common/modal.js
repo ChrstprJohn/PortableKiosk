@@ -19,7 +19,8 @@ window.AppModal = (function () {
         dialog.setAttribute('aria-modal', 'true');
         dialog.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-        var focusTarget = dialog.querySelector('[autofocus], button, input, select, textarea, a[href]');
+        var focusTarget = dialog.querySelector('[autofocus]') ||
+            dialog.querySelector('button, input, select, textarea, a[href]');
         (focusTarget || dialog).focus();
         dialog.dispatchEvent(new CustomEvent('modal:shown'));
     }

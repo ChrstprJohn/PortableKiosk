@@ -102,13 +102,14 @@ namespace PortableKiosk.UI.Admin
 
             if (!Page.IsValid)
             {
+                ReopenAddProductModal();
                 return;
             }
 
             int categoryID;
             if (!int.TryParse(ddlCategory.SelectedValue, out categoryID))
             {
-                ShowError("Please select a valid category.");
+                ShowAddProductError("Please select a valid category.");
                 return;
             }
 
@@ -121,10 +122,9 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                int productID =
-                    productService.Add(product);
+                productService.Add(product);
 
-                ShowSuccess("Product \"" + product.ProductName + "\" added successfully. You can now add size variants below!");
+                ShowSuccess("Product added.");
                 ClearProductForm();
                 LoadProductCards();
             }
@@ -132,21 +132,31 @@ namespace PortableKiosk.UI.Admin
             {
                 if (ex.Number == 2601 || ex.Number == 2627)
                 {
-                    ShowError("A product with this name already exists in this category.");
+                    ShowAddProductError("A product with this name already exists in this category.");
                 }
                 else
                 {
-                    ShowError("The product could not be saved due to a database error.");
+                    ShowAddProductError("The product could not be saved due to a database error.");
                 }
             }
             catch (ArgumentException ex)
             {
-                ShowError(ex.Message);
+                ShowAddProductError(ex.Message);
             }
             catch (Exception)
             {
-                ShowError("An unexpected error occurred while adding the product.");
+                ShowAddProductError("The product could not be added.");
             }
+        }
+
+        private void ShowAddProductError(string message)
+        {
+            ShowError(message);
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenAddProductModal",
+                "AppModal.open('addProductModal');",
+                true);
         }
 
         private void ClearProductForm()
@@ -876,15 +886,15 @@ namespace PortableKiosk.UI.Admin
 
         private void ShowSuccess(string message)
         {
-            lblGlobalMessage.Text = "<i class=\"bi bi-check-circle-fill me-1\"></i> " + message;
-            lblGlobalMessage.CssClass = "block rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 shadow-sm mb-4";
+            lblGlobalMessage.Text = message;
+            lblGlobalMessage.CssClass = "mb-4 block rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800";
             lblGlobalMessage.Visible = true;
         }
 
         private void ShowError(string message)
         {
-            lblGlobalMessage.Text = "<i class=\"bi bi-exclamation-triangle-fill me-1\"></i> " + message;
-            lblGlobalMessage.CssClass = "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800 shadow-sm mb-4";
+            lblGlobalMessage.Text = message;
+            lblGlobalMessage.CssClass = "mb-4 block rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800";
             lblGlobalMessage.Visible = true;
         }
 

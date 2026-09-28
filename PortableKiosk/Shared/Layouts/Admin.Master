@@ -10,42 +10,50 @@
     ContentPlaceHolderID="MainContent"
     runat="server">
 
-    <div class="admin-shell">
-        <aside class="admin-sidebar" aria-label="Admin navigation">
-            <div class="admin-sidebar-heading">
-                <span>Management</span>
-                <strong>Admin workspace</strong>
+    <div class="-m-4 grid min-h-screen grid-cols-1 bg-slate-50 text-slate-900 md:-mx-6 md:-my-4 lg:grid-cols-[248px_minmax(0,1fr)]">
+        <aside class="relative z-20 flex flex-col gap-4 border-b border-slate-200 bg-white px-4 py-4 lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r lg:px-5 lg:py-6" aria-label="Admin navigation">
+            <div class="flex items-center gap-3 px-1">
+                <span class="inline-flex size-9 shrink-0 items-center justify-center rounded-md bg-slate-900 text-xs font-semibold tracking-wide text-white" aria-hidden="true">PK</span>
+                <strong class="text-sm font-semibold tracking-tight text-slate-950">Admin workspace</strong>
             </div>
 
-            <nav class="admin-nav">
+            <nav class="flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible" aria-label="Workspace">
                 <a ID="lnkCatalogConfig" runat="server"
-                    href="~/UI/Admin/CatalogConfig.aspx">
+                    href="~/UI/Admin/CatalogConfig.aspx"
+                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1" /><rect x="13.5" y="3.5" width="7" height="7" rx="1" /><rect x="3.5" y="13.5" width="7" height="7" rx="1" /><rect x="13.5" y="13.5" width="7" height="7" rx="1" /></svg>
                     Catalog setup
                 </a>
 
                 <a ID="lnkProducts" runat="server"
-                    href="~/UI/Admin/Products.aspx">
+                    href="~/UI/Admin/Products.aspx"
+                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8.5 4.5v9L12 21l-8.5-4.5v-9L12 3Z" /><path d="m3.8 7.7 8.2 4.4 8.2-4.4M12 12v9" /></svg>
                     Products
                 </a>
 
                 <a ID="lnkStaff" runat="server"
-                    href="~/UI/Admin/StaffAccounts.aspx">
+                    href="~/UI/Admin/StaffAccounts.aspx"
+                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20" /><circle cx="10" cy="7.5" r="3.5" /><path d="M16 4.2a3.5 3.5 0 0 1 0 6.6M20 20v-1.5a3.5 3.5 0 0 0-2.7-3.4" /></svg>
                     Staff accounts
                 </a>
             </nav>
 
-            <div class="admin-sidebar-account">
-                <span>Signed in as</span>
-                <strong><asp:Literal ID="litAdminName" runat="server" /></strong>
-                <a runat="server" href="~/UI/Account/SignOut.aspx">
+            <div class="mt-auto grid gap-2 border-t border-slate-200 pt-4 lg:px-1">
+                <span class="text-xs text-slate-500">Signed in as</span>
+                <strong class="break-words text-sm font-medium text-slate-900"><asp:Literal ID="litAdminName" runat="server" /></strong>
+                <a runat="server" href="~/UI/Account/SignOut.aspx"
+                    class="mt-1 inline-flex min-h-9 items-center gap-2 rounded-md px-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">
+                    <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3" /><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" /></svg>
                     Sign out
                 </a>
             </div>
         </aside>
 
-        <section class="admin-content">
+        <div class="min-w-0 px-4 py-6 sm:px-6 lg:px-8">
             <asp:ContentPlaceHolder ID="AdminContent" runat="server" />
-        </section>
+        </div>
     </div>
 
 </asp:Content>

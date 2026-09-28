@@ -11,107 +11,110 @@
     ContentPlaceHolderID="AdminContent"
     runat="server">
 
-    <main class="staff-shell" aria-labelledby="staffHeading">
-        <header class="page-heading">
+    <main class="mx-auto w-full max-w-7xl" aria-labelledby="staffHeading">
+        <header class="mb-7 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
             <div>
-                <h1 id="staffHeading">Staff accounts</h1>
-                <p>Create role-based access for managers and counter crew.</p>
+                <h1 id="staffHeading" class="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Staff accounts</h1>
             </div>
+            <button type="button" class="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addStaffModal">
+                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                Add staff
+            </button>
         </header>
 
-        <section class="staff-create-panel" aria-labelledby="createStaffHeading">
-            <div class="section-heading">
-                <h2 id="createStaffHeading">Add staff member</h2>
-                <p>Required fields are marked. Middle name and suffix are optional.</p>
-            </div>
+        <asp:Label ID="lblMessage" runat="server" Visible="false" CssClass="mb-4 block rounded-md border px-4 py-3 text-sm" role="status" aria-live="polite"></asp:Label>
 
+        <div class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 p-4" id="addStaffModal" tabindex="-1" aria-labelledby="createStaffHeading" aria-hidden="true">
+            <div class="w-full max-w-4xl">
+                <div class="flex max-h-[90vh] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
+                    <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+                        <h2 id="createStaffHeading" class="text-base font-semibold text-slate-950">Add staff account</h2>
+                        <button type="button" class="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-dismiss="true" aria-label="Close">
+                            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+                        </button>
+                    </div>
+                    <div class="space-y-4 overflow-y-auto p-5">
             <asp:ValidationSummary
                 ID="validationSummary"
                 runat="server"
                 ValidationGroup="StaffForm"
-                CssClass="rounded-lg border px-4 py-3 border-red-200 bg-red-50 text-red-800"
-                HeaderText="Check the following:"
+                CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"
+                HeaderText="Please correct the following:"
                 DisplayMode="BulletList" />
 
-            <asp:Label
-                ID="lblMessage"
-                runat="server"
-                Visible="false">
-            </asp:Label>
-
             <div class="grid grid-cols-12 gap-3">
-                <div class="col-span-12 md:col-span-4">
+                <div class="col-span-12 md:col-span-3">
                     <asp:Label ID="lblFirstName" runat="server"
                         AssociatedControlID="txtFirstName"
-                        CssClass="mb-1 block text-sm font-semibold text-slate-700" Text="First name *" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="First name *" />
                     <asp:TextBox ID="txtFirstName" runat="server"
-                        CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200" MaxLength="50"
-                        autocomplete="off" />
+                        CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" MaxLength="50"
+                        autocomplete="off" autofocus="autofocus" />
                     <asp:RequiredFieldValidator ID="requiredFirstName"
                         runat="server" ControlToValidate="txtFirstName"
                         ValidationGroup="StaffForm"
                         ErrorMessage="First name is required."
-                        CssClass="field-error" Display="Dynamic" />
-                </div>
-
-                <div class="col-span-12 md:col-span-4">
-                    <asp:Label ID="lblMiddleName" runat="server"
-                        AssociatedControlID="txtMiddleName"
-                        CssClass="mb-1 block text-sm font-semibold text-slate-700" Text="Middle name" />
-                    <asp:TextBox ID="txtMiddleName" runat="server"
-                        CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200" MaxLength="50"
-                        autocomplete="off" />
+                        CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
                 <div class="col-span-12 md:col-span-3">
+                    <asp:Label ID="lblMiddleName" runat="server"
+                        AssociatedControlID="txtMiddleName"
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Middle name" />
+                    <asp:TextBox ID="txtMiddleName" runat="server"
+                        CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" MaxLength="50"
+                        autocomplete="off" />
+                </div>
+
+                <div class="col-span-12 md:col-span-4">
                     <asp:Label ID="lblLastName" runat="server"
                         AssociatedControlID="txtLastName"
-                        CssClass="mb-1 block text-sm font-semibold text-slate-700" Text="Last name *" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Last name *" />
                     <asp:TextBox ID="txtLastName" runat="server"
-                        CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200" MaxLength="50"
+                        CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" MaxLength="50"
                         autocomplete="off" />
                     <asp:RequiredFieldValidator ID="requiredLastName"
                         runat="server" ControlToValidate="txtLastName"
                         ValidationGroup="StaffForm"
                         ErrorMessage="Last name is required."
-                        CssClass="field-error" Display="Dynamic" />
+                        CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
-                <div class="col-span-12 md:col-span-1">
+                <div class="col-span-12 md:col-span-2">
                     <asp:Label ID="lblSuffix" runat="server"
                         AssociatedControlID="txtSuffix"
-                        CssClass="mb-1 block text-sm font-semibold text-slate-700" Text="Suffix" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Suffix" />
                     <asp:TextBox ID="txtSuffix" runat="server"
-                        CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200" MaxLength="20"
+                        CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" MaxLength="20"
                         placeholder="Jr." autocomplete="off" />
                 </div>
 
                 <div class="col-span-12 md:col-span-6">
                     <asp:Label ID="lblEmail" runat="server"
                         AssociatedControlID="txtEmail"
-                        CssClass="mb-1 block text-sm font-semibold text-slate-700" Text="Email address *" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Email address *" />
                     <asp:TextBox ID="txtEmail" runat="server"
-                        CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200" TextMode="Email"
+                        CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" TextMode="Email"
                         MaxLength="256" autocomplete="off" />
                     <asp:RequiredFieldValidator ID="requiredEmail"
                         runat="server" ControlToValidate="txtEmail"
                         ValidationGroup="StaffForm"
                         ErrorMessage="Email address is required."
-                        CssClass="field-error" Display="Dynamic" />
+                        CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                     <asp:RegularExpressionValidator ID="validEmail"
                         runat="server" ControlToValidate="txtEmail"
                         ValidationGroup="StaffForm"
                         ValidationExpression="^[^@\s]+@[^@\s]+\.[^@\s]+$"
                         ErrorMessage="Enter a valid email address."
-                        CssClass="field-error" Display="Dynamic" />
+                        CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
                 <div class="col-span-12 md:col-span-3">
                     <asp:Label ID="lblRole" runat="server"
                         AssociatedControlID="ddlRole"
-                        CssClass="mb-1 block text-sm font-semibold text-slate-700" Text="Workspace role *" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Workspace role *" />
                     <asp:DropDownList ID="ddlRole" runat="server"
-                        CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200">
+                        CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
                         <asp:ListItem Text="Crew — POS access" Value="CREW" />
                         <asp:ListItem Text="Admin — management access" Value="ADMIN" />
                     </asp:DropDownList>
@@ -120,73 +123,75 @@
                 <div class="col-span-12 md:col-span-3 flex items-end pb-2">
                     <asp:CheckBox ID="chkIsActive" runat="server"
                         Checked="true" Text=" Active account"
-                        CssClass="flex items-center gap-2" />
+                        CssClass="inline-flex items-center gap-2 text-sm text-slate-700 [&_input]:size-4 [&_input]:accent-slate-900" />
                 </div>
 
                 <div class="col-span-12 md:col-span-6">
                     <asp:Label ID="lblPassword" runat="server"
                         AssociatedControlID="txtPassword"
-                        CssClass="mb-1 block text-sm font-semibold text-slate-700" Text="Temporary password *" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Temporary password *" />
                     <asp:TextBox ID="txtPassword" runat="server"
-                        CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200" TextMode="Password"
+                        CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" TextMode="Password"
                         MaxLength="100" autocomplete="new-password" />
                     <asp:RequiredFieldValidator ID="requiredPassword"
                         runat="server" ControlToValidate="txtPassword"
                         ValidationGroup="StaffForm"
                         ErrorMessage="Password is required."
-                        CssClass="field-error" Display="Dynamic" />
+                        CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                     <asp:RegularExpressionValidator ID="validPasswordLength"
                         runat="server" ControlToValidate="txtPassword"
                         ValidationGroup="StaffForm"
                         ValidationExpression="^.{8,100}$"
                         ErrorMessage="Password must contain at least 8 characters."
-                        CssClass="field-error" Display="Dynamic" />
+                        CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
                 <div class="col-span-12 md:col-span-6">
                     <asp:Label ID="lblConfirmPassword" runat="server"
                         AssociatedControlID="txtConfirmPassword"
-                        CssClass="mb-1 block text-sm font-semibold text-slate-700" Text="Confirm password *" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Confirm password *" />
                     <asp:TextBox ID="txtConfirmPassword" runat="server"
-                        CssClass="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200" TextMode="Password"
+                        CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" TextMode="Password"
                         MaxLength="100" autocomplete="new-password" />
                     <asp:RequiredFieldValidator ID="requiredConfirmPassword"
                         runat="server" ControlToValidate="txtConfirmPassword"
                         ValidationGroup="StaffForm"
                         ErrorMessage="Confirm the password."
-                        CssClass="field-error" Display="Dynamic" />
+                        CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                     <asp:CompareValidator ID="passwordsMatch"
                         runat="server" ControlToValidate="txtConfirmPassword"
                         ControlToCompare="txtPassword"
                         ValidationGroup="StaffForm"
                         ErrorMessage="Passwords do not match."
-                        CssClass="field-error" Display="Dynamic" />
+                        CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
             </div>
 
-            <div class="form-actions">
-                <p>The selected role controls the workspace shown after sign-in.</p>
+                    </div>
+                    <div class="flex flex-wrap justify-end gap-2 border-t border-slate-200 px-5 py-4">
+                        <button type="button" class="inline-flex min-h-9 items-center justify-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-dismiss="true">Cancel</button>
                 <asp:Button ID="btnCreateStaff" runat="server"
-                    Text="Create staff account"
-                    CssClass="inline-flex items-center justify-center rounded-lg border px-4 py-2 font-semibold transition-colors border-blue-700 bg-blue-700 text-white hover:bg-blue-800"
+                    Text="Add staff"
+                    CssClass="inline-flex min-h-9 cursor-pointer items-center justify-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
                     ValidationGroup="StaffForm"
                     OnClick="btnCreateStaff_Click" />
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
 
-        <section class="staff-list-panel" aria-labelledby="staffListHeading">
-            <div class="section-heading">
-                <h2 id="staffListHeading">Current staff</h2>
-                <p>Inactive accounts remain visible for audit continuity.</p>
+        <section class="overflow-hidden rounded-lg border border-slate-200 bg-white" aria-labelledby="staffListHeading">
+            <div class="border-b border-slate-200 px-4 py-3 sm:px-5">
+                <h2 id="staffListHeading" class="text-sm font-semibold text-slate-950">Current staff</h2>
             </div>
 
             <asp:Label ID="lblLoadError" runat="server"
-                Visible="false" CssClass="rounded-lg border px-4 py-3 border-red-200 bg-red-50 text-red-800 block" />
+                Visible="false" CssClass="m-3 block rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800" />
 
             <div class="w-full overflow-x-auto">
                 <asp:GridView ID="gridStaff" runat="server"
                     AutoGenerateColumns="false" GridLines="None"
-                    CssClass="w-full border-collapse text-left [&_th]:px-3 [&_th]:py-2 [&_td]:px-3 [&_td]:py-2 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-200 staff-table align-middle"
+                    CssClass="w-full border-collapse text-left text-sm tabular-nums [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-slate-50 [&_th]:px-4 [&_th]:py-3 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-4 [&_td]:py-3 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
                     EmptyDataText="No staff accounts have been created.">
                     <Columns>
                         <asp:BoundField DataField="DisplayName" HeaderText="Staff member" />
@@ -208,6 +213,7 @@
                         <asp:BoundField DataField="CreatedAt" HeaderText="Created"
                             DataFormatString="{0:MMM d, yyyy}" />
                     </Columns>
+                    <EmptyDataRowStyle CssClass="text-center text-slate-500 [&_td]:px-4 [&_td]:py-10" />
                 </asp:GridView>
             </div>
         </section>
