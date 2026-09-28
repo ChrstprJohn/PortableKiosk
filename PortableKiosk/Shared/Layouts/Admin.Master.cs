@@ -146,9 +146,28 @@ namespace PortableKiosk.Shared.Layouts
                 "AdminAlertScript",
                 ResolveUrl("~/Scripts/app/admin/alert.js"));
 
-            litAdminName.Text = Server.HtmlEncode(
-                Convert.ToString(
-                    Session["StaffDisplayName"]));
+            string adminLastName = Convert.ToString(
+                Session["StaffLastName"]);
+            if (string.IsNullOrWhiteSpace(adminLastName))
+            {
+                string displayName = Convert.ToString(
+                    Session["StaffDisplayName"]);
+                string[] nameParts = (displayName ?? string.Empty).Split(
+                    new[] { ' ' },
+                    StringSplitOptions.RemoveEmptyEntries);
+                adminLastName = nameParts.Length == 0
+                    ? "Profile"
+                    : nameParts[nameParts.Length - 1];
+            }
+
+            litAdminName.Text = Server.HtmlEncode(adminLastName);
+            litAdminRole.Text = Server.HtmlEncode(
+                string.Equals(
+                    Convert.ToString(Session["StaffRole"]),
+                    "ADMIN",
+                    StringComparison.OrdinalIgnoreCase)
+                    ? "Admin"
+                    : Convert.ToString(Session["StaffRole"]));
 
             string pagePath =
                 Request.AppRelativeCurrentExecutionFilePath;

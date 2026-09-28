@@ -46,21 +46,52 @@
                 </a>
             </nav>
 
-            <div class="mt-auto grid gap-2 border-t border-slate-200 pt-4 lg:px-1">
-                <span class="text-xs text-slate-500">Signed in as</span>
-                <strong class="break-words text-sm font-medium text-slate-900"><asp:Literal ID="litAdminName" runat="server" /></strong>
-                <a runat="server" href="~/UI/Account/SignOut.aspx"
-                    class="mt-1 inline-flex min-h-9 items-center gap-2 rounded-md px-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">
-                    <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3" /><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" /></svg>
-                    Sign out
-                </a>
-            </div>
+            <details data-admin-profile-menu class="group relative mt-auto border-t border-slate-200 pt-4 lg:mx-1">
+                <summary class="flex min-h-14 w-full cursor-pointer list-none items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 [&::-webkit-details-marker]:hidden">
+                    <span class="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700" aria-hidden="true">
+                        <svg class="size-5 fill-none stroke-current" viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.25" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg>
+                    </span>
+                    <span class="min-w-0 flex-1">
+                        <strong class="block truncate text-sm font-semibold text-slate-900"><asp:Literal ID="litAdminName" runat="server" /></strong>
+                        <span class="mt-0.5 block text-xs font-medium text-slate-500"><asp:Literal ID="litAdminRole" runat="server" /></span>
+                    </span>
+                    <svg aria-hidden="true" class="size-4 shrink-0 fill-none stroke-slate-500 transition-transform group-open:rotate-180" viewBox="0 0 20 20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 7.5 5 5 5-5" /></svg>
+                </summary>
+                <div class="absolute bottom-full left-0 right-0 z-30 mb-2 rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg">
+                    <a runat="server" href="~/UI/Account/SignOut.aspx"
+                        class="flex min-h-11 items-center gap-2.5 rounded-lg px-3 text-sm font-medium text-slate-700 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-slate-400">
+                        <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3" /><path d="M12 3h6a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-6" /></svg>
+                        <span>Sign out</span>
+                    </a>
+                </div>
+            </details>
         </aside>
 
         <div class="min-w-0 px-4 py-6 sm:px-6 lg:px-8">
             <asp:ContentPlaceHolder ID="AdminContent" runat="server" />
         </div>
     </div>
+
+    <script>
+        (function () {
+            var profileMenu = document.querySelector("[data-admin-profile-menu]");
+            if (!profileMenu) return;
+
+            document.addEventListener("click", function (event) {
+                if (profileMenu.open && !profileMenu.contains(event.target)) {
+                    profileMenu.open = false;
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" && profileMenu.open) {
+                    profileMenu.open = false;
+                    var trigger = profileMenu.querySelector("summary");
+                    if (trigger) trigger.focus();
+                }
+            });
+        }());
+    </script>
 
     <div id="adminAlertModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 p-4" tabindex="-1" aria-hidden="true" aria-labelledby="adminAlertTitle" aria-describedby="adminAlertMessage" data-modal-backdrop="static" data-modal-keyboard="false">
         <div class="w-full max-w-md">
