@@ -184,21 +184,6 @@
         }
     }
 
-    .cart-fluid .cart-fluid-footer {
-        padding: clamp(0.4rem, 2vh, 3rem) clamp(0.5rem, 3.5vw, 6rem);
-        padding-bottom: max(clamp(0.4rem, 2vh, 3rem), env(safe-area-inset-bottom));
-        border-radius: clamp(0.75rem, 3vw, 5rem) clamp(0.75rem, 3vw, 5rem) 0 0;
-        box-shadow: 0 -1px 6px rgba(15, 23, 42, 0.05);
-    }
-
-    .cart-fluid .cart-fluid-footer-inner {
-        gap: clamp(8px, 2.488cqw, 20px);
-    }
-
-    .cart-fluid .cart-fluid-footer-actions {
-        gap: clamp(8px, 2.239cqw, 18px);
-    }
-
     .cart-fluid .cart-fluid-total-label {
         font-size: clamp(14px, 2.985cqw, 24px);
     }
@@ -207,28 +192,11 @@
         font-size: clamp(22px, 5.224cqw, 42px);
     }
 
-    .cart-fluid .cart-fluid-action-button {
+    .cart-fluid .cart-fluid-empty-action-button {
         min-height: clamp(52px, 13.433cqw, 108px);
         padding-inline: clamp(10px, 2.985cqw, 24px);
         border-radius: clamp(7.5px, 2.239cqw, 18px);
         font-size: clamp(12px, 2.736cqw, 22px);
-    }
-
-    .cart-fluid .cart-fluid-footer-actions .cart-fluid-action-button {
-        min-height: clamp(35.2px, 5.2vh, 192px);
-        padding-block: clamp(4px, 1.4cqw, 24px);
-        border-radius: clamp(8px, 3cqw, 80px);
-        font-weight: 700;
-    }
-
-    .cart-fluid .cart-fluid-footer-actions > a.cart-fluid-action-button {
-        padding-inline: clamp(6.4px, 2.5cqw, 56px);
-        font-size: clamp(12px, 2.2cqw, 64px);
-    }
-
-    .cart-fluid .cart-fluid-footer-actions > input.cart-fluid-action-button {
-        padding-inline: clamp(8px, 3cqw, 64px);
-        font-size: clamp(12px, 2.4cqw, 68px);
     }
 
     @media (max-width: 480px) {
@@ -261,23 +229,5 @@
             font-size: clamp(0.75rem, 3.2vw, 0.875rem);
         }
 
-        .cart-fluid .cart-fluid-footer {
-            padding: 0.5rem 0.75rem max(0.5rem, env(safe-area-inset-bottom));
-        }
-
-        .cart-fluid .cart-fluid-footer-actions .cart-fluid-action-button {
-            min-height: 2.2rem;
-            padding-block: 0.25rem;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-        }
-
-        .cart-fluid .cart-fluid-footer-actions > a.cart-fluid-action-button {
-            padding-inline: 0.5rem;
-        }
-
-        .cart-fluid .cart-fluid-footer-actions > input.cart-fluid-action-button {
-            padding-inline: 0.625rem;
-        }
     }
 }

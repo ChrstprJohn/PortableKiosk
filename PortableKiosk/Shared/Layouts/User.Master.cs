@@ -56,7 +56,7 @@ namespace PortableKiosk.Shared.Layouts
                     "user-kiosk-header h-0 min-h-0 bg-transparent p-0";
                 lnkMenu.Attributes["class"] = "hidden";
                 userKioskActions.Attributes["class"] =
-                    "user-kiosk-actions fixed inset-x-0 bottom-0 z-[1040] flex min-h-[clamp(3.5rem,9vh,26rem)] max-[480px]:min-h-[3.5rem] w-full items-center justify-between gap-[clamp(0.35rem,2cqw,2rem)] rounded-t-[clamp(0.75rem,3cqw,5rem)] border-t border-slate-200 bg-white/95 px-[clamp(0.5rem,3.5cqw,6rem)] py-[clamp(0.4rem,2vh,3rem)] max-[480px]:px-3 max-[480px]:py-2 shadow-[0_-1px_6px_rgba(15,23,42,0.05)] backdrop-blur-[16px] max-[360px]:px-2 group-has-[.product-detail-page]/menu:hidden";
+                    "user-kiosk-actions kiosk-cta-footer kiosk-cta-footer-menu";
             }
             else if (isOrderTypePage)
             {

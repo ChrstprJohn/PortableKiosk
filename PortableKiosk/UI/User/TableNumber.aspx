@@ -56,10 +56,10 @@
 
         </section>
     </main>
-    <footer class="kiosk-flow-footer"><div class="kiosk-flow-footer-inner">
-        <a runat="server" href="~/UI/User/Fulfillment.aspx" class="kiosk-button kiosk-flow-back">Back</a>
+    <footer class="kiosk-flow-footer kiosk-cta-footer"><div class="kiosk-flow-footer-inner kiosk-cta-footer-inner">
+        <a runat="server" href="~/UI/User/Fulfillment.aspx" class="kiosk-cta-button kiosk-cta-button-secondary kiosk-flow-back">Back</a>
         <asp:Button ID="btnContinue" runat="server" Text="Go"
-            CssClass="kiosk-button kiosk-button-primary kiosk-flow-primary"
+            CssClass="kiosk-cta-button kiosk-cta-button-primary kiosk-flow-primary"
             OnClick="btnContinue_Click" />
     </div></footer>
 </asp:Content>

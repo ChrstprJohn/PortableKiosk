@@ -211,7 +211,7 @@
                     </div>
 
                     <div class="product-detail-actions">
-                        <div class="product-purchase-actions fixed inset-x-0 bottom-0 z-[1041] grid min-h-[clamp(3.5rem,9vh,26rem)] max-[480px]:min-h-[3.5rem] w-full grid-cols-1 gap-[clamp(0.35rem,1.2cqw,2rem)] max-[480px]:gap-2 border-t border-slate-200 bg-white/95 px-[clamp(0.5rem,3.5cqw,6rem)] py-[clamp(0.45rem,1.8vh,2.5rem)] max-[480px]:px-3 max-[480px]:py-2 shadow-[0_-1px_6px_rgba(15,23,42,0.05)] backdrop-blur-[16px]">
+                        <div class="product-purchase-actions kiosk-cta-footer kiosk-cta-footer-product">
                             <div class="quantity-field flex items-center justify-between gap-[clamp(0.35rem,1.5cqw,2rem)]">
                                 <label class="text-[clamp(0.75rem,2.4cqw,3.75rem)] max-[480px]:text-xs font-bold text-slate-900" for="<%= txtQuantity.ClientID %>">Quantity</label>
                                 <div class="quantity-control inline-grid grid-cols-[clamp(2.2rem,5.5cqw,8rem)_clamp(2.5rem,6.5cqw,10rem)_clamp(2.2rem,5.5cqw,8rem)] max-[480px]:grid-cols-[2rem_2.5rem_2rem] overflow-hidden rounded-[clamp(0.4rem,1.4cqw,2.5rem)] max-[480px]:rounded-lg border border-slate-200 bg-white shadow-sm">
@@ -223,13 +223,13 @@
                                         aria-label="Increase quantity">+</button>
                                 </div>
                             </div>
-                            <div class="product-purchase-buttons grid grid-cols-[minmax(0,1fr)_minmax(0,1.8fr)] gap-[clamp(0.35rem,1.2cqw,2rem)] max-[480px]:gap-2">
-                                <asp:LinkButton ID="btnBackToMenu" runat="server" CssClass="inline-flex min-h-[clamp(2.4rem,5.2vh,12rem)] max-[480px]:min-h-[2.4rem] items-center justify-center whitespace-nowrap rounded-[clamp(0.5rem,1.8cqw,3rem)] max-[480px]:rounded-lg border border-slate-300 bg-white px-[clamp(0.5rem,2.4cqw,3.5rem)] max-[480px]:px-2.5 text-[clamp(0.75rem,2.4cqw,3.75rem)] max-[480px]:text-xs font-bold text-slate-700 shadow-sm transition-colors hover:border-slate-400 hover:bg-slate-50"
+                            <div class="product-purchase-buttons">
+                                <asp:LinkButton ID="btnBackToMenu" runat="server" CssClass="kiosk-cta-button kiosk-cta-button-secondary"
                                     CausesValidation="false" OnClick="btnBackToMenu_Click">
                                     Back
                                 </asp:LinkButton>
                                 <asp:Button ID="btnAddToCart" runat="server" Text="Add to cart"
-                                    CssClass="inline-flex min-h-[clamp(2.4rem,5.2vh,12rem)] max-[480px]:min-h-[2.4rem] items-center justify-center whitespace-nowrap rounded-[clamp(0.5rem,1.8cqw,3rem)] max-[480px]:rounded-lg bg-[linear-gradient(135deg,#f59e0b,#d97706)] px-[clamp(0.5rem,2.8cqw,4rem)] max-[480px]:px-2.5 text-[clamp(0.75rem,2.6cqw,4rem)] max-[480px]:text-xs font-bold tracking-tight text-white shadow-[0_4px_14px_rgba(217,119,6,0.35)] transition-[filter,transform] hover:-translate-y-0.5 hover:brightness-105" OnClick="btnAddToCart_Click" />
+                                    CssClass="kiosk-cta-button kiosk-cta-button-primary" OnClick="btnAddToCart_Click" />
                             </div>
                         </div>
                     </div>
