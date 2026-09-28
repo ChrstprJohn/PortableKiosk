@@ -48,6 +48,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
@@ -148,6 +150,7 @@
     <Content Include="UI\Account\SignOut.aspx" />
     <Content Include="UI\Admin\CatalogConfig.aspx" />
     <Content Include="UI\Admin\Orders.aspx" />
+    <Content Include="UI\Admin\Analytics.aspx" />
     <Content Include="UI\Admin\Products.aspx" />
     <Content Include="UI\Admin\StaffAccounts.aspx" />
     <Content Include="UI\POS\Index.aspx" />
@@ -166,6 +169,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Core\Data\DatabaseConnection.cs" />
     <Compile Include="Core\Data\Repositories\CategoryRepository.cs" />
+    <Compile Include="Core\Data\Repositories\AnalyticsRepository.cs" />
     <Compile Include="Core\Data\Repositories\OrderItemRepository.cs" />
     <Compile Include="Core\Data\Repositories\OrderRepository.cs" />
     <Compile Include="Core\Data\Repositories\PaymentRepository.cs" />
@@ -175,6 +179,7 @@
     <Compile Include="Core\Data\Repositories\SizeRepository.cs" />
     <Compile Include="Core\Data\Repositories\StaffAccountRepository.cs" />
     <Compile Include="Core\Models\Category.cs" />
+    <Compile Include="Core\Models\AnalyticsReport.cs" />
     <Compile Include="Core\Models\Cart.cs" />
     <Compile Include="Core\Models\CartItem.cs" />
     <Compile Include="Core\Models\Order.cs" />
@@ -188,6 +193,8 @@
     <Compile Include="Core\Models\Size.cs" />
     <Compile Include="Core\Models\StaffAccount.cs" />
     <Compile Include="Core\Services\CategoryService.cs" />
+    <Compile Include="Core\Services\AnalyticsService.cs" />
+    <Compile Include="Core\Services\AnalyticsExcelExportService.cs" />
     <Compile Include="Core\Services\CartService.cs" />
     <Compile Include="Core\Services\OrderItemService.cs" />
     <Compile Include="Core\Services\OrderService.cs" />
@@ -263,6 +270,13 @@
     <Compile Include="UI\Admin\Orders.aspx.cs">
       <DependentUpon>Orders.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Analytics.aspx.cs">
+      <DependentUpon>Analytics.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Analytics.aspx.designer.cs">
+      <DependentUpon>Analytics.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Admin\Orders.aspx.designer.cs">
       <DependentUpon>Orders.aspx</DependentUpon>

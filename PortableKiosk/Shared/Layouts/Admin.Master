@@ -31,6 +31,13 @@
                     Orders
                 </a>
 
+                <a ID="lnkAnalytics" runat="server"
+                    href="~/UI/Admin/Analytics.aspx"
+                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16M6.5 16V10m5 6V5m5 11v-4" /></svg>
+                    Analytics
+                </a>
+
                 <a ID="lnkProducts" runat="server"
                     href="~/UI/Admin/Products.aspx"
                     class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
