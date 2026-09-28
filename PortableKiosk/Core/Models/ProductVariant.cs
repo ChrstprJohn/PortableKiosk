@@ -19,6 +19,9 @@
 
         public bool IsAvailable { get; set; }
 
+        // Parent product availability is assigned by admin views for effective status display.
+        public bool ProductIsAvailable { get; set; }
+
         // Display values populated by GetAll().
         public string ProductName { get; set; }
 

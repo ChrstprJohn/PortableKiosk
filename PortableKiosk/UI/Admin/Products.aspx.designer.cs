@@ -21,9 +21,25 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredProductName;
         protected global::System.Web.UI.WebControls.CheckBox chkIsAvailable;
         protected global::System.Web.UI.WebControls.Button btnAddProduct;
-        protected global::System.Web.UI.WebControls.Label lblProductStats;
+
+        protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryEditProduct;
+        protected global::System.Web.UI.WebControls.HiddenField hfEditProductID;
+        protected global::System.Web.UI.WebControls.Label lblEditProductCategory;
+        protected global::System.Web.UI.WebControls.DropDownList ddlEditProductCategory;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditProductCategory;
+        protected global::System.Web.UI.WebControls.Label lblEditProductName;
+        protected global::System.Web.UI.WebControls.TextBox txtEditProductName;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditProductName;
+        protected global::System.Web.UI.WebControls.Label lblEditProductDescription;
+        protected global::System.Web.UI.WebControls.TextBox txtEditProductDescription;
+        protected global::System.Web.UI.WebControls.CheckBox chkEditProductIsAvailable;
+        protected global::System.Web.UI.WebControls.Button btnUpdateProduct;
+
+        protected global::System.Web.UI.WebControls.HiddenField hfDeleteProductID;
+        protected global::System.Web.UI.WebControls.Button btnDeleteProduct;
+
         protected global::System.Web.UI.WebControls.Label lblLoadError;
-        protected global::System.Web.UI.WebControls.Repeater rptProductCards;
+        protected global::System.Web.UI.WebControls.Repeater rptCategoryGroups;
         protected global::System.Web.UI.WebControls.Panel pnlNoProducts;
 
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryVariant;

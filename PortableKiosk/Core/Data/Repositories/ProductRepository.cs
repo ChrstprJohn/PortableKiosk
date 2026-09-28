@@ -181,16 +181,49 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(productID);
 
-            const string sql = @"
+            const string deleteVariantsSql = @"
+                DELETE FROM ProductVariants
+                WHERE ProductID = @ProductID;";
+            const string deleteProductSql = @"
                 DELETE FROM Products
                 WHERE ProductID = @ProductID;";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
             {
-                command.Parameters.Add("@ProductID", SqlDbType.Int).Value = productID;
                 connection.Open();
-                return command.ExecuteNonQuery() > 0;
+
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand deleteVariants =
+                            new SqlCommand(deleteVariantsSql, connection, transaction))
+                        {
+                            deleteVariants.Parameters.Add(
+                                "@ProductID",
+                                SqlDbType.Int).Value = productID;
+                            deleteVariants.ExecuteNonQuery();
+                        }
+
+                        int deletedProducts;
+                        using (SqlCommand deleteProduct =
+                            new SqlCommand(deleteProductSql, connection, transaction))
+                        {
+                            deleteProduct.Parameters.Add(
+                                "@ProductID",
+                                SqlDbType.Int).Value = productID;
+                            deletedProducts = deleteProduct.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                        return deletedProducts > 0;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 

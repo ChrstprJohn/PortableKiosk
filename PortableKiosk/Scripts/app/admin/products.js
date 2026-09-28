@@ -2,21 +2,72 @@
     'use strict';
 
     var existingSizeKeys = [];
+    var editVariantPreviewUrl = null;
 
     function findControl(idSuffix) {
         return document.querySelector('[id$="' + idSuffix + '"]');
     }
 
+    function getProductCard(button) {
+        return button ? button.closest('[data-existing-size-keys]') : null;
+    }
+
     function getProductName(button) {
-        var card = button ? button.closest('[data-existing-size-keys]') : null;
+        var card = getProductCard(button);
         var heading = card ? card.querySelector('[data-product-name]') : null;
         return heading ? heading.textContent.trim() : 'Selected product';
     }
 
     function getExistingSizeKeys(button) {
-        var card = button ? button.closest('[data-existing-size-keys]') : null;
+        var card = getProductCard(button);
         var keys = card ? card.dataset.existingSizeKeys : '';
         return (keys || '').split(',').filter(Boolean);
+    }
+
+    function releaseEditVariantPreviewUrl() {
+        if (editVariantPreviewUrl) {
+            window.URL.revokeObjectURL(editVariantPreviewUrl);
+            editVariantPreviewUrl = null;
+        }
+    }
+
+    function clearBulkVariantImagePreview(input) {
+        var previewUrl = input.dataset.previewUrl;
+        var row = input.closest('.bulk-variant-row');
+        var preview = row && row.querySelector('.bulk-variant-image-preview');
+        var empty = row && row.querySelector('.bulk-variant-image-empty');
+
+        if (previewUrl) {
+            window.URL.revokeObjectURL(previewUrl);
+            delete input.dataset.previewUrl;
+        }
+
+        if (preview) {
+            preview.src = '';
+            preview.classList.add('hidden');
+        }
+
+        if (empty) {
+            empty.classList.remove('hidden');
+        }
+    }
+
+    function updateBulkVariantImagePreview(input) {
+        clearBulkVariantImagePreview(input);
+
+        var file = input.files && input.files[0];
+        if (!file) return;
+
+        var row = input.closest('.bulk-variant-row');
+        var preview = row && row.querySelector('.bulk-variant-image-preview');
+        var empty = row && row.querySelector('.bulk-variant-image-empty');
+        if (!preview || !empty) return;
+
+        var previewUrl = window.URL.createObjectURL(file);
+        input.dataset.previewUrl = previewUrl;
+        preview.src = previewUrl;
+        preview.classList.remove('hidden');
+        empty.classList.add('hidden');
     }
 
     function getRows() {
@@ -37,6 +88,7 @@
         }
 
         if (image) {
+            clearBulkVariantImagePreview(image);
             image.value = '';
         }
     }
@@ -136,32 +188,90 @@
         resetVariantRows();
     };
 
+    window.openViewProductModal = function (button) {
+        var card = getProductCard(button);
+        if (!card) return;
+
+        var availability = (card.getAttribute('data-product-available') || '').toLowerCase() === 'true';
+        var variants = Array.from(card.querySelectorAll('tbody tr')).map(function (row) {
+            var cells = row.querySelectorAll('td');
+            if (cells.length < 4) return '';
+
+            return cells[1].textContent.trim() + ' — ' +
+                cells[2].textContent.trim() + ' · ' +
+                cells[3].textContent.trim();
+        }).filter(Boolean);
+        var fields = {
+            name: getProductName(button),
+            category: card.getAttribute('data-product-category') || '',
+            description: card.getAttribute('data-product-description') || 'Not provided',
+            variants: variants.length ? variants.join('\n') : 'No variants added'
+        };
+
+        Object.keys(fields).forEach(function (key) {
+            var field = document.getElementById('viewProduct' + key.charAt(0).toUpperCase() + key.slice(1));
+            if (field) field.textContent = fields[key];
+        });
+
+        var status = document.getElementById('viewProductAvailability');
+        if (status) {
+            status.textContent = availability ? 'Available' : 'Unavailable';
+            status.className = availability
+                ? 'inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700'
+                : 'inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600';
+        }
+    };
+
+    window.openEditProductModal = function (button, productId) {
+        var card = getProductCard(button);
+        if (!card) return;
+
+        var id = findControl('hfEditProductID');
+        var category = findControl('ddlEditProductCategory');
+        var name = findControl('txtEditProductName');
+        var description = findControl('txtEditProductDescription');
+        var available = findControl('chkEditProductIsAvailable');
+
+        if (id) id.value = productId;
+        if (category) category.value = card.getAttribute('data-product-category-id') || '';
+        if (name) name.value = getProductName(button);
+        if (description) description.value = card.getAttribute('data-product-description') || '';
+        if (available) {
+            available.checked =
+                (card.getAttribute('data-product-available') || '').toLowerCase() === 'true';
+        }
+    };
+
+    window.openDeleteProductModal = function (button, productId) {
+        var id = findControl('hfDeleteProductID');
+        var name = document.getElementById('deleteProductName');
+
+        if (id) id.value = productId;
+        if (name) name.textContent = getProductName(button);
+    };
+
     window.openViewVariantModal = function (
         button,
-        variantId,
-        sizeId,
         sizeName,
         price,
         isAvailable,
         imageUrl
     ) {
-        var card = button ? button.closest('[data-product-id]') : null;
+        var card = button ? button.closest('[data-existing-size-keys]') : null;
         var productName = card && card.querySelector('[data-product-name]');
-        var category = card && card.querySelector('[data-product-category]');
-        var productStatus = card && card.querySelector('[data-product-status]');
+        var category = card ? card.getAttribute('data-product-category') || '' : '';
+        var productStatus = card && (card.getAttribute('data-product-available') || '').toLowerCase() === 'true'
+            ? 'Active'
+            : 'Hidden';
         var imageWrap = document.getElementById('viewVariantImageWrap');
         var image = document.getElementById('viewVariantImage');
         var imageEmpty = document.getElementById('viewVariantNoImage');
         var fields = {
             product: productName ? productName.textContent.trim() : 'Selected product',
-            productId: card ? card.getAttribute('data-product-id') : '',
-            category: category ? category.textContent.trim() : '',
-            categoryId: card ? card.getAttribute('data-category-id') : '',
+            category: category,
             description: card ? card.getAttribute('data-product-description') || 'Not provided' : 'Not provided',
-            productStatus: productStatus ? productStatus.textContent.trim() : '',
+            productStatus: productStatus,
             size: sizeName,
-            sizeId: sizeId || 'None',
-            id: variantId,
             price: '₱' + price,
             status: isAvailable ? 'Available' : 'Unavailable'
         };
@@ -203,9 +313,11 @@
         var productName = document.getElementById('editVariantProductName');
         var preview = document.getElementById('editVariantImagePreview');
         var image = document.getElementById('editVariantCurrentImage');
+        var imageEmpty = document.getElementById('editVariantNoImage');
         var productLabel = getProductName(button);
         var productSizeKeys = getExistingSizeKeys(button);
 
+        releaseEditVariantPreviewUrl();
         if (id) id.value = variantId;
         if (priceInput) priceInput.value = price;
         if (available) available.checked = isAvailable;
@@ -234,9 +346,11 @@
             size.value = sizeKey;
         }
 
-        if (preview && image) {
+        if (preview && image && imageEmpty) {
             preview.classList.toggle('hidden', !imageUrl);
+            imageEmpty.classList.toggle('hidden', Boolean(imageUrl));
             image.src = imageUrl || '';
+            image.dataset.originalSrc = imageUrl || '';
         }
     };
 
@@ -295,6 +409,37 @@
     });
 
     document.addEventListener('change', function (event) {
+        if (event.target.matches('.bulk-variant-image')) {
+            updateBulkVariantImagePreview(event.target);
+            return;
+        }
+
+        if (event.target.matches('[id$="uploadEditVariantImage"]')) {
+            var upload = event.target;
+            var file = upload.files && upload.files[0];
+            var preview = document.getElementById('editVariantImagePreview');
+            var image = document.getElementById('editVariantCurrentImage');
+            var imageEmpty = document.getElementById('editVariantNoImage');
+
+            if (preview && image && imageEmpty) {
+                releaseEditVariantPreviewUrl();
+
+                if (file) {
+                    editVariantPreviewUrl = window.URL.createObjectURL(file);
+                    image.src = editVariantPreviewUrl;
+                    preview.classList.remove('hidden');
+                    imageEmpty.classList.add('hidden');
+                } else {
+                    var originalImageUrl = image.dataset.originalSrc || '';
+                    image.src = originalImageUrl;
+                    preview.classList.toggle('hidden', !originalImageUrl);
+                    imageEmpty.classList.toggle('hidden', Boolean(originalImageUrl));
+                }
+            }
+
+            return;
+        }
+
         if (event.target.matches('.bulk-variant-size')) {
             refreshRows();
         }

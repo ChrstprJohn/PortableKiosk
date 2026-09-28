@@ -25,7 +25,7 @@
         <asp:Label ID="lblMessage" runat="server" Visible="false" CssClass="mb-4 block rounded-md border px-4 py-3 text-sm" role="status" aria-live="polite"></asp:Label>
 
         <div class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 p-4" id="addStaffModal" tabindex="-1" aria-labelledby="createStaffHeading" aria-hidden="true">
-            <div class="w-full max-w-4xl">
+            <div class="w-full max-w-3xl">
                 <div class="flex max-h-[90vh] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
                     <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
                         <h2 id="createStaffHeading" class="text-base font-semibold text-slate-950">Add staff account</h2>
@@ -33,7 +33,7 @@
                             <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
                         </button>
                     </div>
-                    <div class="space-y-4 overflow-y-auto p-5">
+                    <div class="space-y-5 overflow-y-auto p-5">
             <asp:ValidationSummary
                 ID="validationSummary"
                 runat="server"
@@ -42,8 +42,10 @@
                 HeaderText="Please correct the following:"
                 DisplayMode="BulletList" />
 
-            <div class="grid grid-cols-12 gap-3">
-                <div class="col-span-12 md:col-span-3">
+            <section aria-labelledby="staffDetailsHeading">
+                <h3 id="staffDetailsHeading" class="mb-3 text-sm font-semibold text-slate-900">Staff details</h3>
+                <div class="flex flex-col gap-4">
+                <div class="w-full">
                     <asp:Label ID="lblFirstName" runat="server"
                         AssociatedControlID="txtFirstName"
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="First name *" />
@@ -57,7 +59,7 @@
                         CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
-                <div class="col-span-12 md:col-span-3">
+                <div class="w-full">
                     <asp:Label ID="lblMiddleName" runat="server"
                         AssociatedControlID="txtMiddleName"
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Middle name" />
@@ -66,7 +68,7 @@
                         autocomplete="off" />
                 </div>
 
-                <div class="col-span-12 md:col-span-4">
+                <div class="w-full">
                     <asp:Label ID="lblLastName" runat="server"
                         AssociatedControlID="txtLastName"
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Last name *" />
@@ -80,7 +82,7 @@
                         CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
-                <div class="col-span-12 md:col-span-2">
+                <div class="w-full">
                     <asp:Label ID="lblSuffix" runat="server"
                         AssociatedControlID="txtSuffix"
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Suffix" />
@@ -89,7 +91,7 @@
                         placeholder="Jr." autocomplete="off" />
                 </div>
 
-                <div class="col-span-12 md:col-span-6">
+                <div class="w-full">
                     <asp:Label ID="lblEmail" runat="server"
                         AssociatedControlID="txtEmail"
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Email address *" />
@@ -109,7 +111,14 @@
                         CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
-                <div class="col-span-12 md:col-span-3">
+                </div>
+            </section>
+
+            <section class="border-t border-slate-100 pt-4" aria-labelledby="staffAccessHeading">
+                <h3 id="staffAccessHeading" class="mb-3 text-sm font-semibold text-slate-900">Account access</h3>
+                <div class="flex flex-col gap-4">
+
+                <div class="w-full">
                     <asp:Label ID="lblRole" runat="server"
                         AssociatedControlID="ddlRole"
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Workspace role *" />
@@ -120,13 +129,13 @@
                     </asp:DropDownList>
                 </div>
 
-                <div class="col-span-12 md:col-span-3 flex items-end pb-2">
+                <div class="flex min-h-10 w-full items-center">
                     <asp:CheckBox ID="chkIsActive" runat="server"
                         Checked="true" Text=" Active account"
                         CssClass="inline-flex items-center gap-2 text-sm text-slate-700 [&_input]:size-4 [&_input]:accent-slate-900" />
                 </div>
 
-                <div class="col-span-12 md:col-span-6">
+                <div class="w-full">
                     <asp:Label ID="lblPassword" runat="server"
                         AssociatedControlID="txtPassword"
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Temporary password *" />
@@ -146,7 +155,7 @@
                         CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
-                <div class="col-span-12 md:col-span-6">
+                <div class="w-full">
                     <asp:Label ID="lblConfirmPassword" runat="server"
                         AssociatedControlID="txtConfirmPassword"
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Confirm password *" />
@@ -166,6 +175,7 @@
                         CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
             </div>
+            </section>
 
                     </div>
                     <div class="flex flex-wrap justify-end gap-2 border-t border-slate-200 px-5 py-4">
@@ -181,7 +191,7 @@
         </div>
 
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white" aria-labelledby="staffListHeading">
-            <div class="border-b border-slate-200 px-4 py-3 sm:px-5">
+            <div class="border-b border-slate-200 px-4 py-3">
                 <h2 id="staffListHeading" class="text-sm font-semibold text-slate-950">Current staff</h2>
             </div>
 
@@ -191,7 +201,7 @@
             <div class="w-full overflow-x-auto">
                 <asp:GridView ID="gridStaff" runat="server"
                     AutoGenerateColumns="false" GridLines="None"
-                    CssClass="w-full border-collapse text-left text-sm tabular-nums [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-slate-50 [&_th]:px-4 [&_th]:py-3 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-4 [&_td]:py-3 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
+                    CssClass="w-full min-w-[600px] border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
                     EmptyDataText="No staff accounts have been created.">
                     <Columns>
                         <asp:BoundField DataField="DisplayName" HeaderText="Staff member" />
@@ -216,6 +226,7 @@
                     <EmptyDataRowStyle CssClass="text-center text-slate-500 [&_td]:px-4 [&_td]:py-10" />
                 </asp:GridView>
             </div>
+
         </section>
     </main>
 

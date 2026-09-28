@@ -23,28 +23,25 @@
         <asp:Label ID="lblCategoryMessage" runat="server" Visible="false" role="status" aria-live="polite" CssClass="mb-4 block rounded-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"></asp:Label>
         <asp:Label ID="lblSizeMessage" runat="server" Visible="false" role="status" aria-live="polite" CssClass="mb-4 block rounded-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"></asp:Label>
 
-        <section class="mb-7" aria-labelledby="headingCategoriesSection">
+        <div class="grid grid-cols-1 gap-7 xl:grid-cols-2">
+        <section class="min-w-0" aria-labelledby="headingCategoriesSection">
             <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
-                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
                     <h2 id="headingCategoriesSection" class="text-sm font-semibold text-slate-950">Categories</h2>
                     <asp:Label ID="lblCategoryCount" runat="server" Visible="false"></asp:Label>
-                    <button type="button" class="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addCategoryModal">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add category
-                    </button>
                 </div>
 
                 <asp:Label ID="lblCategoryLoadError" runat="server" Visible="false" CssClass="m-3 block rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"></asp:Label>
-                <div class="w-full overflow-x-auto">
+                <div class="w-full">
                         <asp:GridView
                             ID="gridCategories"
                             runat="server"
                             AutoGenerateColumns="false"
                             GridLines="None"
-                            CssClass="w-full border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-slate-50 [&_th]:px-4 [&_th]:py-3 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-4 [&_td]:py-3 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
+                            CssClass="w-full table-fixed border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:break-words [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
                             EmptyDataText="No categories have been created yet.">
 
                             <Columns>
-                                <asp:BoundField DataField="CategoryID" HeaderText="ID" ItemStyle-Width="90px" />
                                 <asp:BoundField DataField="CategoryName" HeaderText="Category Name" />
                                 <asp:TemplateField HeaderText="Status" ItemStyle-Width="140px">
                                     <ItemTemplate>
@@ -53,24 +50,28 @@
                                         </span>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="190px">
+                                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="88px" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right">
                                     <ItemTemplate>
-                                        <div class="flex gap-2 flex-wrap">
+                                        <div class="flex items-center justify-end gap-1">
                                             <button
                                                 type="button"
-                                                class="inline-flex min-h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                                                class="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
                                                 data-modal-toggle="true"
                                                 data-modal-target="#editCategoryModal"
+                                                aria-label="Edit category"
+                                                title="Edit category"
                                                 onclick='openEditCategoryModal(<%# Eval("CategoryID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("CategoryName").ToString())) %>", <%# (bool)Eval("IsAvailable") ? "true" : "false" %>);'>
-                                                Edit
+                                                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
                                             </button>
                                             <button
                                                 type="button"
-                                                class="inline-flex min-h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                                                class="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
                                                 data-modal-toggle="true"
                                                 data-modal-target="#deleteCategoryModal"
+                                                aria-label="Delete category"
+                                                title="Delete category"
                                                 onclick='openDeleteCategoryModal(<%# Eval("CategoryID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("CategoryName").ToString())) %>");'>
-                                                Delete
+                                                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="m19 6-1 14H6L5 6" /><path d="M10 11v5M14 11v5" /></svg>
                                             </button>
                                         </div>
                                     </ItemTemplate>
@@ -81,51 +82,57 @@
                         </asp:GridView>
                     </div>
 
+                <div class="border-t border-slate-100 px-4 py-2.5">
+                    <button type="button" class="inline-flex min-h-9 w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addCategoryModal">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add category
+                    </button>
+                </div>
+
                 </div>
 
         </section>
 
-        <section class="mb-7" aria-labelledby="headingSizesSection">
+        <section class="min-w-0" aria-labelledby="headingSizesSection">
             <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
-                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
                     <h2 id="headingSizesSection" class="text-sm font-semibold text-slate-950">Serving sizes</h2>
                     <asp:Label ID="lblSizeCount" runat="server" Visible="false"></asp:Label>
-                    <button type="button" class="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addSizeModal">
-                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add size
-                    </button>
                 </div>
 
                 <asp:Label ID="lblSizeLoadError" runat="server" Visible="false" CssClass="m-3 block rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"></asp:Label>
-                <div class="w-full overflow-x-auto">
+                <div class="w-full">
                         <asp:GridView
                             ID="gridSizes"
                             runat="server"
                             AutoGenerateColumns="false"
                             GridLines="None"
-                            CssClass="w-full border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-slate-50 [&_th]:px-4 [&_th]:py-3 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-4 [&_td]:py-3 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
+                            CssClass="w-full table-fixed border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:break-words [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
                             EmptyDataText="No sizes have been created yet.">
 
                             <Columns>
-                                <asp:BoundField DataField="SizeID" HeaderText="ID" ItemStyle-Width="90px" />
                                 <asp:BoundField DataField="SizeName" HeaderText="Size Name" />
-                                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="190px">
+                                <asp:TemplateField HeaderText="Actions" ItemStyle-Width="88px" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right">
                                     <ItemTemplate>
-                                        <div class="flex gap-2 flex-wrap">
+                                        <div class="flex items-center justify-end gap-1">
                                             <button
                                                 type="button"
-                                                class="inline-flex min-h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                                                class="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
                                                 data-modal-toggle="true"
                                                 data-modal-target="#editSizeModal"
+                                                aria-label="Edit serving size"
+                                                title="Edit serving size"
                                                 onclick='openEditSizeModal(<%# Eval("SizeID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("SizeName").ToString())) %>");'>
-                                                Edit
+                                                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9" /><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" /></svg>
                                             </button>
                                             <button
                                                 type="button"
-                                                class="inline-flex min-h-8 items-center justify-center gap-1.5 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                                                class="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
                                                 data-modal-toggle="true"
                                                 data-modal-target="#deleteSizeModal"
+                                                aria-label="Delete serving size"
+                                                title="Delete serving size"
                                                 onclick='openDeleteSizeModal(<%# Eval("SizeID") %>, "<%# HttpUtility.HtmlAttributeEncode(HttpUtility.JavaScriptStringEncode(Eval("SizeName").ToString())) %>");'>
-                                                Delete
+                                                <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18" /><path d="M8 6V4h8v2" /><path d="m19 6-1 14H6L5 6" /><path d="M10 11v5M14 11v5" /></svg>
                                             </button>
                                         </div>
                                     </ItemTemplate>
@@ -136,9 +143,16 @@
                         </asp:GridView>
                     </div>
 
+                <div class="border-t border-slate-100 px-4 py-2.5">
+                    <button type="button" class="inline-flex min-h-9 w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-slate-400 hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addSizeModal">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add size
+                    </button>
+                </div>
+
                 </div>
 
         </section>
+        </div>
 
     </main>
 

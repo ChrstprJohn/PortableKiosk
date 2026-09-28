@@ -43,6 +43,18 @@ namespace PortableKiosk.UI.Admin
             }
         }
 
+        public class ProductCategoryGroupViewModel
+        {
+            public int CategoryID { get; set; }
+            public string CategoryName { get; set; }
+            public List<ProductCardViewModel> Products { get; set; }
+
+            public ProductCategoryGroupViewModel()
+            {
+                Products = new List<ProductCardViewModel>();
+            }
+        }
+
         public class VariantInputRow
         {
             public int RowNumber { get; set; }
@@ -170,6 +182,157 @@ namespace PortableKiosk.UI.Admin
             ddlCategory.SelectedIndex = 0;
             txtProductName.Text = string.Empty;
             chkIsAvailable.Checked = true;
+        }
+
+        protected void btnUpdateProduct_Click(object sender, EventArgs e)
+        {
+            lblGlobalMessage.Visible = false;
+
+            if (!Page.IsValid)
+            {
+                ReopenEditProductModal();
+                return;
+            }
+
+            int productID;
+            int categoryID;
+            if (!int.TryParse(hfEditProductID.Value, out productID) ||
+                productID <= 0)
+            {
+                ShowEditProductError("The selected product is invalid.");
+                return;
+            }
+
+            if (!int.TryParse(ddlEditProductCategory.SelectedValue, out categoryID))
+            {
+                ShowEditProductError("Please select a valid category.");
+                return;
+            }
+
+            try
+            {
+                Product existingProduct = productService.GetByID(productID);
+                if (existingProduct == null)
+                {
+                    ShowError("The product no longer exists.");
+                    return;
+                }
+
+                Product updatedProduct = new Product
+                {
+                    ProductID = productID,
+                    CategoryID = categoryID,
+                    ProductName = txtEditProductName.Text.Trim(),
+                    ProductDescription = txtEditProductDescription.Text.Trim(),
+                    IsAvailable = chkEditProductIsAvailable.Checked
+                };
+
+                if (!productService.Update(updatedProduct))
+                {
+                    ShowEditProductError("The product could not be updated.");
+                    return;
+                }
+
+                ShowSuccess("Product updated.");
+                LoadProductCards();
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 2601 || ex.Number == 2627)
+                {
+                    ShowEditProductError(
+                        "A product with this name already exists in this category.");
+                }
+                else
+                {
+                    ShowEditProductError(
+                        "The product could not be saved due to a database error.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ShowEditProductError(ex.Message);
+            }
+            catch (Exception)
+            {
+                ShowEditProductError("The product could not be updated.");
+            }
+        }
+
+        protected void btnDeleteProduct_Click(object sender, EventArgs e)
+        {
+            lblGlobalMessage.Visible = false;
+
+            int productID;
+            if (!int.TryParse(hfDeleteProductID.Value, out productID) ||
+                productID <= 0)
+            {
+                ShowError("The selected product is invalid.");
+                return;
+            }
+
+            try
+            {
+                Product existingProduct = productService.GetByID(productID);
+                if (existingProduct == null)
+                {
+                    ShowError("The product no longer exists.");
+                    return;
+                }
+
+                List<ProductVariant> existingVariants =
+                    variantService.GetByProductID(productID);
+
+                if (!productService.Delete(productID))
+                {
+                    ShowError("The product no longer exists.");
+                    return;
+                }
+
+                foreach (ProductVariant variant in existingVariants)
+                {
+                    DeleteSavedImageByVirtualPath(variant.ImagePath);
+                }
+
+                ShowSuccess("Product deleted.");
+                LoadProductCards();
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 547)
+                {
+                    ShowError(
+                        "This product has order history and cannot be deleted. Mark it unavailable instead.");
+                }
+                else
+                {
+                    ShowError(
+                        "The product could not be deleted due to a database error.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                ShowError(ex.Message);
+            }
+            catch (Exception)
+            {
+                ShowError("The product could not be deleted.");
+            }
+        }
+
+        private void ShowEditProductError(string message)
+        {
+            ShowError(message);
+            ReopenEditProductModal();
+        }
+
+        private void ReopenEditProductModal()
+        {
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenEditProductModal",
+                "AppModal.open('editProductModal');",
+                true);
         }
 
         #endregion
@@ -589,18 +752,25 @@ namespace PortableKiosk.UI.Admin
 
                 ddlCategory.Items.Clear();
                 ddlCategory.Items.Add(new ListItem("-- Select category --", ""));
+                ddlEditProductCategory.Items.Clear();
+                ddlEditProductCategory.Items.Add(new ListItem("-- Select category --", ""));
 
                 foreach (Category cat in categories)
                 {
                     ddlCategory.Items.Add(new ListItem(cat.CategoryName, cat.CategoryID.ToString()));
+                    ddlEditProductCategory.Items.Add(new ListItem(cat.CategoryName, cat.CategoryID.ToString()));
                 }
             }
             catch (Exception)
             {
                 ddlCategory.Items.Clear();
                 ddlCategory.Items.Add(new ListItem("Categories unavailable", ""));
+                ddlEditProductCategory.Items.Clear();
+                ddlEditProductCategory.Items.Add(new ListItem("Categories unavailable", ""));
                 ddlCategory.Enabled = false;
+                ddlEditProductCategory.Enabled = false;
                 btnAddProduct.Enabled = false;
+                btnUpdateProduct.Enabled = false;
                 ShowError("Failed to load categories.");
             }
         }
@@ -732,6 +902,7 @@ namespace PortableKiosk.UI.Admin
 
                     foreach (ProductVariant variant in vm.Variants)
                     {
+                        variant.ProductIsAvailable = p.IsAvailable;
                         existingSizeKeys.Add(
                             variant.SizeID.HasValue
                                 ? variant.SizeID.Value.ToString()
@@ -744,17 +915,44 @@ namespace PortableKiosk.UI.Admin
                     cardViewModels.Add(vm);
                 }
 
-                rptProductCards.DataSource = cardViewModels;
-                rptProductCards.DataBind();
+                Dictionary<int, ProductCategoryGroupViewModel> groupsByCategory =
+                    new Dictionary<int, ProductCategoryGroupViewModel>();
+                List<ProductCategoryGroupViewModel> categoryGroups =
+                    new List<ProductCategoryGroupViewModel>();
+
+                foreach (ProductCardViewModel card in cardViewModels)
+                {
+                    ProductCategoryGroupViewModel group;
+                    if (!groupsByCategory.TryGetValue(card.CategoryID, out group))
+                    {
+                        group = new ProductCategoryGroupViewModel
+                        {
+                            CategoryID = card.CategoryID,
+                            CategoryName = card.CategoryName
+                        };
+
+                        groupsByCategory.Add(card.CategoryID, group);
+                        categoryGroups.Add(group);
+                    }
+
+                    group.Products.Add(card);
+                }
+
+                categoryGroups.Sort((left, right) =>
+                    StringComparer.CurrentCultureIgnoreCase.Compare(
+                        left.CategoryName,
+                        right.CategoryName));
+
+                rptCategoryGroups.DataSource = categoryGroups;
+                rptCategoryGroups.DataBind();
 
                 pnlNoProducts.Visible = cardViewModels.Count == 0;
-                lblProductStats.Text = products.Count + " Products &bull; " + variants.Count + " Total Variants";
                 lblLoadError.Visible = false;
             }
             catch (Exception)
             {
-                rptProductCards.DataSource = null;
-                rptProductCards.DataBind();
+                rptCategoryGroups.DataSource = null;
+                rptCategoryGroups.DataBind();
                 lblLoadError.Text = "Products and variants could not be loaded.";
                 lblLoadError.Visible = true;
             }
