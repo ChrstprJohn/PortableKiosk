@@ -36,7 +36,7 @@
     --kiosk-shadow-card: 0 2px 8px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
     --kiosk-shadow-hover: 0 10px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -2px rgba(15, 23, 42, 0.03);
     --kiosk-shadow-cta: 0 4px 14px rgba(217, 119, 6, 0.35);
-    --kiosk-shadow-bar: 0 -4px 14px rgba(15, 23, 42, 0.07);
+    --kiosk-shadow-bar: 0 -1px 8px rgba(15, 23, 42, 0.035);
     --kiosk-font-sans: 'Speedee', 'Speedee_App_Bold', 'Speedee_App_Regular', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "Helvetica Neue", Arial, sans-serif;
     --kiosk-cta-footer-padding-y: clamp(0.4rem, 2vh, 3rem);
     --kiosk-cta-button-height: clamp(2.75rem, 5.2vh, 12rem);
@@ -725,6 +725,60 @@ body:has(.kiosk-attract-page) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     width: 100%;
+}
+
+.kiosk-cta-footer-product > .quantity-field > label {
+    color: #475569;
+    font-size: clamp(1rem, 1.4cqw, 1.5rem);
+    font-weight: 700;
+}
+
+.kiosk-cta-footer-product .quantity-control > button {
+    color: #334155;
+    font-size: clamp(1.1rem, 1.6cqw, 1.5rem);
+    font-weight: 900;
+}
+
+.kiosk-cta-footer-product .quantity-control > input {
+    color: #0f172a;
+    font-size: clamp(0.95rem, 1.4cqw, 1.4rem);
+    font-weight: 800;
+}
+
+@media (orientation: portrait) and (min-width: 700px) {
+    .kiosk-cta-footer-product > .quantity-field > label {
+        font-size: clamp(1.35rem, 2vw, 2.25rem);
+    }
+
+    .kiosk-cta-footer-product .quantity-control > button {
+        font-size: clamp(1.35rem, 2.4vw, 2.25rem);
+    }
+
+    .kiosk-cta-footer-product .quantity-control > input {
+        font-size: clamp(1.25rem, 2.2vw, 2rem);
+    }
+}
+
+@media (min-width: 2560px) {
+    .kiosk-cta-footer-product > .quantity-field > label {
+        font-size: clamp(1.85rem, 1.8vw, 3rem);
+    }
+
+    .kiosk-cta-footer-product .quantity-control > button {
+        font-size: clamp(1.75rem, 1.6vw, 2.75rem);
+    }
+
+    .kiosk-cta-footer-product .quantity-control > input {
+        font-size: clamp(1.6rem, 1.6vw, 2.75rem);
+    }
+}
+
+@media (max-width: 540px) {
+    .kiosk-cta-footer-product > .quantity-field > label,
+    .kiosk-cta-footer-product .quantity-control > button,
+    .kiosk-cta-footer-product .quantity-control > input {
+        font-size: 0.875rem;
+    }
 }
 
 .product-detail-page {
