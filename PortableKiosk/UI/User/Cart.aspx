@@ -13,7 +13,7 @@
     <main class="cart-fluid @container/cart relative mx-auto flex min-h-dvh w-full flex-col px-[clamp(0.75rem,3.5cqw,4rem)] pb-[clamp(10rem,22vh,26rem)] pt-[clamp(1.25rem,3.5vh,2.5rem)] kiosk-portrait:px-[clamp(2rem,5vw,6rem)] kiosk-portrait:pt-[clamp(2rem,4vh,5rem)] kiosk-portrait:pb-[clamp(16rem,24vh,34rem)] kiosk-4k:px-[clamp(6rem,3vw,10rem)] kiosk-4k:pt-[clamp(3rem,4vh,6rem)] kiosk-4k:pb-[clamp(24rem,24vh,36rem)] max-[480px]:px-3.5 max-[480px]:pt-5 max-[480px]:pb-40 text-slate-900" aria-labelledby="cartHeading">
         <header class="cart-fluid-header mb-[clamp(1.25rem,3.5vh,3rem)] kiosk-portrait:mb-[clamp(2rem,4vh,6rem)] kiosk-4k:mb-[clamp(3rem,4vh,6rem)] max-[480px]:mb-4 flex w-full items-center justify-between gap-[clamp(0.75rem,2cqw,2rem)]">
             <div class="min-w-0">
-                <h1 id="cartHeading" class="cart-fluid-heading m-0 text-[clamp(2rem,5vw,4.25rem)] font-black leading-[1.04] tracking-[-0.05em] text-slate-900 kiosk-portrait:text-[clamp(2.75rem,min(10vw,7vh),12rem)] kiosk-4k:text-[clamp(4rem,min(8vw,8vh),12rem)] kiosk-mobile:text-[clamp(1.75rem,8vw,2.75rem)]">Your cart</h1>
+                <h1 id="cartHeading" class="cart-fluid-heading m-0 font-black leading-[1.04] tracking-[-0.05em] text-slate-900">Your cart</h1>
 
             </div>
         </header>

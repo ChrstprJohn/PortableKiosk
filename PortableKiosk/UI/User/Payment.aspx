@@ -11,7 +11,7 @@
     ContentPlaceHolderID="UserContent"
     runat="server">
     <main class="payment-choice-page" aria-labelledby="paymentHeading">
-        <h1 id="paymentHeading">How would you like to pay?</h1>
+        <h1 id="paymentHeading">How would you like<br />to pay?</h1>
 
         <div class="payment-choice-options">
             <asp:LinkButton

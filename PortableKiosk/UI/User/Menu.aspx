@@ -9,7 +9,7 @@
                 </div>
 
                 <div class="menu-home-card shrink-0 overflow-hidden rounded-r-[clamp(0.4rem,2.5cqw,4rem)] kiosk-portrait:rounded-r-[clamp(1rem,2.5vw,3rem)] border border-l-0 border-slate-200/90 bg-white shadow-sm">
-                    <asp:LinkButton ID="btnHome" runat="server" CssClass="menu-nav-item flex w-full items-center gap-[clamp(0.2rem,1.3cqw,1.75rem)] kiosk-portrait:gap-[clamp(0.6rem,1.5vw,1.75rem)] rounded-r-[clamp(0.4rem,2.5cqw,4rem)] kiosk-portrait:rounded-r-[clamp(0.8rem,2vw,2.5rem)] px-[clamp(0.2rem,1.5cqw,2.25rem)] kiosk-portrait:px-[clamp(0.75rem,1.8vw,2.25rem)] py-[clamp(0.3rem,1.5cqw,2.5rem)] kiosk-portrait:py-[clamp(0.75rem,1.6vh,2rem)] max-[420px]:px-1 max-[420px]:py-1.5 text-left text-[clamp(0.625rem,2.2cqw,4rem)] kiosk-portrait:text-[clamp(1.05rem,2vw,2.1rem)] max-[420px]:text-[0.625rem] font-semibold leading-tight text-slate-600 no-underline transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30" CausesValidation="false"
+                    <asp:LinkButton ID="btnHome" runat="server" CssClass="menu-nav-item flex w-full items-center gap-[clamp(0.2rem,1.3cqw,1.75rem)] kiosk-portrait:gap-[clamp(0.6rem,1.5vw,1.75rem)] rounded-r-[clamp(0.4rem,2.5cqw,4rem)] kiosk-portrait:rounded-r-[clamp(0.8rem,2vw,2.5rem)] px-[clamp(0.2rem,1.5cqw,2.25rem)] kiosk-portrait:px-[clamp(0.75rem,1.8vw,2.25rem)] py-[clamp(0.3rem,1.5cqw,2.5rem)] kiosk-portrait:py-[clamp(0.75rem,1.6vh,2rem)] max-[420px]:px-1 max-[420px]:py-1.5 text-left text-[clamp(0.625rem,2.2cqw,4rem)] kiosk-portrait:text-[clamp(1.125rem,2.2vw,2.25rem)] max-[420px]:text-[0.625rem] font-semibold leading-tight text-slate-600 no-underline transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30" CausesValidation="false"
                         OnClick="btnHome_Click">
                         <span class="menu-nav-icon menu-home-icon flex size-[clamp(0.95rem,3.8cqw,5.5rem)] max-[420px]:size-4 kiosk-portrait:size-[clamp(1.85rem,3.4vw,3.75rem)] shrink-0 items-center justify-center text-amber-700 [&_svg]:size-[clamp(0.85rem,3.2cqw,4.5rem)] max-[420px]:[&_svg]:size-3.5 kiosk-portrait:[&_svg]:size-[clamp(1.6rem,3vw,3.25rem)]" aria-hidden="true">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1.5"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/></svg>
@@ -61,22 +61,22 @@
                 <asp:Panel ID="pnlHome" runat="server">
                     <div class="menu-home min-h-full">
                         <header class="menu-home-heading mb-[clamp(0.75rem,2.5vh,3.5rem)] max-[480px]:mb-3">
-                                <h1 class="m-0 text-[clamp(1.25rem,6.5cqw,10rem)] max-[480px]:text-[clamp(1.15rem,5.5vw,1.6rem)] font-black leading-[1.04] tracking-[-0.04em] text-slate-900">Must-try Dinner</h1>
+                                <h1 class="m-0 text-[clamp(1.25rem,6.5cqw,10rem)] max-[480px]:text-[clamp(1.5rem,7vw,2.1rem)] kiosk-portrait:text-[clamp(3.5rem,7.5vw,6rem)] font-black leading-[1.04] tracking-[-0.04em] text-slate-900">Must-try Dinner</h1>
                         </header>
 
                         <section class="home-category-section mb-[clamp(1.25rem,4vh,6rem)] max-[480px]:mb-4" aria-labelledby="discoverHeading">
                             <div class="home-section-header mb-[clamp(0.5rem,1.5vh,1.75rem)] max-[480px]:mb-2">
-                                <h2 id="discoverHeading" class="menu-home-subheading m-0 text-[clamp(1.15rem,4.5cqw,6rem)] max-[480px]:text-[clamp(0.95rem,4.5vw,1.3rem)] kiosk-portrait:text-[clamp(1.5rem,3vw,3.2rem)] font-extrabold leading-tight tracking-[-0.03em] text-slate-900">Discover our Menu</h2>
+                                <h2 id="discoverHeading" class="menu-home-subheading m-0 text-[clamp(1.15rem,4.5cqw,6rem)] max-[480px]:text-[clamp(0.95rem,4.5vw,1.3rem)] kiosk-portrait:text-[clamp(1.75rem,4vw,4rem)] font-extrabold leading-tight tracking-[-0.03em] text-slate-900">Discover our Menu</h2>
                             </div>
 
                             <div class="home-category-grid grid grid-cols-2 gap-[clamp(0.6rem,2cqw,2.5rem)] max-[480px]:gap-2 kiosk-portrait:gap-[clamp(1rem,2.5vw,3rem)]">
                                 <asp:Repeater ID="rptHomeCategories" runat="server"
                                     OnItemCommand="rptCategories_ItemCommand">
                                     <ItemTemplate>
-                                        <asp:LinkButton ID="btnHomeCategory" runat="server" CssClass="home-category-card group flex min-h-[clamp(4.5rem,10vh,22rem)] max-[480px]:min-h-[3.75rem] kiosk-portrait:min-h-[clamp(6rem,12vh,16rem)] items-center justify-between gap-[clamp(0.6rem,1.5cqw,2rem)] rounded-[clamp(0.75rem,2.2cqw,4rem)] max-[480px]:rounded-xl kiosk-portrait:rounded-2xl border border-slate-200 bg-white px-[clamp(0.85rem,2.4cqw,3.5rem)] py-[clamp(0.75rem,2vh,2.5rem)] max-[480px]:px-3 max-[480px]:py-2.5 kiosk-portrait:px-5 kiosk-portrait:py-5 text-slate-900 no-underline shadow-[0_2px_8px_rgba(15,23,42,0.04)] transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_10px_24px_-4px_rgba(15,23,42,0.08)] focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30 max-[360px]:flex-col max-[360px]:items-start max-[360px]:gap-1"
+                                        <asp:LinkButton ID="btnHomeCategory" runat="server" CssClass="home-category-card group flex min-h-[clamp(4.5rem,10vh,22rem)] max-[480px]:min-h-[3.75rem] kiosk-portrait:min-h-[clamp(6rem,9vh,9rem)] items-center justify-between gap-[clamp(0.6rem,1.5cqw,2rem)] rounded-[clamp(0.75rem,2.2cqw,4rem)] max-[480px]:rounded-xl kiosk-portrait:rounded-2xl border border-slate-200 bg-white px-[clamp(0.85rem,2.4cqw,3.5rem)] py-[clamp(0.75rem,2vh,2.5rem)] max-[480px]:px-3 max-[480px]:py-2.5 kiosk-portrait:px-5 kiosk-portrait:py-5 text-slate-900 no-underline shadow-[0_2px_8px_rgba(15,23,42,0.04)] transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-[0_10px_24px_-4px_rgba(15,23,42,0.08)] focus-visible:outline focus-visible:outline-4 focus-visible:outline-amber-500/30 max-[360px]:flex-col max-[360px]:items-start max-[360px]:gap-1"
                                             CommandName="SelectCategory" CommandArgument='<%# Eval("CategoryID") %>'
                                             CausesValidation="false">
-                                            <span class="home-category-name min-w-0 break-words text-[clamp(1.05rem,3.4cqw,5rem)] max-[480px]:text-[0.875rem] kiosk-portrait:text-[clamp(1.35rem,2.6vw,2.75rem)] font-extrabold leading-tight tracking-tight max-[360px]:w-full">
+                                            <span class="home-category-name min-w-0 break-words text-[clamp(1.05rem,3.4cqw,5rem)] max-[480px]:text-[0.875rem] kiosk-portrait:text-[clamp(1.5rem,3.1vw,3rem)] font-extrabold leading-tight tracking-tight max-[360px]:w-full">
                                                 <%# Server.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %>
                                             </span>
                                             <span class="home-category-icon flex size-[clamp(2.5rem,6cqw,8rem)] max-[480px]:size-9 kiosk-portrait:size-[clamp(3.5rem,6vw,7rem)] shrink-0 items-center justify-center self-end rounded-[clamp(0.6rem,2cqw,3rem)] max-[480px]:rounded-lg kiosk-portrait:rounded-xl border border-amber-200 bg-amber-50 text-amber-700 transition-[background-color,transform] group-hover:scale-105 group-hover:border-transparent group-hover:bg-amber-500 group-hover:text-white [&_svg]:size-[clamp(1.5rem,3.8cqw,5rem)] max-[480px]:[&_svg]:size-5 kiosk-portrait:[&_svg]:size-[clamp(2rem,3.8vw,4.5rem)] max-[360px]:mt-1" aria-hidden="true">
@@ -90,7 +90,7 @@
 
                         <section class="best-seller-section mt-[clamp(1.25rem,4vh,6rem)] max-[480px]:mt-4" aria-labelledby="bestSellerHeading">
                             <div class="home-section-header best-seller-header mb-[clamp(0.5rem,1.5vh,1.75rem)] max-[480px]:mb-2">
-                                <h2 id="bestSellerHeading" class="m-0 text-[clamp(1.15rem,4.5cqw,6rem)] max-[480px]:text-[clamp(0.95rem,4.5vw,1.3rem)] kiosk-portrait:text-[clamp(1.5rem,3vw,3.2rem)] font-extrabold leading-tight tracking-[-0.03em] text-slate-900">Best Seller</h2>
+                                <h2 id="bestSellerHeading" class="m-0 text-[clamp(1.15rem,4.5cqw,6rem)] max-[480px]:text-[clamp(0.95rem,4.5vw,1.3rem)] kiosk-portrait:text-[clamp(1.75rem,4vw,4rem)] font-extrabold leading-tight tracking-[-0.03em] text-slate-900">Best Seller</h2>
                             </div>
                             <div class="best-seller-grid grid grid-cols-3 gap-[clamp(0.45rem,1.6cqw,2rem)] max-[480px]:gap-2 kiosk-mobile:grid-cols-2 kiosk-portrait:gap-[clamp(0.75rem,2vw,2.5rem)]">
                                 <asp:Repeater ID="rptBestSellers" runat="server"
@@ -109,8 +109,8 @@
                                                     <span runat="server" visible='<%# !HasImage(Eval("ImagePath")) %>'
                                                         class="product-image-placeholder">PK</span>
                                                 </span>
-                                                <span class="best-seller-info flex min-h-[clamp(2.5rem,8cqw,16rem)] max-[480px]:min-h-[2.2rem] kiosk-portrait:min-h-[clamp(3.5rem,7vh,8rem)] flex-1 flex-col justify-center px-[clamp(0.25rem,0.8cqw,1.25rem)] py-[clamp(0.35rem,1.2vh,1.5rem)] max-[480px]:py-1 text-center">
-                                                    <strong class="best-seller-title break-words text-[clamp(0.85rem,2.8cqw,4rem)] max-[480px]:text-[0.75rem] kiosk-portrait:text-[clamp(1.1rem,2vw,2.2rem)] font-bold leading-tight text-slate-900">
+                                                <span class="best-seller-info flex min-h-[clamp(2.5rem,8cqw,16rem)] max-[480px]:min-h-[2.2rem] kiosk-portrait:min-h-[clamp(3.25rem,5vh,5.5rem)] flex-1 flex-col justify-center px-[clamp(0.25rem,0.8cqw,1.25rem)] py-[clamp(0.35rem,1.2vh,1.5rem)] max-[480px]:py-1 text-center">
+                                                    <strong class="best-seller-title break-words text-[clamp(0.85rem,2.8cqw,4rem)] max-[480px]:text-[0.75rem] kiosk-portrait:text-[clamp(1.25rem,2.5vw,2.5rem)] font-bold leading-tight text-slate-900">
                                                         <%# Server.HtmlEncode(Convert.ToString(Eval("ProductName"))) %>
                                                     </strong>
                                                 </span>
@@ -126,7 +126,7 @@
                 <asp:Panel ID="pnlProducts" runat="server" Visible="false">
                     <header class="menu-section-heading mb-[clamp(0.75rem,3vh,5rem)] max-[480px]:mb-3">
                         <div>
-                            <h1 class="m-0 text-[clamp(1.25rem,6.5cqw,10rem)] max-[480px]:text-[clamp(1.15rem,5.5vw,1.6rem)] font-black leading-[1.04] tracking-[-0.04em] text-slate-900">
+                            <h1 class="m-0 text-[clamp(1.25rem,6.5cqw,10rem)] max-[480px]:text-[clamp(1.15rem,5.5vw,1.6rem)] kiosk-portrait:text-[clamp(3.5rem,7.5vw,6rem)] font-black leading-[1.04] tracking-[-0.04em] text-slate-900">
                                 <asp:Literal ID="litCategoryName" runat="server" />
                             </h1>
                         </div>
@@ -166,7 +166,7 @@
 
                 <asp:Panel ID="pnlProductDetail" runat="server" Visible="false" CssClass="product-detail-page min-h-full w-full">
                     <header class="product-detail-heading mb-[clamp(0.75rem,2.5cqw,4rem)] max-[480px]:mb-3">
-                        <h1 class="m-0 text-[clamp(1.25rem,6.5cqw,10rem)] max-[480px]:text-[clamp(1.15rem,5.5vw,1.6rem)] font-black leading-[1.04] tracking-[-0.04em] text-slate-900">Sizes</h1>
+                        <h1 class="m-0 text-[clamp(1.25rem,6.5cqw,10rem)] max-[480px]:text-[clamp(1.15rem,5.5vw,1.6rem)] kiosk-portrait:text-[clamp(3.5rem,7.5vw,6rem)] font-black leading-[1.04] tracking-[-0.04em] text-slate-900">Sizes</h1>
                     </header>
 
                     <div class="product-detail-layout w-full">
