@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using PortableKiosk.Core.Data.Repositories;
 using PortableKiosk.Core.Models;
+using PortableKiosk.Shared.Constants;
 
 namespace PortableKiosk.Core.Services
 {
@@ -89,6 +90,8 @@ namespace PortableKiosk.Core.Services
                 totalAmount += variant.Price * cartItem.Quantity;
             }
 
+            bool isCashless = normalizedPaymentMethod == "CASHLESS";
+
             Order order = new Order
             {
                 OrderType = normalizedOrderType,
@@ -96,10 +99,14 @@ namespace PortableKiosk.Core.Services
                 TableNumber = normalizedFulfillment == "TABLE_SERVICE"
                     ? tableNumber.Trim()
                     : null,
-                KitchenStatus = "QUEUED"
+                KitchenStatus = isCashless
+                    ? "QUEUED"
+                    : "AWAITING_PAYMENT",
+                ExpiresAt = isCashless
+                    ? (DateTime?)null
+                    : DateTime.UtcNow.AddMinutes(
+                        OrderSettings.PendingPaymentExpiryMinutes)
             };
-
-            bool isCashless = normalizedPaymentMethod == "CASHLESS";
 
             Payment payment = new Payment
             {
@@ -135,6 +142,11 @@ namespace PortableKiosk.Core.Services
         public List<Order> GetAll()
         {
             return orderRepository.GetAll();
+        }
+
+        public int CancelExpiredPendingOrders()
+        {
+            return orderRepository.CancelExpiredPendingOrders();
         }
 
         public bool Update(Order order)

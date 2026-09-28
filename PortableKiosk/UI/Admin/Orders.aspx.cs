@@ -7,6 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using PortableKiosk.Core.Models;
 using PortableKiosk.Core.Services;
+using PortableKiosk.Shared.Constants;
 using PortableKiosk.Shared.Layouts;
 
 namespace PortableKiosk.UI.Admin
@@ -31,6 +32,7 @@ namespace PortableKiosk.UI.Admin
             public string ExpiresAtDisplay { get; set; }
             public string OrderTypeDisplay { get; set; }
             public string FulfillmentDisplay { get; set; }
+            public string KitchenStatusDisplay { get; set; }
             public string PaymentStatus { get; set; }
             public string PaymentStatusDisplay { get; set; }
             public string AmountDisplay { get; set; }
@@ -105,6 +107,7 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
+                orderService.CancelExpiredPendingOrders();
                 Order order = orderService.GetByID(orderID);
                 if (order == null)
                 {
@@ -134,6 +137,7 @@ namespace PortableKiosk.UI.Admin
         {
             try
             {
+                orderService.CancelExpiredPendingOrders();
                 List<Order> orders = orderService.GetAll();
                 Dictionary<int, Payment> payments = paymentService.GetAll()
                     .ToDictionary(payment => payment.OrderID);
@@ -147,6 +151,18 @@ namespace PortableKiosk.UI.Admin
                 {
                     Payment payment;
                     payments.TryGetValue(order.OrderID, out payment);
+                    DateTime? expiresAt = GetEffectiveExpiryAt(
+                        order,
+                        payment);
+                    bool isExpired = IsExpired(
+                        payment,
+                        expiresAt,
+                        DateTime.UtcNow);
+                    string paymentStatus = payment == null
+                        ? null
+                        : isExpired
+                            ? "EXPIRED"
+                            : payment.PaymentStatus;
 
                     OrderListRow row = new OrderListRow
                     {
@@ -154,17 +170,16 @@ namespace PortableKiosk.UI.Admin
                         OrderNumber = order.OrderNumber,
                         CreatedAt = order.CreatedAt,
                         CreatedAtDisplay = FormatOrderDate(order.CreatedAt),
-                        ExpiresAtDisplay = order.ExpiresAt.HasValue
-                            ? FormatOrderDate(order.ExpiresAt.Value)
+                        ExpiresAtDisplay = expiresAt.HasValue
+                            ? FormatOrderDate(expiresAt.Value)
                             : "\u2014",
                         OrderTypeDisplay = Humanize(order.OrderType),
                         FulfillmentDisplay = GetFulfillmentDisplay(order),
-                        PaymentStatus = payment == null
-                            ? null
-                            : payment.PaymentStatus,
+                        KitchenStatusDisplay = Humanize(order.KitchenStatus),
+                        PaymentStatus = paymentStatus,
                         PaymentStatusDisplay = payment == null
                             ? "Not recorded"
-                            : Humanize(payment.PaymentStatus),
+                            : Humanize(paymentStatus),
                         AmountDisplay = payment == null
                             ? "\u2014"
                             : FormatAmount(payment.Amount)
@@ -225,6 +240,31 @@ namespace PortableKiosk.UI.Admin
                 HttpUtility.HtmlEncode(Humanize(order.OrderType));
             litDetailsFulfillment.Text =
                 HttpUtility.HtmlEncode(GetFulfillmentDisplay(order));
+            DateTime? expiresAt = GetEffectiveExpiryAt(order, payment);
+            bool isExpired = IsExpired(
+                payment,
+                expiresAt,
+                DateTime.UtcNow);
+            string kitchenStatusDisplay = Humanize(order.KitchenStatus);
+            lblDetailsKitchenStatus.Text = HttpUtility.HtmlEncode(
+                kitchenStatusDisplay);
+            lblDetailsKitchenStatus.CssClass =
+                "inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium " +
+                KitchenStatusCss(kitchenStatusDisplay);
+            string paymentStatusDisplay = payment == null
+                ? "Not recorded"
+                : isExpired
+                    ? "Expired"
+                    : Humanize(payment.PaymentStatus);
+            lblDetailsPaymentStatus.Text = HttpUtility.HtmlEncode(
+                paymentStatusDisplay);
+            lblDetailsPaymentStatus.CssClass =
+                "inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium " +
+                PaymentStatusCss(paymentStatusDisplay);
+            litDetailsExpiresAt.Text = HttpUtility.HtmlEncode(
+                expiresAt.HasValue
+                    ? FormatOrderDate(expiresAt.Value)
+                    : "\u2014");
             rptOrderItems.DataSource = items;
             rptOrderItems.DataBind();
             pnlOrderItems.Visible = items.Count > 0;
@@ -233,10 +273,9 @@ namespace PortableKiosk.UI.Admin
             decimal itemTotal = items.Sum(item => item.LineTotal);
             decimal total = payment == null ? itemTotal : payment.Amount;
             litDetailsPayment.Text = payment == null
-                ? "Not recorded"
+                ? string.Empty
                 : HttpUtility.HtmlEncode(
-                    Humanize(payment.PaymentStatus) + " \u00B7 " +
-                    Humanize(payment.PaymentMethod));
+                    GetPaymentMethodDisplay(payment.PaymentMethod));
             litDetailsTotal.Text = HttpUtility.HtmlEncode(FormatAmount(total));
         }
 
@@ -252,6 +291,34 @@ namespace PortableKiosk.UI.Admin
                     return "bg-amber-50 text-amber-800";
                 case "FAILED":
                 case "CANCELLED":
+                case "EXPIRED":
+                    return "bg-red-50 text-red-700";
+                default:
+                    return "bg-slate-100 text-slate-600";
+            }
+        }
+
+        protected string KitchenStatusCss(object value)
+        {
+            string status = Convert.ToString(value)
+                .Trim()
+                .Replace(' ', '_')
+                .ToUpperInvariant();
+
+            switch (status)
+            {
+                case "AWAITING_PAYMENT":
+                    return "bg-amber-50 text-amber-800";
+                case "QUEUED":
+                    return "bg-sky-50 text-sky-700";
+                case "PREPARING":
+                    return "bg-blue-50 text-blue-800";
+                case "READY":
+                    return "bg-emerald-50 text-emerald-700";
+                case "COMPLETED":
+                    return "bg-slate-100 text-slate-700";
+                case "CANCELLED":
+                case "EXPIRED":
                     return "bg-red-50 text-red-700";
                 default:
                     return "bg-slate-100 text-slate-600";
@@ -261,6 +328,20 @@ namespace PortableKiosk.UI.Admin
         protected string FormatAmount(decimal amount)
         {
             return "\u20B1" + amount.ToString("N2", CultureInfo.CurrentCulture);
+        }
+
+        protected bool HasImage(object imagePath)
+        {
+            return !string.IsNullOrWhiteSpace(
+                Convert.ToString(imagePath));
+        }
+
+        protected string ResolveProductImage(object imagePath)
+        {
+            string path = Convert.ToString(imagePath);
+            return string.IsNullOrWhiteSpace(path)
+                ? string.Empty
+                : ResolveUrl(path);
         }
 
         private static string FormatOrderDate(DateTime createdAt)
@@ -285,6 +366,19 @@ namespace PortableKiosk.UI.Admin
             return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(normalized);
         }
 
+        private static string GetPaymentMethodDisplay(string paymentMethod)
+        {
+            if (string.Equals(
+                paymentMethod,
+                "CASH_COUNTER",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return "Cash at counter";
+            }
+
+            return Humanize(paymentMethod);
+        }
+
         private static string GetFulfillmentDisplay(Order order)
         {
             if (string.Equals(
@@ -298,6 +392,55 @@ namespace PortableKiosk.UI.Admin
             }
 
             return "Counter pickup";
+        }
+
+        private static DateTime? GetEffectiveExpiryAt(
+            Order order,
+            Payment payment)
+        {
+            if (order == null)
+            {
+                return null;
+            }
+
+            if (order.ExpiresAt.HasValue)
+            {
+                return order.ExpiresAt.Value;
+            }
+
+            if (payment != null &&
+                string.Equals(
+                    payment.PaymentMethod,
+                    "CASH_COUNTER",
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    payment.PaymentStatus,
+                    "PENDING",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return order.CreatedAt.AddMinutes(
+                    OrderSettings.PendingPaymentExpiryMinutes);
+            }
+
+            return null;
+        }
+
+        private static bool IsExpired(
+            Payment payment,
+            DateTime? expiresAt,
+            DateTime utcNow)
+        {
+            return payment != null &&
+                string.Equals(
+                    payment.PaymentMethod,
+                    "CASH_COUNTER",
+                    StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(
+                    payment.PaymentStatus,
+                    "PENDING",
+                    StringComparison.OrdinalIgnoreCase) &&
+                expiresAt.HasValue &&
+                expiresAt.Value <= utcNow;
         }
 
         private void ShowError(string message)

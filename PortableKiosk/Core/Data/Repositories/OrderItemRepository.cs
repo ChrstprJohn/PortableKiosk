@@ -76,6 +76,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     oi.OrderID,
                     oi.ProductVariantID,
                     p.ProductName,
+                    pv.ImagePath,
                     s.SizeName,
                     oi.UnitPrice,
                     oi.Quantity
@@ -115,6 +116,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     oi.OrderID,
                     oi.ProductVariantID,
                     p.ProductName,
+                    pv.ImagePath,
                     s.SizeName,
                     oi.UnitPrice,
                     oi.Quantity
@@ -266,6 +268,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
         private static OrderItem Map(SqlDataReader reader)
         {
+            int imagePathOrdinal = reader.GetOrdinal("ImagePath");
             int sizeOrdinal = reader.GetOrdinal("SizeName");
 
             return new OrderItem
@@ -278,6 +281,9 @@ namespace PortableKiosk.Core.Data.Repositories
                     reader.GetOrdinal("ProductVariantID")),
                 ProductName = reader.GetString(
                     reader.GetOrdinal("ProductName")),
+                ImagePath = reader.IsDBNull(imagePathOrdinal)
+                    ? null
+                    : reader.GetString(imagePathOrdinal),
                 SizeName = reader.IsDBNull(sizeOrdinal)
                     ? null
                     : reader.GetString(sizeOrdinal),

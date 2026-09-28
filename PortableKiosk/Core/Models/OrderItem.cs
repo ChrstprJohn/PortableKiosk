@@ -15,6 +15,8 @@ namespace PortableKiosk.Core.Models
 
         public string ProductName { get; set; }
 
+        public string ImagePath { get; set; }
+
         public string SizeName { get; set; }
 
         public decimal UnitPrice { get; set; }

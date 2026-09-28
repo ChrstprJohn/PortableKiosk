@@ -223,6 +223,7 @@ CREATE TABLE Orders
     CONSTRAINT CK_Orders_KitchenStatus
         CHECK (
             KitchenStatus IN (
+                N'AWAITING_PAYMENT',
                 N'QUEUED',
                 N'PREPARING',
                 N'READY',
@@ -274,7 +275,8 @@ CREATE TABLE Payments
                 N'PENDING',
                 N'PAID',
                 N'FAILED',
-                N'CANCELLED'
+                N'CANCELLED',
+                N'EXPIRED'
             )
         ),
 

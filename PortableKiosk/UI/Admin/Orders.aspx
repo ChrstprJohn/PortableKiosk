@@ -33,6 +33,7 @@
                         <asp:ListItem Text="All payment statuses" Value="" />
                         <asp:ListItem Text="Paid" Value="PAID" />
                         <asp:ListItem Text="Pending" Value="PENDING" />
+                        <asp:ListItem Text="Expired" Value="EXPIRED" />
                         <asp:ListItem Text="Failed" Value="FAILED" />
                         <asp:ListItem Text="Cancelled" Value="CANCELLED" />
                         <asp:ListItem Text="Not recorded" Value="NOT_RECORDED" />
@@ -43,7 +44,7 @@
 
         <section class="overflow-hidden rounded-lg border border-slate-200 bg-white" aria-labelledby="ordersTableHeading">
             <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
-                <h2 id="ordersTableHeading" class="text-sm font-semibold text-slate-950">All orders</h2>
+                <h2 id="ordersTableHeading" class="text-sm font-semibold text-slate-950">Orders</h2>
                 <asp:Label ID="lblOrderCount" runat="server" CssClass="text-xs text-slate-500" />
             </div>
 
@@ -58,32 +59,37 @@
                     DataKeyNames="OrderID"
                     OnRowCommand="gridOrders_RowCommand"
                     OnPageIndexChanging="gridOrders_PageIndexChanging"
-                    CssClass="w-full min-w-[1120px] table-fixed border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:break-words [&_td]:px-4 [&_td]:py-3 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
+                    CssClass="w-full min-w-[1160px] table-fixed border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:break-words [&_td]:px-4 [&_td]:py-3 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
                     EmptyDataText="No orders match these filters.">
                     <PagerStyle CssClass="border-t border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 [&_a]:rounded [&_a]:px-2 [&_a]:py-1 [&_a]:text-slate-700 [&_a:hover]:bg-slate-100 [&_span]:font-semibold [&_span]:text-slate-950" />
                     <Columns>
-                        <asp:TemplateField HeaderText="Order" ItemStyle-Width="115px">
+                        <asp:TemplateField HeaderText="Order ID" ItemStyle-Width="90px">
                             <ItemTemplate>
                                 <span class="font-medium text-slate-950">#<%#: Eval("OrderNumber") %></span>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Placed" ItemStyle-Width="175px">
+                        <asp:TemplateField HeaderText="Placed" ItemStyle-Width="160px">
                             <ItemTemplate>
                                 <span class="block text-slate-800"><%#: Eval("CreatedAtDisplay") %></span>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Expires at" ItemStyle-Width="175px">
+                        <asp:TemplateField HeaderText="Expires at" ItemStyle-Width="160px">
                             <ItemTemplate>
                                 <span class="block text-slate-800"><%#: Eval("ExpiresAtDisplay") %></span>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Type" ItemStyle-Width="105px">
+                        <asp:TemplateField HeaderText="Type" ItemStyle-Width="90px">
                             <ItemTemplate><%#: Eval("OrderTypeDisplay") %></ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Fulfillment" ItemStyle-Width="170px">
+                        <asp:TemplateField HeaderText="Fulfillment" ItemStyle-Width="205px">
                             <ItemTemplate><%#: Eval("FulfillmentDisplay") %></ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Payment" ItemStyle-Width="135px">
+                        <asp:TemplateField HeaderText="Kitchen" ItemStyle-Width="140px">
+                            <ItemTemplate>
+                                <span class='inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium <%# KitchenStatusCss(Eval("KitchenStatusDisplay")) %>'><%#: Eval("KitchenStatusDisplay") %></span>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Payment" ItemStyle-Width="125px">
                             <ItemTemplate>
                                 <span class='inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium <%# PaymentStatusCss(Eval("PaymentStatus")) %>'><%#: Eval("PaymentStatusDisplay") %></span>
                             </ItemTemplate>
@@ -91,7 +97,7 @@
                         <asp:TemplateField HeaderText="Total" ItemStyle-Width="110px" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right">
                             <ItemTemplate><span class="whitespace-nowrap font-medium tabular-nums text-slate-900"><%#: Eval("AmountDisplay") %></span></ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Action" ItemStyle-Width="130px" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right">
+                        <asp:TemplateField HeaderText="Action" ItemStyle-Width="72px" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right">
                             <ItemTemplate>
                                 <asp:LinkButton ID="btnViewOrder" runat="server" Text="" ToolTip='<%# "View details for order #" + Eval("OrderNumber") %>' aria-label='<%# "View details for order #" + Eval("OrderNumber") %>' CommandName="ViewDetails" CommandArgument='<%# Eval("OrderID") %>' CausesValidation="false" CssClass="inline-flex size-8 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">
                                     <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.2-6 9.5-6 9.5 6 9.5 6-3.2 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg>
@@ -111,66 +117,88 @@
     </main>
 
     <div id="orderDetailsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 p-4" tabindex="-1" aria-labelledby="orderDetailsModalLabel" aria-hidden="true" role="dialog" aria-modal="true">
-        <div class="w-full max-w-2xl">
+        <div class="w-full max-w-md">
             <div class="flex max-h-[90vh] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
-                <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+                <div class="flex items-start justify-between gap-3 border-b border-dashed border-slate-300 px-5 py-4">
                     <div>
                         <h2 class="text-base font-semibold text-slate-950" id="orderDetailsModalLabel">Order details</h2>
                         <p class="mt-0.5 text-sm text-slate-500">#<asp:Literal ID="litDetailsOrderNumber" runat="server" /></p>
                     </div>
-                    <button type="button" class="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-dismiss="true" aria-label="Close order details">
+                    <button type="button" class="-mt-1 inline-flex size-8 shrink-0 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-dismiss="true" aria-label="Close order details">
                         <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
                     </button>
                 </div>
 
-                <div class="overflow-y-auto p-5">
-                    <dl class="grid grid-cols-2 gap-x-5 gap-y-4 border-b border-slate-200 pb-5 sm:grid-cols-3">
-                        <div><dt class="text-xs text-slate-500">Placed</dt><dd class="mt-1 text-sm font-medium text-slate-900"><asp:Literal ID="litDetailsCreatedAt" runat="server" /></dd></div>
-                        <div><dt class="text-xs text-slate-500">Order type</dt><dd class="mt-1 text-sm font-medium text-slate-900"><asp:Literal ID="litDetailsOrderType" runat="server" /></dd></div>
-                        <div><dt class="text-xs text-slate-500">Fulfillment</dt><dd class="mt-1 text-sm font-medium text-slate-900"><asp:Literal ID="litDetailsFulfillment" runat="server" /></dd></div>
+                <div class="overflow-y-auto px-5 py-4">
+                    <div class="grid grid-cols-2 gap-4 border-b border-dashed border-slate-300 py-3">
+                        <div class="flex flex-col items-start gap-1">
+                            <span class="text-xs font-medium text-slate-500">Kitchen</span>
+                            <asp:Label ID="lblDetailsKitchenStatus" runat="server" />
+                        </div>
+                        <div class="flex flex-col items-start gap-1">
+                            <span class="text-xs font-medium text-slate-500">Payment</span>
+                            <asp:Label ID="lblDetailsPaymentStatus" runat="server" />
+                        </div>
+                    </div>
+
+                    <dl class="grid grid-cols-1 gap-x-6 gap-y-3 border-b border-dashed border-slate-300 py-4 sm:grid-cols-2">
+                        <div><dt class="text-xs font-medium text-slate-500">Placed</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsCreatedAt" runat="server" /></dd></div>
+                        <div><dt class="text-xs font-medium text-slate-500">Expires at</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsExpiresAt" runat="server" /></dd></div>
+                        <div><dt class="text-xs font-medium text-slate-500">Order type</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsOrderType" runat="server" /></dd></div>
+                        <div><dt class="text-xs font-medium text-slate-500">Fulfillment</dt><dd class="mt-1 break-words text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsFulfillment" runat="server" /></dd></div>
                     </dl>
 
-                    <div class="pt-5">
+                    <div class="pt-4">
                         <h3 class="text-sm font-semibold text-slate-950">Items</h3>
-                        <asp:Panel ID="pnlOrderItems" runat="server" CssClass="mt-3 overflow-hidden rounded-md border border-slate-200">
-                            <div class="divide-y divide-slate-100">
+                        <asp:Panel ID="pnlOrderItems" runat="server" CssClass="mt-2">
+                            <div class="divide-y divide-dashed divide-slate-300 border-t border-dashed border-slate-300">
                                 <asp:Repeater ID="rptOrderItems" runat="server">
                                     <ItemTemplate>
-                                        <div class="flex items-center justify-between gap-4 px-4 py-3">
-                                            <div class="min-w-0">
+                                        <div class="flex items-center gap-3 py-3">
+                                            <asp:Image runat="server"
+                                                Visible='<%# HasImage(Eval("ImagePath")) %>'
+                                                ImageUrl='<%# ResolveProductImage(Eval("ImagePath")) %>'
+                                                AlternateText='<%# Convert.ToString(Eval("ProductName")) %>'
+                                                CssClass="size-10 shrink-0 rounded-md object-cover" />
+                                            <span runat="server"
+                                                visible='<%# !HasImage(Eval("ImagePath")) %>'
+                                                class="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-slate-100 text-slate-400"
+                                                aria-hidden="true">
+                                                <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2" /><circle cx="9" cy="10" r="1.5" /><path d="m5 17 4.5-4.5a1.5 1.5 0 0 1 2.1 0L14 15l1.5-1.5a1.5 1.5 0 0 1 2.1 0L20 16" /></svg>
+                                            </span>
+                                            <div class="min-w-0 flex-1">
                                                 <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                                                     <p class="text-sm font-medium text-slate-900"><%#: Eval("ProductName") %></p>
                                                     <span class="text-xs text-slate-500"><%#: Eval("DisplaySize") %></span>
                                                 </div>
-                                                <p class="mt-1 text-xs text-slate-500"><%#: Eval("Quantity") %> × <%#: FormatAmount((decimal)Eval("UnitPrice")) %> each</p>
+                                                <p class="mt-1 text-xs text-slate-500"><%#: Eval("Quantity") %> × <%#: FormatAmount((decimal)Eval("UnitPrice")) %></p>
                                             </div>
                                             <div class="shrink-0 text-right">
-                                                <p class="text-[11px] font-medium text-slate-500">Line total</p>
-                                                <p class="mt-0.5 text-sm font-semibold tabular-nums text-slate-900"><%#: FormatAmount((decimal)Eval("LineTotal")) %></p>
+                                                <p class="text-sm font-semibold tabular-nums text-slate-900"><%#: FormatAmount((decimal)Eval("LineTotal")) %></p>
                                             </div>
                                         </div>
                                     </ItemTemplate>
                                 </asp:Repeater>
                             </div>
                         </asp:Panel>
-                        <asp:Panel ID="pnlNoOrderItems" runat="server" Visible="false" CssClass="mt-3 rounded-md bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                        <asp:Panel ID="pnlNoOrderItems" runat="server" Visible="false" CssClass="mt-2 border-t border-dashed border-slate-300 py-3 text-sm text-slate-600">
                             No item details were recorded for this order.
                         </asp:Panel>
                     </div>
 
-                    <div class="mt-5 flex flex-col gap-4 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                            <h3 class="text-xs font-medium text-slate-500">Payment</h3>
-                            <p class="mt-1 text-sm font-medium text-slate-900"><asp:Literal ID="litDetailsPayment" runat="server" /></p>
+                    <div class="mt-4 border-t border-dashed border-slate-300 pt-3">
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="text-xs font-medium text-slate-500">Payment method</span>
+                            <span class="text-sm font-medium text-slate-900"><asp:Literal ID="litDetailsPayment" runat="server" /></span>
                         </div>
-                        <div class="sm:text-right">
-                            <h3 class="text-xs font-medium text-slate-500">Order total</h3>
-                            <p class="mt-1 text-xl font-semibold tabular-nums tracking-tight text-slate-950"><asp:Literal ID="litDetailsTotal" runat="server" /></p>
+                        <div class="mt-3 flex items-baseline justify-between gap-4">
+                            <h3 class="text-sm font-semibold text-slate-950">TOTAL AMOUNT</h3>
+                            <p class="text-xl font-semibold tabular-nums tracking-tight text-slate-950"><asp:Literal ID="litDetailsTotal" runat="server" /></p>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex justify-end border-t border-slate-200 px-5 py-4">
+                <div class="flex justify-end border-t border-dashed border-slate-300 px-5 py-3">
                     <button type="button" class="inline-flex min-h-9 items-center justify-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-dismiss="true">Close</button>
                 </div>
             </div>

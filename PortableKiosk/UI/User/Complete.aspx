@@ -19,7 +19,7 @@
         </section>
     </main>
     <footer class="kiosk-flow-footer kiosk-cta-footer"><div class="kiosk-flow-footer-inner kiosk-cta-footer-inner">
-        <asp:Button ID="btnFinish" runat="server" Text="Finish"
+        <asp:Button ID="btnFinish" runat="server" Text="Done — Start New Order"
             CssClass="kiosk-cta-button kiosk-cta-button-primary kiosk-flow-primary kiosk-flow-finish"
             OnClick="btnFinish_Click" />
     </div></footer>

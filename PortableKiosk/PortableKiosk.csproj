@@ -224,6 +224,7 @@
       <DependentUpon>User.Master</DependentUpon>
     </Compile>
     <Compile Include="Shared\Helpers\KioskSession.cs" />
+    <Compile Include="Shared\Constants\OrderSettings.cs" />
     <Compile Include="Shared\Security\PasswordHasher.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>

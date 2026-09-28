@@ -1,4 +1,5 @@
 using System;
+using PortableKiosk.Shared.Constants;
 using PortableKiosk.Shared.Helpers;
 
 namespace PortableKiosk.UI.User
@@ -42,7 +43,9 @@ namespace PortableKiosk.UI.User
             if (isTableService && isCashAtCounter)
             {
                 instruction =
-                    "Bring this number to the counter to pay, then keep your table locator visible.";
+                    "Bring this number to the counter to pay within " +
+                    OrderSettings.PendingPaymentExpiryMinutes +
+                    " minutes, then keep your table locator visible.";
             }
             else if (isTableService)
             {
@@ -52,7 +55,9 @@ namespace PortableKiosk.UI.User
             else if (isCashAtCounter)
             {
                 instruction =
-                    "Bring this number to the counter to pay and collect your order.";
+                    "Bring this number to the counter to pay within " +
+                    OrderSettings.PendingPaymentExpiryMinutes +
+                    " minutes and collect your order.";
             }
             else
             {

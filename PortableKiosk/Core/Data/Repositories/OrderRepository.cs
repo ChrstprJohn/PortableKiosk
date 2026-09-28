@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using PortableKiosk.Core.Models;
+using PortableKiosk.Shared.Constants;
 
 namespace PortableKiosk.Core.Data.Repositories
 {
@@ -161,6 +162,78 @@ namespace PortableKiosk.Core.Data.Repositories
             return orders;
         }
 
+        public int CancelExpiredPendingOrders()
+        {
+            const string sql = @"
+                SET NOCOUNT ON;
+
+                DECLARE @ExpiredOrders TABLE (OrderID INT PRIMARY KEY);
+                DECLARE @ExpiredCount INT = 0;
+                DECLARE @Now DATETIME2(7) = SYSUTCDATETIME();
+
+                UPDATE p
+                SET PaymentStatus = N'EXPIRED'
+                OUTPUT inserted.OrderID INTO @ExpiredOrders (OrderID)
+                FROM Payments p
+                INNER JOIN Orders o ON o.OrderID = p.OrderID
+                WHERE p.PaymentMethod = N'CASH_COUNTER'
+                    AND p.PaymentStatus = N'PENDING'
+                    AND COALESCE(
+                        o.ExpiresAt,
+                        DATEADD(
+                            MINUTE,
+                            @ExpiryMinutes,
+                            o.CreatedAt)) <= @Now;
+
+                SET @ExpiredCount = @@ROWCOUNT;
+
+                UPDATE o
+                SET KitchenStatus = N'CANCELLED'
+                FROM Orders o
+                INNER JOIN @ExpiredOrders expired
+                    ON expired.OrderID = o.OrderID
+                WHERE o.KitchenStatus IN (
+                    N'AWAITING_PAYMENT',
+                    N'QUEUED'
+                );
+
+                SELECT @ExpiredCount;";
+
+            using (SqlConnection connection =
+                DatabaseConnection.GetConnection())
+            {
+                connection.Open();
+
+                using (SqlTransaction transaction =
+                    connection.BeginTransaction())
+                {
+                    try
+                    {
+                        int expiredCount;
+
+                        using (SqlCommand command =
+                            new SqlCommand(sql, connection, transaction))
+                        {
+                            command.Parameters.Add(
+                                "@ExpiryMinutes",
+                                SqlDbType.Int).Value =
+                                    OrderSettings.PendingPaymentExpiryMinutes;
+                            expiredCount = Convert.ToInt32(
+                                command.ExecuteScalar());
+                        }
+
+                        transaction.Commit();
+                        return expiredCount;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
         public bool Update(Order order)
         {
             Validate(order);
@@ -174,7 +247,16 @@ namespace PortableKiosk.Core.Data.Repositories
                     TableNumber = @TableNumber,
                     KitchenStatus = @KitchenStatus,
                     ExpiresAt = @ExpiresAt
-                WHERE OrderID = @OrderID;";
+                WHERE OrderID = @OrderID
+                    AND (
+                        @KitchenStatus IN (N'AWAITING_PAYMENT', N'CANCELLED')
+                        OR EXISTS (
+                            SELECT 1
+                            FROM Payments p
+                            WHERE p.OrderID = Orders.OrderID
+                                AND p.PaymentStatus = N'PAID'
+                        )
+                    );";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
@@ -465,7 +547,8 @@ namespace PortableKiosk.Core.Data.Repositories
                     "order");
             }
 
-            if (kitchenStatus != "QUEUED" &&
+            if (kitchenStatus != "AWAITING_PAYMENT" &&
+                kitchenStatus != "QUEUED" &&
                 kitchenStatus != "PREPARING" &&
                 kitchenStatus != "READY" &&
                 kitchenStatus != "COMPLETED" &&

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using PortableKiosk.Core.Models;
+using PortableKiosk.Shared.Constants;
 
 namespace PortableKiosk.Core.Data.Repositories
 {
@@ -94,7 +95,7 @@ namespace PortableKiosk.Core.Data.Repositories
             ValidateID(payment.PaymentID, "paymentID");
 
             const string sql = @"
-                UPDATE Payments
+                UPDATE p
                 SET
                     OrderID = @OrderID,
                     PaymentMethod = @PaymentMethod,
@@ -102,19 +103,90 @@ namespace PortableKiosk.Core.Data.Repositories
                     Amount = @Amount,
                     TransactionReference = @TransactionReference,
                     PaidAt = @PaidAt
-                WHERE PaymentID = @PaymentID;";
+                FROM Payments p
+                WHERE p.PaymentID = @PaymentID
+                    AND NOT (
+                        @PaymentStatus = N'PAID'
+                        AND p.PaymentStatus <> N'PAID'
+                        AND p.PaymentMethod = N'CASH_COUNTER'
+                        AND EXISTS (
+                            SELECT 1
+                            FROM Orders o
+                            WHERE o.OrderID = p.OrderID
+                                AND COALESCE(
+                                    o.ExpiresAt,
+                                    DATEADD(
+                                        MINUTE,
+                                        @ExpiryMinutes,
+                                        o.CreatedAt)) <= SYSUTCDATETIME()
+                        )
+                    );";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
-            using (SqlCommand command =
-                new SqlCommand(sql, connection))
             {
-                AddWriteParameters(command, payment);
-                command.Parameters.Add(
-                    "@PaymentID",
-                    SqlDbType.Int).Value = payment.PaymentID;
                 connection.Open();
-                return command.ExecuteNonQuery() > 0;
+
+                using (SqlTransaction transaction =
+                    connection.BeginTransaction())
+                {
+                    try
+                    {
+                        int affectedRows;
+
+                        using (SqlCommand command =
+                            new SqlCommand(sql, connection, transaction))
+                        {
+                            AddWriteParameters(command, payment);
+                            command.Parameters.Add(
+                                "@PaymentID",
+                                SqlDbType.Int).Value = payment.PaymentID;
+                            command.Parameters.Add(
+                                "@ExpiryMinutes",
+                                SqlDbType.Int).Value =
+                                    OrderSettings.PendingPaymentExpiryMinutes;
+                            affectedRows = command.ExecuteNonQuery();
+                        }
+
+                        if (affectedRows == 0)
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+
+                        if (string.Equals(
+                            payment.PaymentStatus,
+                            "PAID",
+                            StringComparison.OrdinalIgnoreCase))
+                        {
+                            const string queueOrderSql = @"
+                                UPDATE Orders
+                                SET KitchenStatus = N'QUEUED'
+                                WHERE OrderID = @OrderID
+                                    AND KitchenStatus = N'AWAITING_PAYMENT';";
+
+                            using (SqlCommand command =
+                                new SqlCommand(
+                                    queueOrderSql,
+                                    connection,
+                                    transaction))
+                            {
+                                command.Parameters.Add(
+                                    "@OrderID",
+                                    SqlDbType.Int).Value = payment.OrderID;
+                                command.ExecuteNonQuery();
+                            }
+                        }
+
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 
@@ -304,7 +376,8 @@ namespace PortableKiosk.Core.Data.Repositories
             if (status != "PENDING" &&
                 status != "PAID" &&
                 status != "FAILED" &&
-                status != "CANCELLED")
+                status != "CANCELLED" &&
+                status != "EXPIRED")
             {
                 throw new ArgumentException(
                     "Choose a valid payment status.",

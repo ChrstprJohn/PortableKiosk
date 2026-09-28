@@ -20,8 +20,11 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.GridView gridOrders;
         protected global::System.Web.UI.WebControls.Literal litDetailsOrderNumber;
         protected global::System.Web.UI.WebControls.Literal litDetailsCreatedAt;
+        protected global::System.Web.UI.WebControls.Literal litDetailsExpiresAt;
         protected global::System.Web.UI.WebControls.Literal litDetailsOrderType;
         protected global::System.Web.UI.WebControls.Literal litDetailsFulfillment;
+        protected global::System.Web.UI.WebControls.Label lblDetailsKitchenStatus;
+        protected global::System.Web.UI.WebControls.Label lblDetailsPaymentStatus;
         protected global::System.Web.UI.WebControls.Panel pnlOrderItems;
         protected global::System.Web.UI.WebControls.Repeater rptOrderItems;
         protected global::System.Web.UI.WebControls.Panel pnlNoOrderItems;
