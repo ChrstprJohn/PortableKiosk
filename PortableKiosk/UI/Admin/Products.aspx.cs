@@ -105,6 +105,7 @@ namespace PortableKiosk.UI.Admin
             {
                 LoadCategories();
                 LoadProductCards();
+                ShowPendingSuccessAlert();
             }
         }
 
@@ -137,9 +138,8 @@ namespace PortableKiosk.UI.Admin
             {
                 productService.Add(product);
 
-                ShowSuccess("Product added.");
-                ClearProductForm();
-                LoadProductCards();
+                RedirectAfterSuccess("Product added.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -175,13 +175,6 @@ namespace PortableKiosk.UI.Admin
                 "ReopenAddProductModal",
                 "AppModal.open('addProductModal');",
                 true);
-        }
-
-        private void ClearProductForm()
-        {
-            ddlCategory.SelectedIndex = 0;
-            txtProductName.Text = string.Empty;
-            chkIsAvailable.Checked = true;
         }
 
         protected void btnUpdateProduct_Click(object sender, EventArgs e)
@@ -232,8 +225,8 @@ namespace PortableKiosk.UI.Admin
                     return;
                 }
 
-                ShowSuccess("Product updated.");
-                LoadProductCards();
+                RedirectAfterSuccess("Product updated.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -292,8 +285,8 @@ namespace PortableKiosk.UI.Admin
                     DeleteSavedImageByVirtualPath(variant.ImagePath);
                 }
 
-                ShowSuccess("Product deleted.");
-                LoadProductCards();
+                RedirectAfterSuccess("Product deleted.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -470,15 +463,14 @@ namespace PortableKiosk.UI.Admin
                 List<int> variantIDs =
                     variantService.AddRange(variants);
 
-                ShowSuccess(
+                RedirectAfterSuccess(
                     variantIDs.Count +
                     (variantIDs.Count == 1
                         ? " variant was"
                         : " variants were") +
                     " added successfully to Product #" +
                     productID + ".");
-                ClearModalForm();
-                LoadProductCards();
+                return;
             }
             catch (SqlException ex)
             {
@@ -519,28 +511,6 @@ namespace PortableKiosk.UI.Admin
                 "ReopenAddVariantModal",
                 "AppModal.open('addVariantModal');",
                 true);
-        }
-
-        private void ClearModalForm()
-        {
-            hfModalProductID.Value = string.Empty;
-
-            foreach (RepeaterItem item in
-                rptBulkVariantRows.Items)
-            {
-                DropDownList sizeField =
-                    (DropDownList)item.FindControl(
-                        "ddlBulkSize");
-
-                TextBox priceField =
-                    (TextBox)item.FindControl(
-                        "txtBulkPrice");
-
-                sizeField.SelectedIndex = 0;
-                priceField.Text = string.Empty;
-            }
-
-            chkModalIsAvailable.Checked = true;
         }
 
         protected void btnUpdateVariant_Click(
@@ -658,8 +628,8 @@ namespace PortableKiosk.UI.Admin
                         existingVariant.ImagePath);
                 }
 
-                ShowSuccess("Variant updated successfully.");
-                LoadProductCards();
+                RedirectAfterSuccess("Variant updated successfully.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -739,8 +709,8 @@ namespace PortableKiosk.UI.Admin
                 DeleteSavedImageByVirtualPath(
                     existingVariant.ImagePath);
 
-                ShowSuccess("Variant deleted successfully.");
-                LoadProductCards();
+                RedirectAfterSuccess("Variant deleted successfully.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -1114,8 +1084,26 @@ namespace PortableKiosk.UI.Admin
             }
         }
 
-        private void ShowSuccess(string message)
+        private void RedirectAfterSuccess(string message)
         {
+            Session["Products.SuccessMessage"] = message;
+            Response.Redirect(
+                ResolveUrl("~/UI/Admin/Products.aspx"),
+                false);
+            Context.ApplicationInstance.CompleteRequest();
+        }
+
+        private void ShowPendingSuccessAlert()
+        {
+            string message =
+                Session["Products.SuccessMessage"] as string;
+
+            if (message == null)
+            {
+                return;
+            }
+
+            Session.Remove("Products.SuccessMessage");
             ((AdminLayout)Master).ShowSuccessAlert(message);
         }
 
