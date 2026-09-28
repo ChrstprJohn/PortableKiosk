@@ -31,6 +31,7 @@ namespace PortableKiosk.UI.Admin
             public int CategoryID { get; set; }
             public string CategoryName { get; set; }
             public string ProductName { get; set; }
+            public string ProductDescription { get; set; }
             public bool IsAvailable { get; set; }
             public List<ProductVariant> Variants { get; set; }
             public string ExistingSizeKeys { get; set; }
@@ -152,6 +153,11 @@ namespace PortableKiosk.UI.Admin
         private void ShowAddProductError(string message)
         {
             ShowError(message);
+            ReopenAddProductModal();
+        }
+
+        private void ReopenAddProductModal()
+        {
             Page.ClientScript.RegisterStartupScript(
                 GetType(),
                 "ReopenAddProductModal",
@@ -712,6 +718,7 @@ namespace PortableKiosk.UI.Admin
                         CategoryID = p.CategoryID,
                         CategoryName = p.CategoryName,
                         ProductName = p.ProductName,
+                        ProductDescription = p.ProductDescription,
                         IsAvailable = p.IsAvailable
                     };
 

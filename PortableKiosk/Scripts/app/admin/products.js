@@ -130,10 +130,60 @@
         }
 
         if (displaySpan) {
-            displaySpan.innerText = productName + ' (ID #' + productId + ')';
+            displaySpan.innerText = productName;
         }
 
         resetVariantRows();
+    };
+
+    window.openViewVariantModal = function (
+        button,
+        variantId,
+        sizeId,
+        sizeName,
+        price,
+        isAvailable,
+        imageUrl
+    ) {
+        var card = button ? button.closest('[data-product-id]') : null;
+        var productName = card && card.querySelector('[data-product-name]');
+        var category = card && card.querySelector('[data-product-category]');
+        var productStatus = card && card.querySelector('[data-product-status]');
+        var imageWrap = document.getElementById('viewVariantImageWrap');
+        var image = document.getElementById('viewVariantImage');
+        var imageEmpty = document.getElementById('viewVariantNoImage');
+        var fields = {
+            product: productName ? productName.textContent.trim() : 'Selected product',
+            productId: card ? card.getAttribute('data-product-id') : '',
+            category: category ? category.textContent.trim() : '',
+            categoryId: card ? card.getAttribute('data-category-id') : '',
+            description: card ? card.getAttribute('data-product-description') || 'Not provided' : 'Not provided',
+            productStatus: productStatus ? productStatus.textContent.trim() : '',
+            size: sizeName,
+            sizeId: sizeId || 'None',
+            id: variantId,
+            price: '₱' + price,
+            status: isAvailable ? 'Available' : 'Unavailable'
+        };
+
+        Object.keys(fields).forEach(function (key) {
+            var field = document.getElementById('viewVariant' + key.charAt(0).toUpperCase() + key.slice(1));
+            if (field) field.textContent = fields[key];
+        });
+
+        if (imageWrap && image && imageEmpty) {
+            imageWrap.classList.toggle('hidden', !imageUrl);
+            imageEmpty.classList.toggle('hidden', Boolean(imageUrl));
+            image.src = imageUrl || '';
+        }
+
+        var status = document.getElementById('viewVariantStatus');
+        if (status) {
+            status.textContent = fields.status;
+            status.className = isAvailable
+                ? 'inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700'
+                : 'inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600';
+        }
     };
 
     window.openEditVariantModal = function (

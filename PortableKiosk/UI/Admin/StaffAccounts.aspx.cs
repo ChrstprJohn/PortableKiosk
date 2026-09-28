@@ -204,6 +204,11 @@ namespace PortableKiosk.UI.Admin
         private void ShowStaffFormError(string message)
         {
             ShowError(message);
+            ReopenAddStaffModal();
+        }
+
+        private void ReopenAddStaffModal()
+        {
             Page.ClientScript.RegisterStartupScript(
                 GetType(),
                 "ReopenAddStaffModal",

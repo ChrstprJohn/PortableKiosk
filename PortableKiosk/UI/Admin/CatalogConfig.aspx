@@ -27,12 +27,10 @@
             <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-5">
                     <h2 id="headingCategoriesSection" class="text-sm font-semibold text-slate-950">Categories</h2>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <asp:Label ID="lblCategoryCount" runat="server" CssClass="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600"></asp:Label>
-                        <button type="button" class="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addCategoryModal">
-                            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add category
-                        </button>
-                    </div>
+                    <asp:Label ID="lblCategoryCount" runat="server" Visible="false"></asp:Label>
+                    <button type="button" class="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addCategoryModal">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add category
+                    </button>
                 </div>
 
                 <asp:Label ID="lblCategoryLoadError" runat="server" Visible="false" CssClass="m-3 block rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"></asp:Label>
@@ -91,12 +89,10 @@
             <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
                 <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-5">
                     <h2 id="headingSizesSection" class="text-sm font-semibold text-slate-950">Serving sizes</h2>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <asp:Label ID="lblSizeCount" runat="server" CssClass="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-medium text-slate-600"></asp:Label>
-                        <button type="button" class="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addSizeModal">
-                            <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add size
-                        </button>
-                    </div>
+                    <asp:Label ID="lblSizeCount" runat="server" Visible="false"></asp:Label>
+                    <button type="button" class="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addSizeModal">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>Add size
+                    </button>
                 </div>
 
                 <asp:Label ID="lblSizeLoadError" runat="server" Visible="false" CssClass="m-3 block rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"></asp:Label>

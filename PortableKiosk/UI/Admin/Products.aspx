@@ -52,17 +52,19 @@
                     <div class="col-span-12 xl:col-span-6">
                         <div
                             class="h-full overflow-hidden rounded-lg border border-slate-200 bg-white"
-                            data-existing-size-keys='<%# Eval("ExistingSizeKeys") %>'>
+                            data-existing-size-keys='<%# Eval("ExistingSizeKeys") %>'
+                            data-product-id='<%# Eval("ProductID") %>'
+                            data-category-id='<%# Eval("CategoryID") %>'
+                            data-product-description='<%# HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("ProductDescription"))) %>'>
 
                             <!-- CARD HEADER -->
                             <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-5">
                                 <div>
-                                    <span class="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"><%# Eval("CategoryName") %></span>
+                                    <span data-product-category class="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"><%# Eval("CategoryName") %></span>
                                     <h3 class="mt-1 text-sm font-semibold text-slate-950" data-product-name><%# Eval("ProductName") %></h3>
-                                    <small class="text-xs tabular-nums text-slate-500">ID #<%# Eval("ProductID") %></small>
                                 </div>
                                 <div class="flex shrink-0 items-center gap-2">
-                                    <span class='inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium <%# (bool)Eval("IsAvailable") ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600" %>'>
+                                    <span data-product-status class='inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium <%# (bool)Eval("IsAvailable") ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600" %>'>
                                         <%# (bool)Eval("IsAvailable") ? "Active" : "Hidden" %>
                                     </span>
                                     <button
@@ -85,7 +87,7 @@
                                 <asp:Repeater ID="rptInnerVariants" runat="server" DataSource='<%# Eval("Variants") %>'>
                                     <HeaderTemplate>
                                         <div class="w-full overflow-x-auto">
-                                            <table class="w-full min-w-[560px] border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-slate-50 [&_th]:px-3 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-3 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0">
+                                            <table class="w-full min-w-[600px] border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-slate-50 [&_th]:px-3 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-3 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0">
                                                 <thead>
                                                     <tr>
                                                         <th class="w-[50px]">Photo</th>
@@ -119,6 +121,16 @@
                                             </td>
                                             <td class="text-right whitespace-nowrap">
                                                 <div class="inline-flex items-center gap-1" role="group" aria-label="Variant actions">
+                                                    <button
+                                                        type="button"
+                                                        class="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                                                        data-modal-toggle="true"
+                                                        data-modal-target="#viewVariantModal"
+                                                        onclick='openViewVariantModal(this, <%# Eval("ProductVariantID") %>, "<%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeID"))) ? "" : Convert.ToString(Eval("SizeID")) %>", "<%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeID"))) ? "Standard / No size" : HttpUtility.JavaScriptStringEncode(Convert.ToString(Eval("SizeName"))) %>", "<%# Convert.ToDecimal(Eval("Price")).ToString("N2") %>", <%# (bool)Eval("IsAvailable") ? "true" : "false" %>, "<%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("ImagePath"))) ? "" : HttpUtility.JavaScriptStringEncode(ResolveUrl(Convert.ToString(Eval("ImagePath")))) %>");'
+                                                        aria-label="View <%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeID"))) ? "standard variant" : HttpUtility.HtmlAttributeEncode(Convert.ToString(Eval("SizeName"))) %>"
+                                                        title="View variant">
+                                                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.3-6 9.5-6 9.5 6 9.5 6-3.3 6-9.5 6-9.5-6-9.5-6Z" /><circle cx="12" cy="12" r="2.5" /></svg>
+                                                    </button>
                                                     <button
                                                         type="button"
                                                         class="inline-flex size-8 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
@@ -336,6 +348,76 @@
                         OnClick="btnSaveModalVariant_Click" />
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW VARIANT MODAL -->
+    <div class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 p-4" id="viewVariantModal" tabindex="-1" aria-labelledby="viewVariantModalLabel" aria-hidden="true">
+        <div class="w-full max-w-md">
+            <div class="flex max-h-[90vh] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
+                <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+                    <h2 class="text-base font-semibold text-slate-950" id="viewVariantModalLabel">Variant details</h2>
+                    <button type="button" class="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-dismiss="true" aria-label="Close"><svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+                </div>
+                <div class="overflow-y-auto p-5">
+                    <div class="mb-4">
+                        <h3 class="mb-2 text-sm font-medium text-slate-700">Variant image</h3>
+                        <div id="viewVariantImageWrap" class="hidden overflow-hidden rounded-md border border-slate-200 bg-slate-50">
+                            <img id="viewVariantImage" class="max-h-56 w-full object-contain" alt="Variant image" />
+                        </div>
+                        <p id="viewVariantNoImage" class="mb-0 rounded-md border border-dashed border-slate-200 bg-slate-50 px-3 py-5 text-center text-sm text-slate-500">No image</p>
+                    </div>
+                    <dl class="divide-y divide-slate-100">
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3 first:pt-0">
+                            <dt class="text-sm text-slate-500">Product</dt>
+                            <dd id="viewVariantProduct" class="m-0 text-sm font-medium text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Product ID</dt>
+                            <dd id="viewVariantProductId" class="m-0 text-sm font-medium tabular-nums text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Category</dt>
+                            <dd id="viewVariantCategory" class="m-0 text-sm font-medium text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Category ID</dt>
+                            <dd id="viewVariantCategoryId" class="m-0 text-sm font-medium tabular-nums text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Description</dt>
+                            <dd id="viewVariantDescription" class="m-0 break-words whitespace-pre-wrap text-sm text-slate-700"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Product status</dt>
+                            <dd id="viewVariantProductStatus" class="m-0 text-sm font-medium text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Size / serving</dt>
+                            <dd id="viewVariantSize" class="m-0 text-sm font-medium text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Size ID</dt>
+                            <dd id="viewVariantSizeId" class="m-0 text-sm font-medium tabular-nums text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Variant ID</dt>
+                            <dd id="viewVariantId" class="m-0 text-sm font-medium tabular-nums text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3">
+                            <dt class="text-sm text-slate-500">Price</dt>
+                            <dd id="viewVariantPrice" class="m-0 text-sm font-medium tabular-nums text-slate-900"></dd>
+                        </div>
+                        <div class="grid grid-cols-[7rem_minmax(0,1fr)] gap-3 py-3 last:pb-0">
+                            <dt class="text-sm text-slate-500">Status</dt>
+                            <dd class="m-0"><span id="viewVariantStatus" class="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"></span></dd>
+                        </div>
+                    </dl>
+                </div>
+                <div class="flex justify-end border-t border-slate-200 px-5 py-4">
+                    <button type="button" class="inline-flex min-h-9 items-center justify-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-dismiss="true">Close</button>
+                </div>
             </div>
         </div>
     </div>
