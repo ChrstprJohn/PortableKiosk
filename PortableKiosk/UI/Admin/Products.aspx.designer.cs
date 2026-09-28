@@ -11,7 +11,6 @@ namespace PortableKiosk.UI.Admin
 {
     public partial class ProductManagement
     {
-        protected global::System.Web.UI.WebControls.Label lblGlobalMessage;
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryProduct;
         protected global::System.Web.UI.WebControls.Label lblCategory;
         protected global::System.Web.UI.WebControls.DropDownList ddlCategory;
@@ -38,7 +37,6 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.HiddenField hfDeleteProductID;
         protected global::System.Web.UI.WebControls.Button btnDeleteProduct;
 
-        protected global::System.Web.UI.WebControls.Label lblLoadError;
         protected global::System.Web.UI.WebControls.Repeater rptCategoryGroups;
         protected global::System.Web.UI.WebControls.Panel pnlNoProducts;
 

@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using PortableKiosk.Core.Models;
 using PortableKiosk.Core.Services;
+using PortableKiosk.Shared.Layouts;
 
 namespace PortableKiosk.UI.Admin
 {
@@ -111,7 +112,6 @@ namespace PortableKiosk.UI.Admin
 
         protected void btnAddProduct_Click(object sender, EventArgs e)
         {
-            lblGlobalMessage.Visible = false;
 
             if (!Page.IsValid)
             {
@@ -186,7 +186,6 @@ namespace PortableKiosk.UI.Admin
 
         protected void btnUpdateProduct_Click(object sender, EventArgs e)
         {
-            lblGlobalMessage.Visible = false;
 
             if (!Page.IsValid)
             {
@@ -214,7 +213,7 @@ namespace PortableKiosk.UI.Admin
                 Product existingProduct = productService.GetByID(productID);
                 if (existingProduct == null)
                 {
-                    ShowError("The product no longer exists.");
+                    ShowEditProductError("The product no longer exists.");
                     return;
                 }
 
@@ -261,7 +260,6 @@ namespace PortableKiosk.UI.Admin
 
         protected void btnDeleteProduct_Click(object sender, EventArgs e)
         {
-            lblGlobalMessage.Visible = false;
 
             int productID;
             if (!int.TryParse(hfDeleteProductID.Value, out productID) ||
@@ -341,17 +339,17 @@ namespace PortableKiosk.UI.Admin
 
         protected void btnSaveModalVariant_Click(object sender, EventArgs e)
         {
-            lblGlobalMessage.Visible = false;
 
             if (!Page.IsValid)
             {
+                ReopenAddVariantModal();
                 return;
             }
 
             int productID;
             if (!int.TryParse(hfModalProductID.Value, out productID) || productID <= 0)
             {
-                ShowError("Invalid product selected for adding variant.");
+                ShowAddVariantError("Invalid product selected for adding variant.");
                 return;
             }
 
@@ -392,7 +390,7 @@ namespace PortableKiosk.UI.Admin
                             out parsedSizeID) ||
                         parsedSizeID <= 0)
                     {
-                        ShowError("Choose a valid size or serving.");
+                        ShowAddVariantError("Choose a valid size or serving.");
                         return;
                     }
 
@@ -405,7 +403,7 @@ namespace PortableKiosk.UI.Admin
                         out price) ||
                     price < 0)
                 {
-                    ShowError(
+                    ShowAddVariantError(
                         "Enter a valid non-negative price for " +
                         sizeField.SelectedItem.Text + ".");
                     return;
@@ -428,7 +426,7 @@ namespace PortableKiosk.UI.Admin
 
             if (pendingVariants.Count == 0)
             {
-                ShowError(
+                ShowAddVariantError(
                     "Add at least one size or serving before saving.");
                 return;
             }
@@ -452,7 +450,7 @@ namespace PortableKiosk.UI.Admin
                         out uploadError))
                 {
                     DeleteSavedImages(savedPhysicalPaths);
-                    ShowError(
+                    ShowAddVariantError(
                         "Image for " + pending.SizeName + ": " +
                         uploadError);
                     return;
@@ -488,24 +486,39 @@ namespace PortableKiosk.UI.Admin
 
                 if (ex.Number == 2601 || ex.Number == 2627)
                 {
-                    ShowError(
+                    ShowAddVariantError(
                         "One or more selected sizes already exist for this product.");
                 }
                 else
                 {
-                    ShowError("The variant could not be saved due to a database error.");
+                    ShowAddVariantError("The variant could not be saved due to a database error.");
                 }
             }
             catch (ArgumentException ex)
             {
                 DeleteSavedImages(savedPhysicalPaths);
-                ShowError(ex.Message);
+                ShowAddVariantError(ex.Message);
             }
             catch (Exception)
             {
                 DeleteSavedImages(savedPhysicalPaths);
-                ShowError("An unexpected error occurred while saving the variant.");
+                ShowAddVariantError("An unexpected error occurred while saving the variant.");
             }
+        }
+
+        private void ShowAddVariantError(string message)
+        {
+            ShowError(message);
+            ReopenAddVariantModal();
+        }
+
+        private void ReopenAddVariantModal()
+        {
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenAddVariantModal",
+                "AppModal.open('addVariantModal');",
+                true);
         }
 
         private void ClearModalForm()
@@ -534,11 +547,11 @@ namespace PortableKiosk.UI.Admin
             object sender,
             EventArgs e)
         {
-            lblGlobalMessage.Visible = false;
             Page.Validate("EditVariantForm");
 
             if (!Page.IsValid)
             {
+                ReopenEditVariantModal();
                 return;
             }
 
@@ -548,7 +561,7 @@ namespace PortableKiosk.UI.Admin
                     out productVariantID) ||
                 productVariantID <= 0)
             {
-                ShowError("The selected variant is invalid.");
+                ShowEditVariantError("The selected variant is invalid.");
                 return;
             }
 
@@ -565,7 +578,7 @@ namespace PortableKiosk.UI.Admin
                         out parsedSizeID) ||
                     parsedSizeID <= 0)
                 {
-                    ShowError("Choose a valid size or serving.");
+                    ShowEditVariantError("Choose a valid size or serving.");
                     return;
                 }
 
@@ -578,7 +591,7 @@ namespace PortableKiosk.UI.Admin
                     out price) ||
                 price < 0)
             {
-                ShowError("Enter a valid non-negative price.");
+                ShowEditVariantError("Enter a valid non-negative price.");
                 return;
             }
 
@@ -591,14 +604,14 @@ namespace PortableKiosk.UI.Admin
             }
             catch (Exception)
             {
-                ShowError(
+                ShowEditVariantError(
                     "The variant could not be loaded for editing.");
                 return;
             }
 
             if (existingVariant == null)
             {
-                ShowError("The variant no longer exists.");
+                ShowEditVariantError("The variant no longer exists.");
                 return;
             }
 
@@ -612,7 +625,7 @@ namespace PortableKiosk.UI.Admin
                     out savedPhysicalPath,
                     out uploadError))
             {
-                ShowError(uploadError);
+                ShowEditVariantError(uploadError);
                 return;
             }
 
@@ -635,7 +648,7 @@ namespace PortableKiosk.UI.Admin
                 if (!variantService.Update(updatedVariant))
                 {
                     DeleteSavedImage(savedPhysicalPath);
-                    ShowError("The variant no longer exists.");
+                    ShowEditVariantError("The variant no longer exists.");
                     return;
                 }
 
@@ -654,33 +667,47 @@ namespace PortableKiosk.UI.Admin
 
                 if (ex.Number == 2601 || ex.Number == 2627)
                 {
-                    ShowError(
+                    ShowEditVariantError(
                         "That size already exists for this product.");
                 }
                 else
                 {
-                    ShowError(
+                    ShowEditVariantError(
                         "The variant could not be updated due to a database error.");
                 }
             }
             catch (ArgumentException ex)
             {
                 DeleteSavedImage(savedPhysicalPath);
-                ShowError(ex.Message);
+                ShowEditVariantError(ex.Message);
             }
             catch (Exception)
             {
                 DeleteSavedImage(savedPhysicalPath);
-                ShowError(
+                ShowEditVariantError(
                     "An unexpected error occurred while updating the variant.");
             }
+        }
+
+        private void ShowEditVariantError(string message)
+        {
+            ShowError(message);
+            ReopenEditVariantModal();
+        }
+
+        private void ReopenEditVariantModal()
+        {
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenEditVariantModal",
+                "AppModal.open('editVariantModal');",
+                true);
         }
 
         protected void btnDeleteVariant_Click(
             object sender,
             EventArgs e)
         {
-            lblGlobalMessage.Visible = false;
 
             int productVariantID;
             if (!int.TryParse(
@@ -947,14 +974,12 @@ namespace PortableKiosk.UI.Admin
                 rptCategoryGroups.DataBind();
 
                 pnlNoProducts.Visible = cardViewModels.Count == 0;
-                lblLoadError.Visible = false;
             }
             catch (Exception)
             {
                 rptCategoryGroups.DataSource = null;
                 rptCategoryGroups.DataBind();
-                lblLoadError.Text = "Products and variants could not be loaded.";
-                lblLoadError.Visible = true;
+                ShowError("Products and variants could not be loaded.");
             }
         }
 
@@ -1091,16 +1116,12 @@ namespace PortableKiosk.UI.Admin
 
         private void ShowSuccess(string message)
         {
-            lblGlobalMessage.Text = message;
-            lblGlobalMessage.CssClass = "mb-4 block rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800";
-            lblGlobalMessage.Visible = true;
+            ((AdminLayout)Master).ShowSuccessAlert(message);
         }
 
         private void ShowError(string message)
         {
-            lblGlobalMessage.Text = message;
-            lblGlobalMessage.CssClass = "mb-4 block rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800";
-            lblGlobalMessage.Visible = true;
+            ((AdminLayout)Master).ShowErrorAlert(message);
         }
 
         #endregion

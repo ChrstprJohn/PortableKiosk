@@ -113,6 +113,7 @@
     <Content Include="Scripts\jquery-3.7.0.slim.js" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.js" />
     <Content Include="Scripts\app\admin\catalog-config.js" />
+    <Content Include="Scripts\app\admin\alert.js" />
     <Content Include="Scripts\app\admin\products.js" />
     <Content Include="Scripts\app\user\kiosk.js" />
     <Content Include="Scripts\app\user\menu.js" />

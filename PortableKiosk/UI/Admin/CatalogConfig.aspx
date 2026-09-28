@@ -20,9 +20,6 @@
             </div>
         </header>
 
-        <asp:Label ID="lblCategoryMessage" runat="server" Visible="false" role="status" aria-live="polite" CssClass="mb-4 block rounded-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"></asp:Label>
-        <asp:Label ID="lblSizeMessage" runat="server" Visible="false" role="status" aria-live="polite" CssClass="mb-4 block rounded-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"></asp:Label>
-
         <div class="grid grid-cols-1 gap-7 xl:grid-cols-2">
         <section class="min-w-0" aria-labelledby="headingCategoriesSection">
             <div class="overflow-hidden rounded-lg border border-slate-200 bg-white">
@@ -31,7 +28,6 @@
                     <asp:Label ID="lblCategoryCount" runat="server" Visible="false"></asp:Label>
                 </div>
 
-                <asp:Label ID="lblCategoryLoadError" runat="server" Visible="false" CssClass="m-3 block rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"></asp:Label>
                 <div class="w-full">
                         <asp:GridView
                             ID="gridCategories"
@@ -99,7 +95,6 @@
                     <asp:Label ID="lblSizeCount" runat="server" Visible="false"></asp:Label>
                 </div>
 
-                <asp:Label ID="lblSizeLoadError" runat="server" Visible="false" CssClass="m-3 block rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"></asp:Label>
                 <div class="w-full">
                         <asp:GridView
                             ID="gridSizes"

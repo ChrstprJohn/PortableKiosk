@@ -3,7 +3,6 @@ namespace PortableKiosk.UI.Admin
     public partial class StaffAccounts
     {
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummary;
-        protected global::System.Web.UI.WebControls.Label lblMessage;
         protected global::System.Web.UI.WebControls.Label lblFirstName;
         protected global::System.Web.UI.WebControls.TextBox txtFirstName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredFirstName;
@@ -30,7 +29,31 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredConfirmPassword;
         protected global::System.Web.UI.WebControls.CompareValidator passwordsMatch;
         protected global::System.Web.UI.WebControls.Button btnCreateStaff;
-        protected global::System.Web.UI.WebControls.Label lblLoadError;
+        protected global::System.Web.UI.WebControls.Label lblViewStaffName;
+        protected global::System.Web.UI.WebControls.Label lblViewStaffEmail;
+        protected global::System.Web.UI.WebControls.Label lblViewStaffRole;
+        protected global::System.Web.UI.WebControls.Label lblViewStaffStatus;
+        protected global::System.Web.UI.WebControls.Label lblViewStaffCreated;
+        protected global::System.Web.UI.WebControls.ValidationSummary editStaffValidationSummary;
+        protected global::System.Web.UI.WebControls.HiddenField hfEditStaffAccountID;
+        protected global::System.Web.UI.WebControls.Label lblEditStaffFirstName;
+        protected global::System.Web.UI.WebControls.TextBox txtEditStaffFirstName;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditStaffFirstName;
+        protected global::System.Web.UI.WebControls.Label lblEditStaffMiddleName;
+        protected global::System.Web.UI.WebControls.TextBox txtEditStaffMiddleName;
+        protected global::System.Web.UI.WebControls.Label lblEditStaffLastName;
+        protected global::System.Web.UI.WebControls.TextBox txtEditStaffLastName;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditStaffLastName;
+        protected global::System.Web.UI.WebControls.Label lblEditStaffSuffix;
+        protected global::System.Web.UI.WebControls.TextBox txtEditStaffSuffix;
+        protected global::System.Web.UI.WebControls.Label lblEditStaffEmail;
+        protected global::System.Web.UI.WebControls.TextBox txtEditStaffEmail;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredEditStaffEmail;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator validEditStaffEmail;
+        protected global::System.Web.UI.WebControls.Label lblEditStaffRole;
+        protected global::System.Web.UI.WebControls.DropDownList ddlEditStaffRole;
+        protected global::System.Web.UI.WebControls.CheckBox chkEditStaffIsActive;
+        protected global::System.Web.UI.WebControls.Button btnUpdateStaff;
         protected global::System.Web.UI.WebControls.GridView gridStaff;
     }
 }

@@ -12,14 +12,12 @@ namespace PortableKiosk.UI.Admin
     public partial class CatalogConfig
     {
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryCategory;
-        protected global::System.Web.UI.WebControls.Label lblCategoryMessage;
         protected global::System.Web.UI.WebControls.Label lblCategoryName;
         protected global::System.Web.UI.WebControls.TextBox txtCategoryName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredCategoryName;
         protected global::System.Web.UI.WebControls.CheckBox chkCategoryIsAvailable;
         protected global::System.Web.UI.WebControls.Button btnAddCategory;
         protected global::System.Web.UI.WebControls.Label lblCategoryCount;
-        protected global::System.Web.UI.WebControls.Label lblCategoryLoadError;
         protected global::System.Web.UI.WebControls.GridView gridCategories;
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryEditCategory;
         protected global::System.Web.UI.WebControls.HiddenField hfEditCategoryID;
@@ -32,13 +30,11 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Button btnDeleteCategory;
 
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummarySize;
-        protected global::System.Web.UI.WebControls.Label lblSizeMessage;
         protected global::System.Web.UI.WebControls.Label lblSizeName;
         protected global::System.Web.UI.WebControls.TextBox txtSizeName;
         protected global::System.Web.UI.WebControls.RequiredFieldValidator requiredSizeName;
         protected global::System.Web.UI.WebControls.Button btnAddSize;
         protected global::System.Web.UI.WebControls.Label lblSizeCount;
-        protected global::System.Web.UI.WebControls.Label lblSizeLoadError;
         protected global::System.Web.UI.WebControls.GridView gridSizes;
         protected global::System.Web.UI.WebControls.ValidationSummary validationSummaryEditSize;
         protected global::System.Web.UI.WebControls.HiddenField hfEditSizeID;

@@ -24,21 +24,6 @@
             </button>
         </header>
 
-        <!-- GLOBAL FEEDBACK MESSAGES -->
-        <asp:Label
-            ID="lblGlobalMessage"
-            runat="server"
-            Visible="false"
-            CssClass="mb-4 block rounded-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
-        </asp:Label>
-
-        <asp:Label
-            ID="lblLoadError"
-            runat="server"
-            Visible="false"
-            CssClass="mb-4 block rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800">
-        </asp:Label>
-
         <!-- PRODUCT CARDS GROUPED BY CATEGORY -->
         <asp:Repeater ID="rptCategoryGroups" runat="server">
             <ItemTemplate>

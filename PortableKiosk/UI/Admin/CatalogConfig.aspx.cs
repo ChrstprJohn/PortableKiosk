@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using PortableKiosk.Core.Models;
 using PortableKiosk.Core.Services;
+using PortableKiosk.Shared.Layouts;
 
 namespace PortableKiosk.UI.Admin
 {
@@ -37,6 +38,7 @@ namespace PortableKiosk.UI.Admin
             {
                 LoadCategories();
                 LoadSizes();
+                ShowPendingSuccessAlert();
             }
         }
 
@@ -44,8 +46,6 @@ namespace PortableKiosk.UI.Admin
 
         protected void btnAddCategory_Click(object sender, EventArgs e)
         {
-            lblCategoryMessage.Visible = false;
-
             if (!Page.IsValid)
             {
                 ReopenAddCategoryModal();
@@ -60,12 +60,11 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                int categoryID =
-                    categoryService.Add(category);
+                categoryService.Add(category);
 
-                ShowCategorySuccess("Category \"" + category.CategoryName + "\" added successfully (ID: " + categoryID + ").");
-                ClearCategoryForm();
-                LoadCategories();
+                RedirectAfterSuccess(
+                    "Category \"" + category.CategoryName + "\" added successfully.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -100,15 +99,24 @@ namespace PortableKiosk.UI.Admin
                 true);
         }
 
+        private void ReopenEditCategoryModal()
+        {
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenEditCategoryModal",
+                "AppModal.open('editCategoryModal');",
+                true);
+        }
+
         protected void btnUpdateCategory_Click(
             object sender,
             EventArgs e)
         {
-            lblCategoryMessage.Visible = false;
             Page.Validate("EditCategoryForm");
 
             if (!Page.IsValid)
             {
+                ReopenEditCategoryModal();
                 return;
             }
 
@@ -119,7 +127,7 @@ namespace PortableKiosk.UI.Admin
                     out categoryID) ||
                 categoryID <= 0)
             {
-                ShowCategoryError(
+                ShowEditCategoryError(
                     "The selected category is invalid.");
                 return;
             }
@@ -137,37 +145,37 @@ namespace PortableKiosk.UI.Admin
             {
                 if (!categoryService.Update(category))
                 {
-                    ShowCategoryError(
+                    ShowEditCategoryError(
                         "The category no longer exists.");
                     return;
                 }
 
-                ShowCategorySuccess(
+                RedirectAfterSuccess(
                     "Category \"" +
                     category.CategoryName +
                     "\" updated successfully.");
-                LoadCategories();
+                return;
             }
             catch (SqlException ex)
             {
                 if (ex.Number == 2601 || ex.Number == 2627)
                 {
-                    ShowCategoryError(
+                    ShowEditCategoryError(
                         "A category with this name already exists.");
                 }
                 else
                 {
-                    ShowCategoryError(
+                    ShowEditCategoryError(
                         "The category could not be updated due to a database error.");
                 }
             }
             catch (ArgumentException ex)
             {
-                ShowCategoryError(ex.Message);
+                ShowEditCategoryError(ex.Message);
             }
             catch (Exception)
             {
-                ShowCategoryError(
+                ShowEditCategoryError(
                     "An unexpected error occurred while updating the category.");
             }
         }
@@ -176,8 +184,6 @@ namespace PortableKiosk.UI.Admin
             object sender,
             EventArgs e)
         {
-            lblCategoryMessage.Visible = false;
-
             int categoryID;
             if (!int.TryParse(
                     hfDeleteCategoryID.Value,
@@ -198,9 +204,8 @@ namespace PortableKiosk.UI.Admin
                     return;
                 }
 
-                ShowCategorySuccess(
-                    "Category deleted successfully.");
-                LoadCategories();
+                RedirectAfterSuccess("Category deleted successfully.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -237,35 +242,25 @@ namespace PortableKiosk.UI.Admin
                 gridCategories.DataBind();
 
                 gridCategories.Visible = true;
-                lblCategoryLoadError.Visible = false;
                 lblCategoryCount.Text = categories.Count.ToString() + " Categories";
             }
             catch (Exception)
             {
                 gridCategories.Visible = false;
-                lblCategoryLoadError.Text = "Categories could not be loaded.";
-                lblCategoryLoadError.Visible = true;
+                ((AdminLayout)Master).ShowErrorAlert(
+                    "Categories could not be loaded.");
             }
-        }
-
-        private void ClearCategoryForm()
-        {
-            txtCategoryName.Text = string.Empty;
-            chkCategoryIsAvailable.Checked = true;
-        }
-
-        private void ShowCategorySuccess(string message)
-        {
-            lblCategoryMessage.Text = message;
-            lblCategoryMessage.CssClass = "mb-4 block rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800";
-            lblCategoryMessage.Visible = true;
         }
 
         private void ShowCategoryError(string message)
         {
-            lblCategoryMessage.Text = message;
-            lblCategoryMessage.CssClass = "mb-4 block rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800";
-            lblCategoryMessage.Visible = true;
+            ((AdminLayout)Master).ShowErrorAlert(message);
+        }
+
+        private void ShowEditCategoryError(string message)
+        {
+            ShowCategoryError(message);
+            ReopenEditCategoryModal();
         }
 
         #endregion
@@ -274,8 +269,6 @@ namespace PortableKiosk.UI.Admin
 
         protected void btnAddSize_Click(object sender, EventArgs e)
         {
-            lblSizeMessage.Visible = false;
-
             if (!Page.IsValid)
             {
                 ReopenAddSizeModal();
@@ -289,11 +282,11 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                int sizeID = sizeService.Add(size);
+                sizeService.Add(size);
 
-                ShowSizeSuccess("Size \"" + size.SizeName + "\" added successfully (ID: " + sizeID + ").");
-                ClearSizeForm();
-                LoadSizes();
+                RedirectAfterSuccess(
+                    "Size \"" + size.SizeName + "\" added successfully.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -328,15 +321,24 @@ namespace PortableKiosk.UI.Admin
                 true);
         }
 
+        private void ReopenEditSizeModal()
+        {
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenEditSizeModal",
+                "AppModal.open('editSizeModal');",
+                true);
+        }
+
         protected void btnUpdateSize_Click(
             object sender,
             EventArgs e)
         {
-            lblSizeMessage.Visible = false;
             Page.Validate("EditSizeForm");
 
             if (!Page.IsValid)
             {
+                ReopenEditSizeModal();
                 return;
             }
 
@@ -347,7 +349,7 @@ namespace PortableKiosk.UI.Admin
                     out sizeID) ||
                 sizeID <= 0)
             {
-                ShowSizeError("The selected size is invalid.");
+                ShowEditSizeError("The selected size is invalid.");
                 return;
             }
 
@@ -361,36 +363,36 @@ namespace PortableKiosk.UI.Admin
             {
                 if (!sizeService.Update(size))
                 {
-                    ShowSizeError("The size no longer exists.");
+                    ShowEditSizeError("The size no longer exists.");
                     return;
                 }
 
-                ShowSizeSuccess(
+                RedirectAfterSuccess(
                     "Size \"" +
                     size.SizeName +
                     "\" updated successfully.");
-                LoadSizes();
+                return;
             }
             catch (SqlException ex)
             {
                 if (ex.Number == 2601 || ex.Number == 2627)
                 {
-                    ShowSizeError(
+                    ShowEditSizeError(
                         "A size with this name already exists.");
                 }
                 else
                 {
-                    ShowSizeError(
+                    ShowEditSizeError(
                         "The size could not be updated due to a database error.");
                 }
             }
             catch (ArgumentException ex)
             {
-                ShowSizeError(ex.Message);
+                ShowEditSizeError(ex.Message);
             }
             catch (Exception)
             {
-                ShowSizeError(
+                ShowEditSizeError(
                     "An unexpected error occurred while updating the size.");
             }
         }
@@ -399,8 +401,6 @@ namespace PortableKiosk.UI.Admin
             object sender,
             EventArgs e)
         {
-            lblSizeMessage.Visible = false;
-
             int sizeID;
             if (!int.TryParse(
                     hfDeleteSizeID.Value,
@@ -419,8 +419,8 @@ namespace PortableKiosk.UI.Admin
                     return;
                 }
 
-                ShowSizeSuccess("Size deleted successfully.");
-                LoadSizes();
+                RedirectAfterSuccess("Size deleted successfully.");
+                return;
             }
             catch (SqlException ex)
             {
@@ -456,34 +456,48 @@ namespace PortableKiosk.UI.Admin
                 gridSizes.DataBind();
 
                 gridSizes.Visible = true;
-                lblSizeLoadError.Visible = false;
                 lblSizeCount.Text = sizes.Count.ToString() + " Sizes";
             }
             catch (Exception)
             {
                 gridSizes.Visible = false;
-                lblSizeLoadError.Text = "Sizes could not be loaded.";
-                lblSizeLoadError.Visible = true;
+                ((AdminLayout)Master).ShowErrorAlert(
+                    "Sizes could not be loaded.");
             }
         }
 
-        private void ClearSizeForm()
+        private void RedirectAfterSuccess(string message)
         {
-            txtSizeName.Text = string.Empty;
+            Session["CatalogConfig.SuccessMessage"] = message;
+            Response.Redirect(
+                ResolveUrl("~/UI/Admin/CatalogConfig.aspx"),
+                false);
+            Context.ApplicationInstance.CompleteRequest();
         }
 
-        private void ShowSizeSuccess(string message)
+        private void ShowPendingSuccessAlert()
         {
-            lblSizeMessage.Text = message;
-            lblSizeMessage.CssClass = "mb-4 block rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800";
-            lblSizeMessage.Visible = true;
+            string message =
+                Session["CatalogConfig.SuccessMessage"] as string;
+
+            if (message == null)
+            {
+                return;
+            }
+
+            Session.Remove("CatalogConfig.SuccessMessage");
+            ((AdminLayout)Master).ShowSuccessAlert(message);
         }
 
         private void ShowSizeError(string message)
         {
-            lblSizeMessage.Text = message;
-            lblSizeMessage.CssClass = "mb-4 block rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800";
-            lblSizeMessage.Visible = true;
+            ((AdminLayout)Master).ShowErrorAlert(message);
+        }
+
+        private void ShowEditSizeError(string message)
+        {
+            ShowSizeError(message);
+            ReopenEditSizeModal();
         }
 
         #endregion

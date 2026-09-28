@@ -55,4 +55,28 @@
         </div>
     </div>
 
+    <div id="adminAlertModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 p-4" tabindex="-1" aria-hidden="true" aria-labelledby="adminAlertTitle" aria-describedby="adminAlertMessage" data-modal-backdrop="static" data-modal-keyboard="false">
+        <div class="w-full max-w-md">
+            <div class="flex max-h-[90vh] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
+                <div class="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
+                    <div class="flex min-w-0 items-center gap-3">
+                        <span id="adminAlertIcon" class="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-700" aria-hidden="true">
+                            <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 11v5m0-8h.01" /></svg>
+                        </span>
+                        <h2 id="adminAlertTitle" class="truncate text-base font-semibold text-slate-950">Information</h2>
+                    </div>
+                    <button type="button" class="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-dismiss="true" aria-label="Close alert">
+                        <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+                    </button>
+                </div>
+                <div class="overflow-y-auto p-5">
+                    <p id="adminAlertMessage" class="whitespace-pre-wrap break-words text-sm leading-6 text-slate-700"></p>
+                </div>
+                <div class="flex justify-end border-t border-slate-200 px-5 py-4">
+                    <button id="adminAlertConfirm" type="button" class="inline-flex min-h-9 items-center justify-center rounded-md border border-blue-700 bg-blue-700 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" data-modal-dismiss="true" autofocus>OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </asp:Content>

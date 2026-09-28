@@ -71,11 +71,58 @@ using System;
 
 
 using System.Web.UI;
+using System.Web.Script.Serialization;
 
 namespace PortableKiosk.Shared.Layouts
 {
     public partial class AdminLayout : MasterPage
     {
+        public void ShowAlert(
+            string type,
+            string message,
+            string title = null)
+        {
+            string alertOptions = new JavaScriptSerializer().Serialize(
+                new
+                {
+                    type = type,
+                    message = message,
+                    title = title
+                });
+
+            string script =
+                "window.setTimeout(function(){if(window.AdminAlert){window.AdminAlert.show(" +
+                alertOptions +
+                ");}},0);";
+
+            ScriptManager.RegisterStartupScript(
+                Page,
+                GetType(),
+                "AdminAlert_" + Guid.NewGuid().ToString("N"),
+                script,
+                true);
+        }
+
+        public void ShowSuccessAlert(string message)
+        {
+            ShowAlert("success", message, "Success");
+        }
+
+        public void ShowErrorAlert(string message)
+        {
+            ShowAlert("error", message, "Error");
+        }
+
+        public void ShowInformationAlert(string message)
+        {
+            ShowAlert("info", message, "Information");
+        }
+
+        public void ShowWarningAlert(string message)
+        {
+            ShowAlert("warning", message, "Warning");
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["StaffAccountID"] == null)
@@ -92,6 +139,12 @@ namespace PortableKiosk.Shared.Layouts
                 Redirect("~/UI/POS/Index.aspx");
                 return;
             }
+
+            ScriptManager.RegisterClientScriptInclude(
+                Page,
+                GetType(),
+                "AdminAlertScript",
+                ResolveUrl("~/Scripts/app/admin/alert.js"));
 
             litAdminName.Text = Server.HtmlEncode(
                 Convert.ToString(

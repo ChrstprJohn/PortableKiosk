@@ -47,7 +47,7 @@ window.AppModal = (function () {
             return;
         }
         var dismiss = event.target.closest('[data-modal-dismiss]');
-        if (dismiss) { close(dismiss.closest('[role="dialog"]')); return; }
+        if (dismiss) { close(dismiss.closest('[role="dialog"], [role="alertdialog"]')); return; }
         if (active && event.target === active && active.dataset.modalBackdrop !== 'static') close(active);
     });
     document.addEventListener('keydown', function (event) {
@@ -101,6 +101,7 @@ window.AppModal = (function () {
     }
     return {
         open: open, show: open, close: close, hide: close,
+        getActive: function () { return active; },
         alert: function (options) { create(Object.assign({title:'Notice', message:'', variant:'primary', buttonText:'OK'}, options), false); },
         confirm: function (options) { create(Object.assign({title:'Confirm Action', message:'Are you sure you want to proceed?', variant:'danger', confirmText:'Confirm', cancelText:'Cancel'}, options), true); }
     };

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Web.UI.WebControls;
 using PortableKiosk.Core.Models;
 using PortableKiosk.Core.Services;
+using PortableKiosk.Shared.Layouts;
 
 namespace PortableKiosk.UI.Admin
 {
@@ -28,8 +30,6 @@ namespace PortableKiosk.UI.Admin
             object sender,
             EventArgs e)
         {
-            lblMessage.Visible = false;
-
             if (!EnsureAdminAccess())
             {
                 return;
@@ -107,6 +107,131 @@ namespace PortableKiosk.UI.Admin
             }
         }
 
+        protected void gridStaff_RowCommand(
+            object sender,
+            GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "ViewStaff" &&
+                e.CommandName != "EditStaff")
+            {
+                return;
+            }
+
+            if (!EnsureAdminAccess())
+            {
+                return;
+            }
+
+            int staffAccountID;
+
+            if (!int.TryParse(
+                Convert.ToString(e.CommandArgument),
+                out staffAccountID))
+            {
+                ShowError("The selected staff account could not be found.");
+                return;
+            }
+
+            try
+            {
+                StaffAccount account =
+                    staffAccountService.GetByID(staffAccountID);
+
+                if (account == null)
+                {
+                    ShowError("The selected staff account could not be found.");
+                    LoadStaff();
+                    return;
+                }
+
+                if (e.CommandName == "ViewStaff")
+                {
+                    ShowStaffDetails(account);
+                }
+                else
+                {
+                    PopulateEditForm(account);
+                }
+            }
+            catch (Exception)
+            {
+                ShowError("The selected staff account could not be loaded.");
+            }
+        }
+
+        protected void btnUpdateStaff_Click(
+            object sender,
+            EventArgs e)
+        {
+            if (!EnsureAdminAccess())
+            {
+                return;
+            }
+
+            if (!Page.IsValid)
+            {
+                ReopenEditStaffModal();
+                return;
+            }
+
+            int staffAccountID;
+
+            if (!int.TryParse(
+                hfEditStaffAccountID.Value,
+                out staffAccountID))
+            {
+                ShowError("The selected staff account could not be found.");
+                return;
+            }
+
+            StaffAccount account = new StaffAccount
+            {
+                StaffAccountID = staffAccountID,
+                FirstName = txtEditStaffFirstName.Text,
+                MiddleName = txtEditStaffMiddleName.Text,
+                LastName = txtEditStaffLastName.Text,
+                Suffix = txtEditStaffSuffix.Text,
+                Email = txtEditStaffEmail.Text,
+                StaffRole = ddlEditStaffRole.SelectedValue,
+                IsActive = chkEditStaffIsActive.Checked
+            };
+
+            try
+            {
+                if (!staffAccountService.Update(account))
+                {
+                    ShowEditStaffFormError("The staff account could not be updated.");
+                    return;
+                }
+
+                ShowSuccess(account.DisplayName + " updated.");
+                LoadStaff();
+            }
+            catch (SqlException exception)
+            {
+                if (exception.Number == 2601 ||
+                    exception.Number == 2627)
+                {
+                    ShowEditStaffFormError(
+                        "That email address already belongs to a staff account.");
+                }
+                else
+                {
+                    ShowEditStaffFormError(
+                        "The staff account could not be updated. Try again.");
+                }
+            }
+            catch (ArgumentException exception)
+            {
+                ShowEditStaffFormError(exception.Message);
+            }
+            catch (Exception)
+            {
+                ShowEditStaffFormError(
+                    "The staff account could not be updated.");
+            }
+        }
+
         protected string GetRoleCss(object role)
         {
             return string.Equals(
@@ -129,6 +254,54 @@ namespace PortableKiosk.UI.Admin
             return Convert.ToBoolean(isActive)
                 ? "Active"
                 : "Inactive";
+        }
+
+        private void ShowStaffDetails(StaffAccount account)
+        {
+            lblViewStaffName.Text =
+                System.Web.HttpUtility.HtmlEncode(account.DisplayName);
+            lblViewStaffEmail.Text =
+                System.Web.HttpUtility.HtmlEncode(account.Email);
+            lblViewStaffRole.Text =
+                string.Equals(
+                    account.StaffRole,
+                    "ADMIN",
+                    StringComparison.OrdinalIgnoreCase)
+                    ? "Admin"
+                    : "Crew";
+            lblViewStaffStatus.Text = account.IsActive
+                ? "Active"
+                : "Inactive";
+            lblViewStaffStatus.CssClass = account.IsActive
+                ? "inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700"
+                : "inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600";
+            lblViewStaffCreated.Text =
+                account.CreatedAt.ToString("MMM d, yyyy");
+
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "OpenViewStaffModal",
+                "AppModal.open('viewStaffModal');",
+                true);
+        }
+
+        private void PopulateEditForm(StaffAccount account)
+        {
+            hfEditStaffAccountID.Value =
+                account.StaffAccountID.ToString();
+            txtEditStaffFirstName.Text = account.FirstName;
+            txtEditStaffMiddleName.Text = account.MiddleName;
+            txtEditStaffLastName.Text = account.LastName;
+            txtEditStaffSuffix.Text = account.Suffix;
+            txtEditStaffEmail.Text = account.Email;
+            ddlEditStaffRole.SelectedValue = account.StaffRole;
+            chkEditStaffIsActive.Checked = account.IsActive;
+
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "OpenEditStaffModal",
+                "AppModal.open('editStaffModal');",
+                true);
         }
 
         private bool EnsureAdminAccess()
@@ -161,14 +334,12 @@ namespace PortableKiosk.UI.Admin
                 gridStaff.DataSource = accounts;
                 gridStaff.DataBind();
                 gridStaff.Visible = true;
-                lblLoadError.Visible = false;
             }
             catch (Exception)
             {
                 gridStaff.Visible = false;
-                lblLoadError.Text =
-                    "Staff accounts could not be loaded. Refresh the page to try again.";
-                lblLoadError.Visible = true;
+                ((AdminLayout)Master).ShowErrorAlert(
+                    "Staff accounts could not be loaded. Refresh the page to try again.");
             }
         }
 
@@ -187,18 +358,12 @@ namespace PortableKiosk.UI.Admin
 
         private void ShowSuccess(string message)
         {
-            lblMessage.Text = message;
-            lblMessage.CssClass =
-                "mb-4 block rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800";
-            lblMessage.Visible = true;
+            ((AdminLayout)Master).ShowSuccessAlert(message);
         }
 
         private void ShowError(string message)
         {
-            lblMessage.Text = message;
-            lblMessage.CssClass =
-                "mb-4 block rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800";
-            lblMessage.Visible = true;
+            ((AdminLayout)Master).ShowErrorAlert(message);
         }
 
         private void ShowStaffFormError(string message)
@@ -207,12 +372,27 @@ namespace PortableKiosk.UI.Admin
             ReopenAddStaffModal();
         }
 
+        private void ShowEditStaffFormError(string message)
+        {
+            ShowError(message);
+            ReopenEditStaffModal();
+        }
+
         private void ReopenAddStaffModal()
         {
             Page.ClientScript.RegisterStartupScript(
                 GetType(),
                 "ReopenAddStaffModal",
                 "AppModal.open('addStaffModal');",
+                true);
+        }
+
+        private void ReopenEditStaffModal()
+        {
+            Page.ClientScript.RegisterStartupScript(
+                GetType(),
+                "ReopenEditStaffModal",
+                "AppModal.open('editStaffModal');",
                 true);
         }
 
