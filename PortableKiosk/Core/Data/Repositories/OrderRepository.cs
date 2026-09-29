@@ -130,20 +130,6 @@ namespace PortableKiosk.Core.Data.Repositories
                 return order;
             }
 
-            // Existing orders may still store a four-digit number while the
-            // displayed number is padded to six digits.
-            int orderID;
-            if (int.TryParse(trimmedNumber, out orderID) && orderID > 0)
-            {
-                order = GetByID(orderID);
-                if (order != null &&
-                    string.Equals(order.OrderNumber, FormatOrderNumber(trimmedNumber),
-                        StringComparison.Ordinal))
-                {
-                    return order;
-                }
-            }
-
             return null;
         }
 
@@ -366,7 +352,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
             if (shouldGenerateOrderNumber)
             {
-                order.OrderNumber = order.OrderID.ToString("D6");
+                order.OrderNumber = order.OrderID.ToString("D4");
 
                 const string updateNumberSql = @"
                     UPDATE Orders
@@ -486,8 +472,8 @@ namespace PortableKiosk.Core.Data.Repositories
             {
                 OrderID = reader.GetInt32(
                     reader.GetOrdinal("OrderID")),
-                OrderNumber = FormatOrderNumber(reader.GetString(
-                    reader.GetOrdinal("OrderNumber"))),
+                OrderNumber = reader.GetString(
+                    reader.GetOrdinal("OrderNumber")),
                 OrderType = reader.GetString(
                     reader.GetOrdinal("OrderType")),
                 FulfillmentMethod = reader.GetString(
@@ -503,24 +489,6 @@ namespace PortableKiosk.Core.Data.Repositories
                 CreatedAt = reader.GetDateTime(
                     reader.GetOrdinal("CreatedAt"))
             };
-        }
-
-        public static string FormatOrderNumber(string orderNumber)
-        {
-            if (string.IsNullOrEmpty(orderNumber))
-            {
-                return orderNumber;
-            }
-
-            foreach (char character in orderNumber)
-            {
-                if (character < '0' || character > '9')
-                {
-                    return orderNumber;
-                }
-            }
-
-            return orderNumber.PadLeft(6, '0');
         }
 
         private static void Validate(Order order)

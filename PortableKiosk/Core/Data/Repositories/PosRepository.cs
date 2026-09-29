@@ -80,8 +80,7 @@ namespace PortableKiosk.Core.Data.Repositories
                                     existingOrder = new Order
                                     {
                                         OrderID = reader.GetInt32(reader.GetOrdinal("OrderID")),
-                                        OrderNumber = OrderRepository.FormatOrderNumber(
-                                            reader.GetString(reader.GetOrdinal("OrderNumber"))),
+                                        OrderNumber = reader.GetString(reader.GetOrdinal("OrderNumber")),
                                         OrderType = reader.GetString(reader.GetOrdinal("OrderType")),
                                         FulfillmentMethod = reader.GetString(reader.GetOrdinal("FulfillmentMethod")),
                                         TableNumber = reader.IsDBNull(tableNumber)
@@ -292,8 +291,7 @@ namespace PortableKiosk.Core.Data.Repositories
                                 order = new Order
                                 {
                                     OrderID = reader.GetInt32(reader.GetOrdinal("OrderID")),
-                                    OrderNumber = OrderRepository.FormatOrderNumber(
-                                        reader.GetString(reader.GetOrdinal("OrderNumber"))),
+                                    OrderNumber = reader.GetString(reader.GetOrdinal("OrderNumber")),
                                     OrderType = reader.GetString(reader.GetOrdinal("OrderType")),
                                     FulfillmentMethod = reader.GetString(
                                         reader.GetOrdinal("FulfillmentMethod")),

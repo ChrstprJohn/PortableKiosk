@@ -63,9 +63,9 @@
                     EmptyDataText="No orders match these filters.">
                     <PagerStyle CssClass="border-t border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 [&_a]:rounded [&_a]:px-2 [&_a]:py-1 [&_a]:text-slate-700 [&_a:hover]:bg-slate-100 [&_span]:font-semibold [&_span]:text-slate-950" />
                     <Columns>
-                        <asp:TemplateField HeaderText="ID" ItemStyle-Width="1%" HeaderStyle-Width="1%" ItemStyle-CssClass="whitespace-nowrap" HeaderStyle-CssClass="whitespace-nowrap">
+                        <asp:TemplateField HeaderText="Order number" ItemStyle-Width="1%" HeaderStyle-Width="1%" ItemStyle-CssClass="whitespace-nowrap" HeaderStyle-CssClass="whitespace-nowrap">
                             <ItemTemplate>
-                                <span class="font-medium text-slate-950">#<%#: Eval("OrderNumber") %></span>
+                                <span class="font-medium tabular-nums text-slate-950"><%#: Eval("OrderNumber") %></span>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Placed" ItemStyle-Width="160px">

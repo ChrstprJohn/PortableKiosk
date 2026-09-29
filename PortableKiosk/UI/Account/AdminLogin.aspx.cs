@@ -85,7 +85,7 @@ namespace PortableKiosk.UI.Account
         {
             lblMessage.Text = message;
             lblMessage.CssClass =
-                "block rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800";
+                "mt-6 block rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800";
             lblMessage.Visible = true;
         }
 
