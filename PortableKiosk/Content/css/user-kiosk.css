@@ -988,3 +988,374 @@ body:has(.kiosk-attract-page) {
     }
 }
 
+/* Horizontal customer kiosks: keep the portrait composition untouched. */
+@media (orientation: landscape) and (min-width: 700px) {
+    .user-kiosk-shell {
+        max-width: none;
+    }
+
+    .user-kiosk-shell:has(.menu-layout) {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        height: 100dvh;
+        min-height: 0;
+    }
+
+    .user-kiosk-shell:has(.menu-layout) .user-kiosk-header {
+        flex: 0 0 auto;
+    }
+
+    .menu-layout {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+        grid-template-columns: clamp(190px, 19vw, 300px) minmax(0, 1fr);
+    }
+
+    .menu-sidebar {
+        gap: 0.75rem;
+        padding-bottom: 1rem;
+        padding-right: 0.5rem;
+    }
+
+    .menu-categories-card {
+        padding: 0.35rem 0;
+    }
+
+    .menu-sidebar-brand {
+        height: clamp(64px, 11vh, 100px);
+    }
+
+    .menu-brand-letter {
+        font-size: clamp(2.5rem, 6vh, 4.5rem);
+    }
+
+    .menu-nav-item {
+        min-height: 52px;
+        gap: 0.65rem;
+        padding: 0.7rem 0.8rem;
+        font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+    }
+
+    .menu-nav-icon,
+    .menu-home-icon {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+
+    .menu-nav-icon svg {
+        width: 1.4rem;
+        height: 1.4rem;
+    }
+
+    .menu-content {
+        min-height: 0;
+        padding: clamp(1.25rem, 3vh, 2rem) clamp(1.25rem, 3vw, 3.5rem) calc(6.5rem + env(safe-area-inset-bottom));
+    }
+
+    .menu-home-heading h1,
+    .menu-section-heading h1,
+    .product-detail-heading h1 {
+        font-size: clamp(2rem, 3vw, 3.5rem);
+    }
+
+    .home-section-header h2 {
+        font-size: clamp(1.35rem, 2vw, 2rem);
+    }
+
+    .home-category-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .home-category-card {
+        min-height: 80px;
+        padding: 0.85rem 1rem;
+    }
+
+    .home-category-name {
+        font-size: clamp(1rem, 1.4vw, 1.35rem);
+    }
+
+    .home-category-icon {
+        width: clamp(2.5rem, 3.5vw, 3.5rem);
+        height: clamp(2.5rem, 3.5vw, 3.5rem);
+    }
+
+    .best-seller-grid,
+    .product-grid,
+    .variant-options {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: clamp(0.75rem, 1.3vw, 1.5rem);
+    }
+
+    .best-seller-info,
+    .product-card-body {
+        min-height: 3.5rem;
+    }
+
+    .best-seller-title,
+    .product-card-name,
+    .variant-name,
+    .variant-price {
+        font-size: clamp(0.95rem, 1.3vw, 1.3rem);
+    }
+
+    .variant-card-content {
+        gap: 0.25rem;
+    }
+
+    .variant-card .variant-image,
+    .variant-card .variant-image-placeholder {
+        max-height: 30vh;
+        object-fit: cover;
+    }
+
+    .kiosk-cta-footer {
+        padding: 0.75rem clamp(1.25rem, 3vw, 3rem);
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+
+    .kiosk-cta-button {
+        min-height: 52px;
+        min-width: 112px;
+        padding: 0.7rem 1.5rem;
+        font-size: clamp(1rem, 1.35vw, 1.3rem);
+    }
+
+    .kiosk-cta-footer-menu {
+        min-height: 0;
+    }
+
+    .kiosk-cta-footer-menu .user-kiosk-cart-total {
+        font-size: clamp(1.25rem, 2vw, 2rem);
+    }
+
+    .user-kiosk-cart-icon-pill,
+    .user-kiosk-shell:has(.menu-layout) .user-kiosk-cart-icon-pill {
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .user-kiosk-shell:has(.menu-layout) .user-kiosk-cart-icon-pill svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .product-detail-page {
+        padding-bottom: 9rem;
+    }
+
+    .kiosk-cta-footer-product {
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: clamp(1rem, 3vw, 3rem);
+    }
+
+    .kiosk-cta-footer-product > .quantity-field {
+        width: auto;
+        gap: 1rem;
+    }
+
+    .product-purchase-buttons {
+        grid-column: auto;
+    }
+
+    .kiosk-cta-footer-product .quantity-control {
+        grid-template-columns: repeat(3, 3.25rem);
+    }
+
+    .kiosk-cta-footer-product .quantity-control > * {
+        min-height: 52px;
+    }
+
+    .cart-fluid.cart-fluid {
+        max-width: 1500px;
+        padding: clamp(1.25rem, 3vh, 2rem) clamp(1.5rem, 4vw, 4rem) 9rem;
+    }
+
+    .cart-fluid .cart-fluid-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .cart-fluid .cart-fluid-heading {
+        font-size: clamp(2rem, 3vw, 3.5rem);
+    }
+
+    .cart-fluid .cart-fluid-items {
+        gap: 0.75rem;
+    }
+
+    .cart-fluid .cart-fluid-item {
+        padding: 0.9rem 1.2rem;
+    }
+
+    .cart-fluid .cart-fluid-image {
+        width: clamp(72px, 8vw, 112px);
+        height: clamp(72px, 8vw, 112px);
+    }
+
+    .cart-fluid .cart-fluid-stepper > a,
+    .cart-fluid .cart-fluid-stepper > span {
+        min-width: 44px;
+        height: 48px;
+    }
+
+    .kiosk-cta-footer-cart-inner {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 1.5rem;
+    }
+
+    .kiosk-cta-footer-cart-inner .kiosk-cta-footer-actions {
+        grid-column: 2;
+    }
+
+    .payment-choice-page,
+    .fulfillment-page,
+    .online-payment-page,
+    .table-number-page,
+    .complete-page {
+        min-height: 100dvh;
+        padding: 2rem 3vw 7rem;
+    }
+
+    .payment-choice-page h1,
+    .fulfillment-page h1 {
+        font-size: clamp(2rem, 3vw, 3.5rem);
+        margin-bottom: 1.5rem;
+    }
+
+    .payment-choice-options,
+    .fulfillment-options {
+        max-width: 1100px;
+        gap: 1.25rem;
+    }
+
+    .payment-choice-option,
+    .fulfillment-option {
+        min-height: clamp(200px, 42vh, 340px);
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .payment-choice-option strong,
+    .fulfillment-option strong {
+        font-size: clamp(1.3rem, 2vw, 2rem);
+    }
+
+    .flow-choice-art {
+        width: min(16vw, 220px);
+        max-height: 25vh;
+    }
+
+    .online-payment-panel {
+        gap: 0.75rem;
+    }
+
+    .online-payment-panel h1 {
+        font-size: clamp(2rem, 3vw, 3rem);
+    }
+
+    .payment-qr {
+        width: min(30vh, 280px);
+    }
+
+    .table-number-panel {
+        max-width: 520px;
+        padding: 1.25rem;
+    }
+
+    .table-number-panel h1 {
+        font-size: clamp(1.5rem, 2.2vw, 2.25rem);
+        margin-bottom: 0.75rem;
+    }
+
+    .table-number-input {
+        min-height: 3.5rem;
+        margin-bottom: 0.75rem;
+        font-size: 2rem;
+    }
+
+    .table-number-keypad {
+        gap: 0.45rem;
+        margin-bottom: 0;
+    }
+
+    .table-number-keypad button {
+        min-height: 44px;
+        font-size: 1.35rem;
+    }
+
+    .order-complete-panel {
+        padding: 2rem;
+    }
+
+    .kiosk-attract-actions {
+        flex: 0 0 auto;
+        min-height: 108px;
+        padding: 1rem 1.5rem;
+    }
+
+    .kiosk-start-order {
+        width: min(100%, 440px);
+        max-width: 440px;
+        min-height: 64px;
+        padding: 0.85rem 2rem;
+        border-radius: 16px;
+        font-size: clamp(1.25rem, 1.7vw, 1.6rem);
+    }
+}
+
+@media (orientation: landscape) and (min-width: 700px) and (max-width: 1199px) {
+    .home-category-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .best-seller-grid,
+    .product-grid,
+    .variant-options {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .menu-layout {
+        grid-template-columns: clamp(160px, 22vw, 230px) minmax(0, 1fr);
+    }
+}
+
+@media (orientation: landscape) and (max-width: 699px) {
+    .user-kiosk-shell:has(.menu-layout) {
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+        min-height: 0;
+    }
+
+    .menu-layout {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 0;
+    }
+
+    .menu-content {
+        min-height: 0;
+        padding-bottom: 6rem;
+    }
+
+    .kiosk-cta-footer {
+        padding-top: 0.4rem;
+        padding-bottom: max(0.4rem, env(safe-area-inset-bottom));
+    }
+
+    .kiosk-cta-button {
+        min-height: 44px;
+    }
+
+    .payment-choice-page,
+    .fulfillment-page,
+    .online-payment-page,
+    .table-number-page,
+    .complete-page {
+        padding-bottom: 6rem;
+    }
+}
+

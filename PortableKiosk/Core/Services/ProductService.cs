@@ -36,6 +36,11 @@ namespace PortableKiosk.Core.Services
                 categoryID);
         }
 
+        public List<Product> GetTopSellingAvailable(int count)
+        {
+            return productRepository.GetTopSellingAvailable(count);
+        }
+
         public bool Update(Product product)
         {
             return productRepository.Update(product);

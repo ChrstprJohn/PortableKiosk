@@ -23,6 +23,7 @@ namespace PortableKiosk.UI.User
         protected global::System.Web.UI.WebControls.Label lblMenuError;
         protected global::System.Web.UI.WebControls.Panel pnlHome;
         protected global::System.Web.UI.WebControls.Repeater rptHomeCategories;
+        protected global::System.Web.UI.WebControls.Panel pnlNoBestSellers;
         protected global::System.Web.UI.WebControls.Repeater rptBestSellers;
         protected global::System.Web.UI.WebControls.Panel pnlProducts;
         protected global::System.Web.UI.WebControls.Literal litCategoryName;

@@ -155,6 +155,63 @@ namespace PortableKiosk.Core.Data.Repositories
             return products;
         }
 
+        public List<Product> GetTopSellingAvailable(int count)
+        {
+            if (count <= 0)
+            {
+                throw new ArgumentException("Count must be positive.", "count");
+            }
+
+            // Match Analytics popular products: units from paid orders, across variants.
+            // Only return products that a customer can open and add to the cart now.
+            const string sql = @"
+                WITH SoldUnits AS
+                (
+                    SELECT pv.ProductID, SUM(oi.Quantity) AS Units
+                    FROM ProductVariants AS pv
+                    INNER JOIN OrderItems AS oi
+                        ON oi.ProductVariantID = pv.ProductVariantID
+                    WHERE EXISTS
+                    (
+                        SELECT 1 FROM Payments AS pay
+                        WHERE pay.OrderID = oi.OrderID
+                            AND pay.PaymentStatus = N'PAID'
+                    )
+                    GROUP BY pv.ProductID
+                )
+                SELECT TOP (@Count) p.ProductID, p.CategoryID, c.CategoryName,
+                    p.ProductName, p.ProductDescription, p.IsAvailable
+                FROM Products AS p
+                INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
+                INNER JOIN SoldUnits AS sold ON sold.ProductID = p.ProductID
+                WHERE p.IsAvailable = 1 AND c.IsAvailable = 1
+                    AND EXISTS
+                    (
+                        SELECT 1 FROM ProductVariants AS available
+                        WHERE available.ProductID = p.ProductID
+                            AND available.IsAvailable = 1
+                    )
+                ORDER BY sold.Units DESC, p.ProductName ASC,
+                    p.ProductID ASC;";
+
+            List<Product> products = new List<Product>();
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.Add("@Count", SqlDbType.Int).Value = count;
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        products.Add(Map(reader));
+                    }
+                }
+            }
+
+            return products;
+        }
+
         public bool Update(Product product)
         {
             ValidateForSave(product, true);

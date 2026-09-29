@@ -92,6 +92,7 @@
                             <div class="home-section-header best-seller-header mb-[clamp(0.5rem,1.5vh,1.75rem)] max-[480px]:mb-2">
                                 <h2 id="bestSellerHeading" class="m-0 text-[clamp(1.15rem,4.5cqw,6rem)] max-[480px]:text-[clamp(0.95rem,4.5vw,1.3rem)] kiosk-portrait:text-[clamp(1.75rem,4vw,4rem)] font-extrabold leading-tight tracking-[-0.03em] text-slate-900">Best Seller</h2>
                             </div>
+                            <asp:Panel ID="pnlNoBestSellers" runat="server" Visible="false" CssClass="rounded-xl border border-slate-200 bg-white p-5 text-slate-600">No best sellers yet. Browse the menu to get started.</asp:Panel>
                             <div class="best-seller-grid grid grid-cols-3 gap-[clamp(0.45rem,1.6cqw,2rem)] max-[480px]:gap-2 kiosk-mobile:grid-cols-2 kiosk-portrait:gap-[clamp(0.75rem,2vw,2.5rem)]">
                                 <asp:Repeater ID="rptBestSellers" runat="server"
                                     OnItemCommand="rptProducts_ItemCommand">

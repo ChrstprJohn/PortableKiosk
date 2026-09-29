@@ -336,50 +336,37 @@ namespace PortableKiosk.UI.User
             List<MenuProductViewModel> featuredProducts =
                 new List<MenuProductViewModel>();
 
-            foreach (Category category in categories)
+            foreach (Product product in productService.GetTopSellingAvailable(5))
             {
-                foreach (Product product in productService
-                    .GetAvailableByCategoryID(category.CategoryID))
+                List<ProductVariant> variants = variantService
+                    .GetAvailableByProductID(product.ProductID);
+
+                if (variants.Count == 0)
                 {
-                    List<ProductVariant> variants = variantService
-                        .GetAvailableByProductID(product.ProductID);
-
-                    if (variants.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    ProductVariant imageVariant = variants.FirstOrDefault(
-                        variant => !string.IsNullOrWhiteSpace(
-                            variant.ImagePath));
-
-                    featuredProducts.Add(new MenuProductViewModel
-                    {
-                        ProductID = product.ProductID,
-                        CategoryName = product.CategoryName,
-                        ProductName = product.ProductName,
-                        ProductDescription = product.ProductDescription,
-                        StartingPrice = variants.Min(
-                            variant => variant.Price),
-                        ImagePath = imageVariant == null
-                            ? null
-                            : imageVariant.ImagePath
-                    });
-
-                    if (featuredProducts.Count == 3)
-                    {
-                        break;
-                    }
+                    continue;
                 }
 
-                if (featuredProducts.Count == 3)
+                ProductVariant imageVariant = variants.FirstOrDefault(
+                    variant => !string.IsNullOrWhiteSpace(
+                        variant.ImagePath));
+
+                featuredProducts.Add(new MenuProductViewModel
                 {
-                    break;
-                }
+                    ProductID = product.ProductID,
+                    CategoryName = product.CategoryName,
+                    ProductName = product.ProductName,
+                    ProductDescription = product.ProductDescription,
+                    StartingPrice = variants.Min(
+                        variant => variant.Price),
+                    ImagePath = imageVariant == null
+                        ? null
+                        : imageVariant.ImagePath
+                });
             }
 
             rptBestSellers.DataSource = featuredProducts;
             rptBestSellers.DataBind();
+            pnlNoBestSellers.Visible = featuredProducts.Count == 0;
         }
 
         private void BindProducts(int categoryID)
