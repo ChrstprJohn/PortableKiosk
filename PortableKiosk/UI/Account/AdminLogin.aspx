@@ -5,10 +5,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <main class="-m-3 flex min-h-dvh items-center justify-center bg-slate-50 px-6 py-12 text-slate-950 md:-mx-6 md:-my-4" aria-labelledby="loginHeading">
         <section class="w-full max-w-sm py-8" aria-labelledby="loginHeading">
-                <span class="flex size-12 items-center justify-center rounded-xl bg-blue-700 text-white shadow-sm" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" class="size-6 fill-none stroke-current" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="2" /><path d="M8 10V7a4 4 0 0 1 8 0v3" /><path d="M12 14v3" /></svg>
-                </span>
-                <h1 id="loginHeading" class="mt-7 text-4xl font-semibold tracking-tight text-slate-950">Staff sign in</h1>
+                <h1 id="loginHeading" class="text-4xl font-semibold tracking-tight text-slate-950">Staff sign in</h1>
                 <div class="mt-5 h-px w-full bg-slate-200" aria-hidden="true"></div>
 
                 <asp:ValidationSummary ID="validationSummary" runat="server" ValidationGroup="StaffLoginForm"
