@@ -6,11 +6,12 @@
     <main class="-m-3 flex min-h-dvh items-center justify-center bg-slate-50 px-6 py-12 text-slate-950 md:-mx-6 md:-my-4">
         <section id="rolePicker" runat="server" class="w-full max-w-2xl">
             <h1 id="roleHeading" class="text-3xl font-semibold tracking-tight md:text-4xl">Choose your workspace</h1>
-            <p class="mt-2 text-slate-600">Select where you want to sign in.</p>
+            <p class="mt-2 text-slate-600">Choose a staff workspace or view order status.</p>
             <div class="mt-6 grid gap-3">
                 <a href="AdminLogin.aspx?mode=admin" class="flex min-h-24 items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"><span><span class="block text-xl font-semibold">Admin</span><span class="mt-1 block text-sm text-slate-600">Manage products, orders, and staff.</span></span><span class="shrink-0 text-sm font-semibold text-blue-700">Sign in</span></a>
                 <a href="AdminLogin.aspx?mode=pos" class="flex min-h-24 items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"><span><span class="block text-xl font-semibold">POS</span><span class="mt-1 block text-sm text-slate-600">Take orders and collect payment.</span></span><span class="shrink-0 text-sm font-semibold text-blue-700">Sign in</span></a>
                 <a href="AdminLogin.aspx?mode=kitchen" class="flex min-h-24 items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"><span><span class="block text-xl font-semibold">Kitchen</span><span class="mt-1 block text-sm text-slate-600">Prepare and serve paid orders.</span></span><span class="shrink-0 text-sm font-semibold text-blue-700">Sign in</span></a>
+                <a href="../OrderStatus.aspx" class="flex min-h-24 items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"><span><span class="block text-xl font-semibold">Order status</span><span class="mt-1 block text-sm text-slate-600">See which orders are preparing or serving.</span></span><span class="shrink-0 text-sm font-semibold text-blue-700">View board</span></a>
             </div>
         </section>
         <section id="loginForm" runat="server" class="w-full max-w-sm py-8" aria-labelledby="loginHeading">
