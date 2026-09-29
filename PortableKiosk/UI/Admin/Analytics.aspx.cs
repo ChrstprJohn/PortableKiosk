@@ -106,7 +106,12 @@ namespace PortableKiosk.UI.Admin
             litPaidOrders.Text = report.PaidOrders.ToString("N0", PhilippineCulture);
             litAverage.Text = Money(report.AverageOrderValue);
             litConversion.Text = report.ConversionRate.ToString("N1", PhilippineCulture) + "%";
-            litConversionDetail.Text = report.ConvertedOrders.ToString("N0") + " of " + report.PlacedOrders.ToString("N0") + " placed orders are paid";
+            litPlacedOrders.Text = report.PlacedOrders.ToString("N0", PhilippineCulture);
+            litConversionDetail.Text = report.ConvertedOrders.ToString("N0", PhilippineCulture);
+            litConvertedValue.Text = Money(report.ConvertedValue);
+            int otherOrders = Math.Max(0, report.PlacedOrders - report.ConvertedOrders - report.ExpiredOrders);
+            litOtherOrders.Text = otherOrders.ToString("N0", PhilippineCulture);
+            pnlOtherOrders.Visible = otherOrders > 0;
             litExpired.Text = report.ExpiredOrders.ToString("N0", PhilippineCulture);
             litExpiredValue.Text = Money(report.ExpiredValue);
 
@@ -206,6 +211,32 @@ namespace PortableKiosk.UI.Admin
         protected string ConversionWidth()
         {
             return "width:" + (report == null ? 0 : report.ConversionRate).ToString("0.##", CultureInfo.InvariantCulture) + "%";
+        }
+
+        protected string ExpiredWidth()
+        {
+            decimal percent = report == null || report.PlacedOrders == 0 ? 0 : 100m * report.ExpiredOrders / report.PlacedOrders;
+            return "width:" + percent.ToString("0.##", CultureInfo.InvariantCulture) + "%";
+        }
+
+        protected string OutcomeBarLabel()
+        {
+            if (report == null) return "Order outcomes unavailable";
+            return System.Web.HttpUtility.HtmlAttributeEncode(report.ConvertedOrders.ToString("N0", PhilippineCulture) + " paid, " +
+                report.ExpiredOrders.ToString("N0", PhilippineCulture) + " expired, " +
+                Math.Max(0, report.PlacedOrders - report.ConvertedOrders - report.ExpiredOrders).ToString("N0", PhilippineCulture) + " other orders");
+        }
+
+        protected string CategoryWidth(object value)
+        {
+            decimal max = report.Categories.Count == 0 ? 0 : report.Categories.Max(category => category.Revenue);
+            decimal percent = max == 0 ? 0 : 100m * Convert.ToDecimal(value) / max;
+            return "width:" + percent.ToString("0.##", CultureInfo.InvariantCulture) + "%";
+        }
+
+        protected string CategoryBarLabel(object name, object revenue, object units)
+        {
+            return System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(name) + ": " + Money(revenue) + ", " + Convert.ToString(units) + " units");
         }
 
         protected string PaymentDonutStyle()

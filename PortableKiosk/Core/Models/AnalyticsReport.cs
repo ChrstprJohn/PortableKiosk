@@ -10,6 +10,7 @@ namespace PortableKiosk.Core.Models
         public decimal AverageOrderValue { get { return PaidOrders == 0 ? 0 : TotalSales / PaidOrders; } }
         public int PlacedOrders { get; set; }
         public int ConvertedOrders { get; set; }
+        public decimal ConvertedValue { get; set; }
         public decimal ConversionRate { get { return PlacedOrders == 0 ? 0 : 100m * ConvertedOrders / PlacedOrders; } }
         public int ExpiredOrders { get; set; }
         public decimal ExpiredValue { get; set; }

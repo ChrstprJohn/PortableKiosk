@@ -37,6 +37,7 @@ namespace PortableKiosk.Core.Data.Repositories
                 SELECT COALESCE(SUM(Amount), 0), COUNT(*)
                 FROM Payments WHERE PaymentStatus = N'PAID' AND PaidAt >= @Start AND PaidAt < @End;
                 SELECT COUNT(*), COALESCE(SUM(CASE WHEN p.PaymentStatus = N'PAID' THEN 1 ELSE 0 END), 0),
+                    COALESCE(SUM(CASE WHEN p.PaymentStatus = N'PAID' THEN p.Amount ELSE 0 END), 0),
                     COALESCE(SUM(CASE WHEN p.PaymentStatus = N'EXPIRED'
                         OR (p.PaymentStatus = N'PENDING' AND o.ExpiresAt IS NOT NULL
                             AND o.ExpiresAt <= SYSUTCDATETIME()) THEN 1 ELSE 0 END), 0),
@@ -55,8 +56,9 @@ namespace PortableKiosk.Core.Data.Repositories
                 reader.Read();
                 report.PlacedOrders = reader.GetInt32(0);
                 report.ConvertedOrders = reader.GetInt32(1);
-                report.ExpiredOrders = reader.GetInt32(2);
-                report.ExpiredValue = reader.GetDecimal(3);
+                report.ConvertedValue = reader.GetDecimal(2);
+                report.ExpiredOrders = reader.GetInt32(3);
+                report.ExpiredValue = reader.GetDecimal(4);
             }
         }
 

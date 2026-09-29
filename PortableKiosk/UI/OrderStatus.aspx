@@ -24,8 +24,7 @@
                 </div>
             </section>
             <aside class="order-status-image" aria-label="Welcome illustration">
-                <p class="order-status-image-caption">Straight from<br />the kitchen</p>
-                <img src="<%= ResolveUrl("~/Content/images/order-status-mascot.png") %>" alt="Smiling stick figure holding fries" />
+                <img src="<%= ResolveUrl("~/Content/images/order-status-mascot.png") %>" alt="Straight from the kitchen: smiling stick figure holding fries" />
             </aside>
         </div>
         <footer class="order-status-greeting">Welcome and thank you for waiting!</footer>
