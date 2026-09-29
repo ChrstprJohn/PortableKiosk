@@ -187,6 +187,9 @@ namespace PortableKiosk.Shared.Layouts
             SetCurrentPage(lnkStaff, pagePath.EndsWith(
                 "StaffAccounts.aspx",
                 StringComparison.OrdinalIgnoreCase));
+            SetCurrentPage(lnkSettings, pagePath.EndsWith(
+                "Settings.aspx",
+                StringComparison.OrdinalIgnoreCase));
         }
 
         private static void SetCurrentPage(

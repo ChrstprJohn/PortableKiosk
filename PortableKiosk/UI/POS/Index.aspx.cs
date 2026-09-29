@@ -17,7 +17,9 @@ namespace PortableKiosk.UI.POS
         private const string IdleStage = "IDLE";
         private const string QueueStage = "QUEUE";
         private const string RegisterStage = "REGISTER";
+        private const string ChoiceStage = "CHOICE";
         private const string PaymentStage = "PAYMENT";
+        private const string CashlessStage = "CASHLESS";
         private const string ReceiptStage = "RECEIPT";
 
         private readonly PosService posService = new PosService();
@@ -246,14 +248,55 @@ namespace PortableKiosk.UI.POS
                 return;
             }
 
-            Current.Stage = PaymentStage;
+            Current.Stage = ChoiceStage;
             txtTendered.Text = string.Empty;
         }
 
-        protected void btnBackToSale_Click(object sender, EventArgs e)
+        protected void btnChooseCash_Click(object sender, EventArgs e)
         {
-            if (!CanAct(PaymentStage)) return;
+            if (!CanAct(ChoiceStage)) return;
+            Current.Stage = PaymentStage;
+        }
+
+        protected void btnChooseCashless_Click(object sender, EventArgs e)
+        {
+            if (!CanAct(ChoiceStage)) return;
+            Current.Stage = CashlessStage;
+        }
+
+        protected void btnBackToChoice_Click(object sender, EventArgs e)
+        {
+            if (!CanAct(PaymentStage) && !CanAct(CashlessStage)) return;
+            Current.Stage = ChoiceStage;
+        }
+
+        protected void btnChoiceBackToSale_Click(object sender, EventArgs e)
+        {
+            if (!CanAct(ChoiceStage)) return;
             Current.Stage = RegisterStage;
+        }
+
+        protected void btnSimulatePayment_Click(object sender, EventArgs e)
+        {
+            if (!CanAct(CashlessStage)) return;
+            try
+            {
+                Current.Receipt = posService.CompleteMockCashlessSale(Current.Sale);
+                Current.Sale = null;
+                Current.Stage = ReceiptStage;
+            }
+            catch (ArgumentException ex)
+            {
+                ShowError(ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                ShowError(ex.Message);
+            }
+            catch (Exception)
+            {
+                ShowError("Payment could not be completed. Check the order and try again.");
+            }
         }
 
         protected void btnCompletePayment_Click(object sender, EventArgs e)
@@ -320,7 +363,8 @@ namespace PortableKiosk.UI.POS
         private void BindStage()
         {
             RegisterState state = Current;
-            if ((state.Stage == RegisterStage || state.Stage == PaymentStage) &&
+            if ((state.Stage == RegisterStage || state.Stage == ChoiceStage ||
+                state.Stage == PaymentStage || state.Stage == CashlessStage) &&
                 state.Sale == null)
             {
                 state.Stage = IdleStage;
@@ -333,7 +377,9 @@ namespace PortableKiosk.UI.POS
             pnlIdle.Visible = state.Stage == IdleStage;
             pnlQueue.Visible = state.Stage == QueueStage;
             pnlRegister.Visible = state.Stage == RegisterStage;
+            pnlPaymentChoice.Visible = state.Stage == ChoiceStage;
             pnlPayment.Visible = state.Stage == PaymentStage;
+            pnlCashless.Visible = state.Stage == CashlessStage;
             pnlReceipt.Visible = state.Stage == ReceiptStage;
 
             switch (state.Stage)
@@ -343,6 +389,10 @@ namespace PortableKiosk.UI.POS
                     break;
                 case PaymentStage:
                     BindPayment(state.Sale);
+                    break;
+                case ChoiceStage:
+                case CashlessStage:
+                    litCashlessTotal.Text = FormatMoney(state.Sale.Cart.TotalAmount);
                     break;
                 case ReceiptStage:
                     BindReceipt(state.Receipt);
@@ -511,6 +561,9 @@ namespace PortableKiosk.UI.POS
             litReceiptTotal.Text = FormatMoney(receipt.Payment.Amount);
             litReceiptTendered.Text = FormatMoney(receipt.Tendered);
             litReceiptChange.Text = FormatMoney(receipt.Change);
+            bool cashless = receipt.Payment.PaymentMethod == "CASHLESS";
+            pnlReceiptCash.Visible = !cashless;
+            pnlReceiptCashless.Visible = cashless;
         }
 
         protected string FormatMoney(object value)

@@ -66,7 +66,7 @@ namespace PortableKiosk.Core.Services
             int orderID = order.OrderID;
             Payment payment = paymentRepository.GetByOrderID(orderID);
             DateTime expiresAt = order.ExpiresAt ?? order.CreatedAt.AddMinutes(
-                OrderSettings.PendingPaymentExpiryMinutes);
+                OrderSettings.LegacyPendingPaymentExpiryMinutes);
 
             if (payment != null && payment.PaymentMethod == "CASH_COUNTER" &&
                 (payment.PaymentStatus == "EXPIRED" ||
@@ -189,6 +189,17 @@ namespace PortableKiosk.Core.Services
 
         public PosReceipt CompleteCashSale(PosSale sale, decimal tendered)
         {
+            return CompleteSale(sale, "CASH_COUNTER", tendered);
+        }
+
+        public PosReceipt CompleteMockCashlessSale(PosSale sale)
+        {
+            ValidateSale(sale);
+            return CompleteSale(sale, "CASHLESS", sale.Cart.TotalAmount);
+        }
+
+        private PosReceipt CompleteSale(PosSale sale, string paymentMethod, decimal tendered)
+        {
             ValidateSale(sale);
 
             if (sale.Cart.IsEmpty)
@@ -234,7 +245,7 @@ namespace PortableKiosk.Core.Services
 
             Payment payment = new Payment
             {
-                PaymentMethod = "CASH_COUNTER",
+                PaymentMethod = paymentMethod,
                 PaymentStatus = "PAID",
                 Amount = total,
                 TransactionReference = "POS-" +

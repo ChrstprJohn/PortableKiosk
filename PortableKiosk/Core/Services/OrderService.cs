@@ -26,6 +26,12 @@ namespace PortableKiosk.Core.Services
             string fulfillmentMethod,
             string tableNumber)
         {
+            if (!new KioskSettingsService().Get().IsAvailable)
+            {
+                throw new InvalidOperationException(
+                    "The kiosk is currently unavailable. Please ask a crew member for help.");
+            }
+
             if (cart == null || cart.IsEmpty)
             {
                 throw new InvalidOperationException(

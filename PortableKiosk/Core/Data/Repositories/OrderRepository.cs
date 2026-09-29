@@ -120,10 +120,31 @@ namespace PortableKiosk.Core.Data.Repositories
                     "orderNumber");
             }
 
-            return GetSingle(
+            string trimmedNumber = orderNumber.Trim();
+            Order order = GetSingle(
                 "OrderNumber = @Value",
                 null,
-                orderNumber.Trim());
+                trimmedNumber);
+            if (order != null)
+            {
+                return order;
+            }
+
+            // Existing orders may still store a four-digit number while the
+            // displayed number is padded to six digits.
+            int orderID;
+            if (int.TryParse(trimmedNumber, out orderID) && orderID > 0)
+            {
+                order = GetByID(orderID);
+                if (order != null &&
+                    string.Equals(order.OrderNumber, FormatOrderNumber(trimmedNumber),
+                        StringComparison.Ordinal))
+                {
+                    return order;
+                }
+            }
+
+            return null;
         }
 
         public List<Order> GetAll()
@@ -217,7 +238,7 @@ namespace PortableKiosk.Core.Data.Repositories
                             command.Parameters.Add(
                                 "@ExpiryMinutes",
                                 SqlDbType.Int).Value =
-                                    OrderSettings.PendingPaymentExpiryMinutes;
+                                    OrderSettings.LegacyPendingPaymentExpiryMinutes;
                             expiredCount = Convert.ToInt32(
                                 command.ExecuteScalar());
                         }
@@ -345,7 +366,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
             if (shouldGenerateOrderNumber)
             {
-                order.OrderNumber = order.OrderID.ToString("D4");
+                order.OrderNumber = order.OrderID.ToString("D6");
 
                 const string updateNumberSql = @"
                     UPDATE Orders
@@ -465,8 +486,8 @@ namespace PortableKiosk.Core.Data.Repositories
             {
                 OrderID = reader.GetInt32(
                     reader.GetOrdinal("OrderID")),
-                OrderNumber = reader.GetString(
-                    reader.GetOrdinal("OrderNumber")),
+                OrderNumber = FormatOrderNumber(reader.GetString(
+                    reader.GetOrdinal("OrderNumber"))),
                 OrderType = reader.GetString(
                     reader.GetOrdinal("OrderType")),
                 FulfillmentMethod = reader.GetString(
@@ -482,6 +503,24 @@ namespace PortableKiosk.Core.Data.Repositories
                 CreatedAt = reader.GetDateTime(
                     reader.GetOrdinal("CreatedAt"))
             };
+        }
+
+        public static string FormatOrderNumber(string orderNumber)
+        {
+            if (string.IsNullOrEmpty(orderNumber))
+            {
+                return orderNumber;
+            }
+
+            foreach (char character in orderNumber)
+            {
+                if (character < '0' || character > '9')
+                {
+                    return orderNumber;
+                }
+            }
+
+            return orderNumber.PadLeft(6, '0');
         }
 
         private static void Validate(Order order)

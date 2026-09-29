@@ -35,6 +35,7 @@ namespace PortableKiosk.UI.Admin
             public string KitchenStatusDisplay { get; set; }
             public string PaymentStatus { get; set; }
             public string PaymentStatusDisplay { get; set; }
+            public string PaymentMethodDisplay { get; set; }
             public string AmountDisplay { get; set; }
         }
 
@@ -180,6 +181,9 @@ namespace PortableKiosk.UI.Admin
                         PaymentStatusDisplay = payment == null
                             ? "Not recorded"
                             : Humanize(paymentStatus),
+                        PaymentMethodDisplay = payment == null
+                            ? "Not recorded"
+                            : GetPaymentMethodDisplay(payment.PaymentMethod),
                         AmountDisplay = payment == null
                             ? "\u2014"
                             : FormatAmount(payment.Amount)
@@ -273,7 +277,7 @@ namespace PortableKiosk.UI.Admin
             decimal itemTotal = items.Sum(item => item.LineTotal);
             decimal total = payment == null ? itemTotal : payment.Amount;
             litDetailsPayment.Text = payment == null
-                ? string.Empty
+                ? "Not recorded"
                 : HttpUtility.HtmlEncode(
                     GetPaymentMethodDisplay(payment.PaymentMethod));
             litDetailsTotal.Text = HttpUtility.HtmlEncode(FormatAmount(total));
@@ -419,7 +423,7 @@ namespace PortableKiosk.UI.Admin
                     StringComparison.OrdinalIgnoreCase))
             {
                 return order.CreatedAt.AddMinutes(
-                    OrderSettings.PendingPaymentExpiryMinutes);
+                    OrderSettings.LegacyPendingPaymentExpiryMinutes);
             }
 
             return null;

@@ -153,6 +153,7 @@
     <Content Include="UI\Admin\Analytics.aspx" />
     <Content Include="UI\Admin\Products.aspx" />
     <Content Include="UI\Admin\StaffAccounts.aspx" />
+    <Content Include="UI\Admin\Settings.aspx" />
     <Content Include="UI\POS\Index.aspx" />
     <Content Include="UI\User\Cart.aspx" />
     <Content Include="UI\User\Complete.aspx" />
@@ -178,6 +179,7 @@
     <Compile Include="Core\Data\Repositories\ProductVariantRepository.cs" />
     <Compile Include="Core\Data\Repositories\SizeRepository.cs" />
     <Compile Include="Core\Data\Repositories\StaffAccountRepository.cs" />
+    <Compile Include="Core\Data\Repositories\KioskSettingsRepository.cs" />
     <Compile Include="Core\Models\Category.cs" />
     <Compile Include="Core\Models\AnalyticsReport.cs" />
     <Compile Include="Core\Models\Cart.cs" />
@@ -192,6 +194,7 @@
     <Compile Include="Core\Models\ProductVariant.cs" />
     <Compile Include="Core\Models\Size.cs" />
     <Compile Include="Core\Models\StaffAccount.cs" />
+    <Compile Include="Core\Models\KioskSettings.cs" />
     <Compile Include="Core\Services\CategoryService.cs" />
     <Compile Include="Core\Services\AnalyticsService.cs" />
     <Compile Include="Core\Services\AnalyticsExcelExportService.cs" />
@@ -204,6 +207,7 @@
     <Compile Include="Core\Services\ProductVariantService.cs" />
     <Compile Include="Core\Services\SizeService.cs" />
     <Compile Include="Core\Services\StaffAccountService.cs" />
+    <Compile Include="Core\Services\KioskSettingsService.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -294,6 +298,13 @@
     </Compile>
     <Compile Include="UI\Admin\StaffAccounts.aspx.designer.cs">
       <DependentUpon>StaffAccounts.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Admin\Settings.aspx.cs">
+      <DependentUpon>Settings.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\Settings.aspx.designer.cs">
+      <DependentUpon>Settings.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\POS\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>

@@ -183,6 +183,54 @@
             </main>
         </asp:Panel>
 
+        <asp:Panel ID="pnlPaymentChoice" runat="server" Visible="false">
+            <main class="mx-auto flex min-h-dvh max-w-3xl flex-col justify-center px-5 py-10">
+                <h1 class="text-center text-3xl font-semibold tracking-tight text-slate-950">Choose a payment method</h1>
+                <div class="mt-8 grid gap-4 sm:grid-cols-2">
+                    <asp:Button ID="btnChooseCash" runat="server" OnClick="btnChooseCash_Click" Text="Cash" CssClass="min-h-32 cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-xl font-semibold text-slate-950 shadow-sm hover:border-blue-400 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                    <asp:Button ID="btnChooseCashless" runat="server" OnClick="btnChooseCashless_Click" Text="Cashless (mock QR)" CssClass="min-h-32 cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-xl font-semibold text-slate-950 shadow-sm hover:border-blue-400 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                </div>
+                <asp:Button ID="btnChoiceBackToSale" runat="server" OnClick="btnChoiceBackToSale_Click" Text="Back to sale" CssClass="mt-6 min-h-12 cursor-pointer self-start rounded-lg border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+            </main>
+        </asp:Panel>
+
+        <asp:Panel ID="pnlCashless" runat="server" Visible="false">
+            <main class="mx-auto flex min-h-dvh max-w-lg flex-col items-center justify-center px-5 py-10 text-center">
+                <h1 class="text-3xl font-semibold tracking-tight text-slate-950">Scan to pay</h1>
+                <p class="mt-2 text-sm text-slate-600">Example QR code for simulated payment</p>
+                <div class="mt-6 rounded-xl bg-white p-5 shadow-sm"><svg class="size-56" viewBox="0 0 25 25" role="img" aria-label="Example payment QR code" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="25" height="25" fill="#fff" />
+                    <path fill="#0f172a" d="
+                        M2 2h7v1h-7zM11 2h2v1h-2zM16 2h7v1h-7z
+                        M2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM13 3h2v1h-2zM16 3h1v1h-1zM22 3h1v1h-1z
+                        M2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM16 4h1v1h-1zM18 4h3v1h-3zM22 4h1v1h-1z
+                        M2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h2v1h-2zM16 5h1v1h-1zM18 5h3v1h-3zM22 5h1v1h-1z
+                        M2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM13 6h1v1h-1zM16 6h1v1h-1zM18 6h3v1h-3zM22 6h1v1h-1z
+                        M2 7h1v1h-1zM8 7h1v1h-1zM11 7h4v1h-4zM16 7h1v1h-1zM22 7h1v1h-1z
+                        M2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h7v1h-7z
+                        M10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1z
+                        M2 10h3v1h-3zM8 10h2v1h-2zM11 10h1v1h-1zM14 10h2v1h-2z
+                        M3 11h1v1h-1zM5 11h1v1h-1zM13 11h2v1h-2zM17 11h3v1h-3zM22 11h1v1h-1z
+                        M3 12h1v1h-1zM6 12h1v1h-1zM8 12h1v1h-1zM10 12h3v1h-3zM15 12h2v1h-2zM18 12h1v1h-1zM20 12h1v1h-1z
+                        M5 13h1v1h-1zM10 13h2v1h-2zM15 13h2v1h-2zM19 13h4v1h-4z
+                        M3 14h1v1h-1zM5 14h2v1h-2zM8 14h3v1h-3zM12 14h2v1h-2zM15 14h2v1h-2zM18 14h3v1h-3zM22 14h1v1h-1z
+                        M11 15h1v1h-1zM15 15h1v1h-1zM17 15h1v1h-1z
+                        M2 16h7v1h-7zM10 16h1v1h-1zM12 16h1v1h-1zM16 16h1v1h-1zM18 16h3v1h-3zM22 16h1v1h-1z
+                        M2 17h1v1h-1zM8 17h1v1h-1zM12 17h1v1h-1zM14 17h1v1h-1zM16 17h1v1h-1zM19 17h2v1h-2z
+                        M2 18h1v1h-1zM4 18h3v1h-3zM8 18h1v1h-1zM10 18h3v1h-3zM14 18h2v1h-2zM21 18h1v1h-1z
+                        M2 19h1v1h-1zM4 19h3v1h-3zM8 19h1v1h-1zM11 19h7v1h-7zM21 19h2v1h-2z
+                        M2 20h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM12 20h2v1h-2zM15 20h1v1h-1zM20 20h1v1h-1z
+                        M2 21h1v1h-1zM8 21h1v1h-1zM11 21h1v1h-1zM14 21h2v1h-2zM18 21h2v1h-2z
+                        M2 22h7v1h-7zM10 22h2v1h-2zM16 22h1v1h-1zM18 22h1v1h-1zM21 22h2v1h-2z" />
+                </svg></div>
+                <strong class="mt-5 text-2xl font-semibold tabular-nums text-slate-950"><asp:Literal ID="litCashlessTotal" runat="server" /></strong>
+                <div class="mt-8 grid w-full grid-cols-2 gap-3">
+                    <asp:Button ID="btnCashlessBack" runat="server" OnClick="btnBackToChoice_Click" Text="Back" CssClass="min-h-12 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                    <asp:Button ID="btnSimulatePayment" runat="server" OnClick="btnSimulatePayment_Click" Text="Simulate payment" CssClass="min-h-12 cursor-pointer rounded-lg bg-blue-700 px-4 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                </div>
+            </main>
+        </asp:Panel>
+
         <asp:Panel ID="pnlPayment" runat="server" Visible="false" DefaultButton="btnCompletePayment">
             <main class="grid min-h-dvh w-full gap-4 px-3 py-4 sm:px-5 sm:py-5 lg:h-dvh lg:min-h-0 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:overflow-hidden">
                     <section aria-labelledby="paymentSummaryHeading" class="rounded-xl border border-slate-200 bg-white p-5 sm:p-6 lg:grid lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_auto] lg:overflow-hidden">
@@ -233,7 +281,7 @@
                                 class="text-lg font-semibold tabular-nums text-slate-950">₱0.00</strong>
                         </div>
                         <div class="mt-5 grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-3">
-                            <asp:Button ID="btnBackToSale" runat="server" OnClick="btnBackToSale_Click" Text="Back to sale"
+                            <asp:Button ID="btnBackToSale" runat="server" OnClick="btnBackToChoice_Click" Text="Back"
                                 CssClass="min-h-12 cursor-pointer rounded-lg border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
                             <asp:Button ID="btnCompletePayment" runat="server" OnClick="btnCompletePayment_Click" Text="Complete cash payment"
                                 CssClass="min-h-12 cursor-pointer rounded-lg bg-blue-700 px-3 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300" />
@@ -269,8 +317,9 @@
                     </div>
                     <dl class="mt-5 space-y-3 border-t border-slate-200 pt-5 text-sm">
                         <div class="flex justify-between"><dt class="text-slate-600">Total</dt><dd class="font-semibold tabular-nums text-slate-950"><asp:Literal ID="litReceiptTotal" runat="server" /></dd></div>
-                        <div class="flex justify-between"><dt class="text-slate-600">Cash received</dt><dd class="font-medium tabular-nums text-slate-950"><asp:Literal ID="litReceiptTendered" runat="server" /></dd></div>
-                        <div class="flex justify-between border-t border-slate-200 pt-3"><dt class="font-semibold text-slate-950">Change</dt><dd class="font-semibold tabular-nums text-slate-950"><asp:Literal ID="litReceiptChange" runat="server" /></dd></div>
+                        <asp:Panel ID="pnlReceiptCash" runat="server"><div class="flex justify-between"><dt class="text-slate-600">Cash received</dt><dd class="font-medium tabular-nums text-slate-950"><asp:Literal ID="litReceiptTendered" runat="server" /></dd></div>
+                        <div class="mt-3 flex justify-between border-t border-slate-200 pt-3"><dt class="font-semibold text-slate-950">Change</dt><dd class="font-semibold tabular-nums text-slate-950"><asp:Literal ID="litReceiptChange" runat="server" /></dd></div></asp:Panel>
+                        <asp:Panel ID="pnlReceiptCashless" runat="server" Visible="false"><div class="flex justify-between"><dt class="text-slate-600">Payment method</dt><dd class="font-medium text-slate-950">Cashless (simulated)</dd></div></asp:Panel>
                     </dl>
                 </section>
                 <asp:Button ID="btnCloseReceipt" runat="server" OnClick="btnCloseReceipt_Click" Text="Close and start next sale"

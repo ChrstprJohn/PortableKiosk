@@ -144,7 +144,7 @@ namespace PortableKiosk.Core.Data.Repositories
                             command.Parameters.Add(
                                 "@ExpiryMinutes",
                                 SqlDbType.Int).Value =
-                                    OrderSettings.PendingPaymentExpiryMinutes;
+                                    OrderSettings.LegacyPendingPaymentExpiryMinutes;
                             affectedRows = command.ExecuteNonQuery();
                         }
 

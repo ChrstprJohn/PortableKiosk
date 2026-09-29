@@ -27,6 +27,14 @@ namespace PortableKiosk.UI.POS
         protected global::System.Web.UI.WebControls.Panel pnlCatalogEmpty;
         protected global::System.Web.UI.WebControls.Repeater rptCategories;
         protected global::System.Web.UI.WebControls.Repeater rptProducts;
+        protected global::System.Web.UI.WebControls.Panel pnlPaymentChoice;
+        protected global::System.Web.UI.WebControls.Button btnChooseCash;
+        protected global::System.Web.UI.WebControls.Button btnChooseCashless;
+        protected global::System.Web.UI.WebControls.Button btnChoiceBackToSale;
+        protected global::System.Web.UI.WebControls.Panel pnlCashless;
+        protected global::System.Web.UI.WebControls.Literal litCashlessTotal;
+        protected global::System.Web.UI.WebControls.Button btnCashlessBack;
+        protected global::System.Web.UI.WebControls.Button btnSimulatePayment;
         protected global::System.Web.UI.WebControls.Panel pnlPayment;
         protected global::System.Web.UI.WebControls.Button btnBackToSale;
         protected global::System.Web.UI.WebControls.Literal litPaymentContext;
@@ -42,6 +50,8 @@ namespace PortableKiosk.UI.POS
         protected global::System.Web.UI.WebControls.Literal litReceiptTotal;
         protected global::System.Web.UI.WebControls.Literal litReceiptTendered;
         protected global::System.Web.UI.WebControls.Literal litReceiptChange;
+        protected global::System.Web.UI.WebControls.Panel pnlReceiptCash;
+        protected global::System.Web.UI.WebControls.Panel pnlReceiptCashless;
         protected global::System.Web.UI.WebControls.Button btnCloseReceipt;
         protected global::System.Web.UI.WebControls.HiddenField hdnProductVariantID;
         protected global::System.Web.UI.WebControls.HiddenField hdnLineAction;

@@ -44,7 +44,7 @@ namespace PortableKiosk.Core.Data.Repositories
                 FROM Payments p
                 INNER JOIN Orders o ON o.OrderID = p.OrderID
                 WHERE p.TransactionReference = @Reference
-                    AND p.PaymentMethod = N'CASH_COUNTER'
+                    AND p.PaymentMethod IN (N'CASH_COUNTER', N'CASHLESS')
                     AND p.PaymentStatus = N'PAID';";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
@@ -80,7 +80,8 @@ namespace PortableKiosk.Core.Data.Repositories
                                     existingOrder = new Order
                                     {
                                         OrderID = reader.GetInt32(reader.GetOrdinal("OrderID")),
-                                        OrderNumber = reader.GetString(reader.GetOrdinal("OrderNumber")),
+                                        OrderNumber = OrderRepository.FormatOrderNumber(
+                                            reader.GetString(reader.GetOrdinal("OrderNumber"))),
                                         OrderType = reader.GetString(reader.GetOrdinal("OrderType")),
                                         FulfillmentMethod = reader.GetString(reader.GetOrdinal("FulfillmentMethod")),
                                         TableNumber = reader.IsDBNull(tableNumber)
@@ -240,7 +241,8 @@ namespace PortableKiosk.Core.Data.Repositories
 
             const string paySql = @"
                 UPDATE Payments
-                SET PaymentStatus = N'PAID',
+                SET PaymentMethod = @PaymentMethod,
+                    PaymentStatus = N'PAID',
                     Amount = @Amount,
                     TransactionReference = @TransactionReference,
                     PaidAt = @PaidAt
@@ -276,7 +278,7 @@ namespace PortableKiosk.Core.Data.Repositories
                         {
                             command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                             command.Parameters.Add("@ExpiryMinutes", SqlDbType.Int).Value =
-                                OrderSettings.PendingPaymentExpiryMinutes;
+                                OrderSettings.LegacyPendingPaymentExpiryMinutes;
 
                             using (SqlDataReader reader = command.ExecuteReader())
                             {
@@ -290,7 +292,8 @@ namespace PortableKiosk.Core.Data.Repositories
                                 order = new Order
                                 {
                                     OrderID = reader.GetInt32(reader.GetOrdinal("OrderID")),
-                                    OrderNumber = reader.GetString(reader.GetOrdinal("OrderNumber")),
+                                    OrderNumber = OrderRepository.FormatOrderNumber(
+                                        reader.GetString(reader.GetOrdinal("OrderNumber"))),
                                     OrderType = reader.GetString(reader.GetOrdinal("OrderType")),
                                     FulfillmentMethod = reader.GetString(
                                         reader.GetOrdinal("FulfillmentMethod")),
@@ -360,6 +363,7 @@ namespace PortableKiosk.Core.Data.Repositories
                             paySql, connection, transaction))
                         {
                             command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
+                            command.Parameters.Add("@PaymentMethod", SqlDbType.NVarChar, 20).Value = payment.PaymentMethod;
                             SqlParameter amount = command.Parameters.Add(
                                 "@Amount", SqlDbType.Decimal);
                             amount.Precision = 10;
@@ -383,7 +387,7 @@ namespace PortableKiosk.Core.Data.Repositories
                         {
                             command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                             command.Parameters.Add("@ExpiryMinutes", SqlDbType.Int).Value =
-                                OrderSettings.PendingPaymentExpiryMinutes;
+                                OrderSettings.LegacyPendingPaymentExpiryMinutes;
 
                             if (command.ExecuteNonQuery() != 1)
                             {

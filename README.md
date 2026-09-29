@@ -1,5 +1,7 @@
 # Portable Kiosk
 
+For an existing database, run `PortableKiosk/Database/Migrations/005_ADD_KIOSK_SETTINGS.sql` against `portable_kiosk_db` before deploying this version. A fresh database created from `PortableKiosk/Database/Schema.sql` already includes the settings row. The admin **Settings** page controls kiosk availability and the payment deadline for new cash-at-counter orders.
+
 The Web Forms app uses Tailwind CSS 4. Bootstrap is no longer required. The compiled stylesheet is `PortableKiosk/Content/tailwind.css` and is included in the ASP.NET project, so deployment does not require Node.js.
 
 After changing page classes or stylesheet sources, regenerate it from the repository root:

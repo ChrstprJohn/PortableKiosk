@@ -1,6 +1,8 @@
 using System;
 using PortableKiosk.Shared.Constants;
 using PortableKiosk.Shared.Helpers;
+using PortableKiosk.Core.Models;
+using PortableKiosk.Core.Services;
 
 namespace PortableKiosk.UI.User
 {
@@ -39,12 +41,24 @@ namespace PortableKiosk.UI.User
                 "CASH_COUNTER",
                 StringComparison.OrdinalIgnoreCase);
 
+            int paymentWindowMinutes = OrderSettings.PendingPaymentExpiryMinutes;
+            if (isCashAtCounter)
+            {
+                Order placedOrder = new OrderService().GetByID(
+                    KioskSession.GetCompletedOrderID(Session).Value);
+                if (placedOrder != null && placedOrder.ExpiresAt.HasValue)
+                {
+                    paymentWindowMinutes = Math.Max(1, (int)Math.Ceiling(
+                        (placedOrder.ExpiresAt.Value - placedOrder.CreatedAt).TotalMinutes));
+                }
+            }
+
             string instruction;
             if (isTableService && isCashAtCounter)
             {
                 instruction =
                     "Bring this number to the counter to pay within " +
-                    OrderSettings.PendingPaymentExpiryMinutes +
+                    paymentWindowMinutes +
                     " minutes, then keep your table locator visible.";
             }
             else if (isTableService)
@@ -56,7 +70,7 @@ namespace PortableKiosk.UI.User
             {
                 instruction =
                     "Bring this number to the counter to pay within " +
-                    OrderSettings.PendingPaymentExpiryMinutes +
+                    paymentWindowMinutes +
                     " minutes and collect your order.";
             }
             else

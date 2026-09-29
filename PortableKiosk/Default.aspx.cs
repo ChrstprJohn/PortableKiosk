@@ -1,6 +1,7 @@
 ﻿using System;
 
 using PortableKiosk.Shared.Helpers;
+using PortableKiosk.Core.Services;
 
 namespace PortableKiosk
 {
@@ -8,12 +9,21 @@ namespace PortableKiosk
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            bool available = new KioskSettingsService().Get().IsAvailable;
+            btnStartOrder.Visible = available;
+            pnlUnavailable.Visible = !available;
         }
 
         protected void btnStartOrder_Click(
             object sender,
             EventArgs e)
         {
+            if (!new KioskSettingsService().Get().IsAvailable)
+            {
+                Response.Redirect("~/Default.aspx", false);
+                Context.ApplicationInstance.CompleteRequest();
+                return;
+            }
             KioskSession.StartNewOrder(Session);
             Response.Redirect(
                 "~/UI/User/OrderType.aspx",

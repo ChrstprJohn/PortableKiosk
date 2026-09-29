@@ -14,7 +14,7 @@ web
 
 ## Product Purpose
 
-Portable Kiosk carries an order from menu selection through payment and kitchen fulfillment. The counter POS lets crew review a pending kiosk cash order or build a new sale, collect cash, and show the resulting receipt.
+Portable Kiosk carries an order from menu selection through payment and kitchen fulfillment. The counter POS lets crew review a pending kiosk cash order or build a new sale, collect cash or simulate cashless payment, and show the resulting receipt.
 
 ## Operating Context
 
@@ -24,7 +24,7 @@ The POS opens in an idle state. Crew can select a kiosk order awaiting cash paym
 
 - The application is ASP.NET Web Forms on .NET Framework 4.7.2 with SQL Server.
 - Tailwind CSS is compiled into the deployed stylesheet.
-- This POS release accepts cash only. Kiosk orders eligible for pickup in the POS are pending cash-at-counter orders.
+- The POS offers cash collection and a simulated cashless QR payment. Kiosk orders eligible for pickup in the POS are pending cash-at-counter orders.
 - Existing order and payment records must stay consistent when a kiosk order is changed and paid.
 - New counter orders support dine-in and takeout with counter pickup.
 

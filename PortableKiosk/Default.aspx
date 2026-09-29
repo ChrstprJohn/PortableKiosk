@@ -11,6 +11,10 @@
         </div>
 
         <div class="relative z-20 flex min-h-[clamp(2.5rem,12vw,12rem)] w-full flex-col items-center justify-center border-t border-slate-200/85 bg-white px-6 py-[clamp(0.25rem,1vw,1rem)] shadow-[0_-6px_24px_rgba(15,23,42,0.05)]">
+            <asp:Panel ID="pnlUnavailable" runat="server" Visible="false" CssClass="w-full max-w-xl py-5 text-center">
+                <h1 class="text-2xl font-semibold text-slate-950">Kiosk temporarily unavailable</h1>
+                <p class="mt-2 text-base text-slate-600">Please place your order with a crew member at the counter.</p>
+            </asp:Panel>
             <asp:Button
                 ID="btnStartOrder"
                 runat="server"

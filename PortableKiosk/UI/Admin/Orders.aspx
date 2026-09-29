@@ -59,11 +59,11 @@
                     DataKeyNames="OrderID"
                     OnRowCommand="gridOrders_RowCommand"
                     OnPageIndexChanging="gridOrders_PageIndexChanging"
-                    CssClass="w-full min-w-[1160px] table-fixed border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:break-words [&_td]:px-4 [&_td]:py-3 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
+                    CssClass="w-full min-w-[1240px] table-auto border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:break-words [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
                     EmptyDataText="No orders match these filters.">
                     <PagerStyle CssClass="border-t border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 [&_a]:rounded [&_a]:px-2 [&_a]:py-1 [&_a]:text-slate-700 [&_a:hover]:bg-slate-100 [&_span]:font-semibold [&_span]:text-slate-950" />
                     <Columns>
-                        <asp:TemplateField HeaderText="Order ID" ItemStyle-Width="90px">
+                        <asp:TemplateField HeaderText="ID" ItemStyle-Width="1%" HeaderStyle-Width="1%" ItemStyle-CssClass="whitespace-nowrap" HeaderStyle-CssClass="whitespace-nowrap">
                             <ItemTemplate>
                                 <span class="font-medium text-slate-950">#<%#: Eval("OrderNumber") %></span>
                             </ItemTemplate>
@@ -81,7 +81,7 @@
                         <asp:TemplateField HeaderText="Type" ItemStyle-Width="90px">
                             <ItemTemplate><%#: Eval("OrderTypeDisplay") %></ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Fulfillment" ItemStyle-Width="205px">
+                        <asp:TemplateField HeaderText="Fulfillment" ItemStyle-Width="145px">
                             <ItemTemplate><%#: Eval("FulfillmentDisplay") %></ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Kitchen" ItemStyle-Width="140px">
@@ -89,10 +89,13 @@
                                 <span class='inline-flex whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium <%# KitchenStatusCss(Eval("KitchenStatusDisplay")) %>'><%#: Eval("KitchenStatusDisplay") %></span>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Payment" ItemStyle-Width="125px">
+                        <asp:TemplateField HeaderText="Payment status" ItemStyle-Width="125px">
                             <ItemTemplate>
                                 <span class='inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium <%# PaymentStatusCss(Eval("PaymentStatus")) %>'><%#: Eval("PaymentStatusDisplay") %></span>
                             </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Payment method" ItemStyle-Width="150px">
+                            <ItemTemplate><span class="text-slate-800"><%#: Eval("PaymentMethodDisplay") %></span></ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Total" ItemStyle-Width="110px" ItemStyle-HorizontalAlign="Right" HeaderStyle-HorizontalAlign="Right">
                             <ItemTemplate><span class="whitespace-nowrap font-medium tabular-nums text-slate-900"><%#: Eval("AmountDisplay") %></span></ItemTemplate>
@@ -146,6 +149,7 @@
                         <div><dt class="text-xs font-medium text-slate-500">Expires at</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsExpiresAt" runat="server" /></dd></div>
                         <div><dt class="text-xs font-medium text-slate-500">Order type</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsOrderType" runat="server" /></dd></div>
                         <div><dt class="text-xs font-medium text-slate-500">Fulfillment</dt><dd class="mt-1 break-words text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsFulfillment" runat="server" /></dd></div>
+                        <div><dt class="text-xs font-medium text-slate-500">Payment method</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsPayment" runat="server" /></dd></div>
                     </dl>
 
                     <div class="pt-4">
@@ -187,11 +191,7 @@
                     </div>
 
                     <div class="mt-4 border-t border-dashed border-slate-300 pt-3">
-                        <div class="flex items-center justify-between gap-4">
-                            <span class="text-xs font-medium text-slate-500">Payment method</span>
-                            <span class="text-sm font-medium text-slate-900"><asp:Literal ID="litDetailsPayment" runat="server" /></span>
-                        </div>
-                        <div class="mt-3 flex items-baseline justify-between gap-4">
+                        <div class="flex items-baseline justify-between gap-4">
                             <h3 class="text-sm font-semibold text-slate-950">TOTAL AMOUNT</h3>
                             <p class="text-xl font-semibold tabular-nums tracking-tight text-slate-950"><asp:Literal ID="litDetailsTotal" runat="server" /></p>
                         </div>

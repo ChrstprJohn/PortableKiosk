@@ -13,6 +13,7 @@ namespace PortableKiosk
 
     public partial class _Default
     {
+        protected global::System.Web.UI.WebControls.Panel pnlUnavailable;
 
         /// <summary>
         /// btnStartOrder control.
