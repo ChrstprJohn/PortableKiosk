@@ -12,9 +12,9 @@ namespace PortableKiosk.Core.Services
         private readonly OrderRepository orderRepository = new OrderRepository();
         private readonly OrderItemRepository itemRepository = new OrderItemRepository();
 
-        public List<KitchenOrderCard> GetPaidOrders()
+        public List<KitchenOrderCard> GetPaidOrders(bool includeCompleted = false)
         {
-            return orderRepository.GetPaidKitchenOrders()
+            return orderRepository.GetPaidKitchenOrders(includeCompleted)
                 .Select(order => new KitchenOrderCard
                 {
                     OrderID = order.OrderID,

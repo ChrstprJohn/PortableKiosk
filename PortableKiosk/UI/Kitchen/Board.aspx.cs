@@ -68,10 +68,7 @@ namespace PortableKiosk.UI.Kitchen
                 return;
             }
 
-            if (card.KitchenStatus == "SERVING")
-            {
-                status.Items.Add(new ListItem("Completed", "COMPLETED"));
-            }
+            status.Items.Add(new ListItem("Completed", "COMPLETED"));
             status.SelectedValue = card.KitchenStatus;
         }
 
@@ -117,11 +114,12 @@ namespace PortableKiosk.UI.Kitchen
         {
             try
             {
-                List<KitchenOrderCard> cards = boardService.GetPaidOrders();
+                List<KitchenOrderCard> cards = boardService.GetPaidOrders(true);
 
                 BindColumn(rptQueued, litQueuedCount, emptyQueued, cards, "QUEUED");
                 BindColumn(rptPreparing, litPreparingCount, emptyPreparing, cards, "PREPARING");
                 BindColumn(rptServing, litServingCount, emptyServing, cards, "SERVING");
+                BindColumn(rptCompleted, litCompletedCount, emptyCompleted, cards, "COMPLETED");
             }
             catch (SqlException)
             {
@@ -133,6 +131,10 @@ namespace PortableKiosk.UI.Kitchen
             List<KitchenOrderCard> cards, string status)
         {
             List<KitchenOrderCard> column = cards.Where(c => c.KitchenStatus == status).ToList();
+            if (status == "COMPLETED")
+            {
+                column.Reverse();
+            }
             count.Text = column.Count.ToString(CultureInfo.InvariantCulture);
             empty.Visible = column.Count == 0;
             repeater.DataSource = column;

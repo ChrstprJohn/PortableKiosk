@@ -169,14 +169,15 @@ namespace PortableKiosk.Core.Data.Repositories
             return orders;
         }
 
-        public List<Order> GetPaidKitchenOrders()
+        public List<Order> GetPaidKitchenOrders(bool includeCompleted = false)
         {
             const string sql = @"
                 SELECT o.OrderID, o.OrderNumber, o.OrderType,
                     o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
                     o.ExpiresAt, o.CreatedAt
                 FROM Orders o
-                WHERE o.KitchenStatus IN (N'QUEUED', N'PREPARING', N'SERVING')
+                WHERE (o.KitchenStatus IN (N'QUEUED', N'PREPARING', N'SERVING')
+                    OR (@IncludeCompleted = 1 AND o.KitchenStatus = N'COMPLETED'))
                     AND EXISTS (
                         SELECT 1 FROM Payments p
                         WHERE p.OrderID = o.OrderID AND p.PaymentStatus = N'PAID'
@@ -187,6 +188,7 @@ namespace PortableKiosk.Core.Data.Repositories
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             using (SqlCommand command = new SqlCommand(sql, connection))
             {
+                command.Parameters.Add("@IncludeCompleted", SqlDbType.Bit).Value = includeCompleted;
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -313,10 +315,11 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(orderID, "orderID");
             bool validCurrent = currentStatus == "QUEUED" ||
-                currentStatus == "PREPARING" || currentStatus == "SERVING";
+                currentStatus == "PREPARING" || currentStatus == "SERVING" ||
+                currentStatus == "COMPLETED";
             bool validNext = nextStatus == "QUEUED" ||
                 nextStatus == "PREPARING" || nextStatus == "SERVING" ||
-                (currentStatus == "SERVING" && nextStatus == "COMPLETED");
+                nextStatus == "COMPLETED";
             if (!validCurrent || !validNext || currentStatus == nextStatus)
             {
                 throw new ArgumentException("Invalid kitchen status transition.");

@@ -9,6 +9,8 @@ namespace PortableKiosk.UI.User
     public partial class Complete
     {
         protected global::System.Web.UI.WebControls.Literal litOrderNumber;
+        protected global::System.Web.UI.WebControls.Literal litOrderType;
+        protected global::System.Web.UI.WebControls.Repeater rptOrderItems;
         protected global::System.Web.UI.WebControls.Literal litInstruction;
         protected global::System.Web.UI.WebControls.Button btnFinish;
     }

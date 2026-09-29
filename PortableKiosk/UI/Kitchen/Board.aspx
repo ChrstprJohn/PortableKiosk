@@ -2,7 +2,7 @@
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
     <meta http-equiv="refresh" content="20" />
-    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/kitchen-board.css") %>" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/kitchen-board.css") %>?v=2" />
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -52,6 +52,17 @@
                         <div class="kitchen-status-row"><span class="kitchen-status-label">Status</span><asp:HiddenField ID="hidOrderID" runat="server" Value='<%# Eval("OrderID") %>' /><asp:HiddenField ID="hidCurrentStatus" runat="server" Value='<%# Eval("KitchenStatus") %>' /><asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="StatusChanged" CssClass="kitchen-status" aria-label='<%# "Status for order " + Eval("OrderNumberDisplay") %>'><asp:ListItem Text="Queued" Value="QUEUED" /><asp:ListItem Text="Preparing" Value="PREPARING" /><asp:ListItem Text="Serving" Value="SERVING" /></asp:DropDownList></div>
                     </article>
                 </ItemTemplate></asp:Repeater><asp:PlaceHolder ID="emptyServing" runat="server"><p class="kitchen-empty">No orders</p></asp:PlaceHolder></div>
+            </section>
+            <section class="kitchen-column" aria-labelledby="completedHeading">
+                <h2 id="completedHeading" class="kitchen-column-heading">Completed <span class="kitchen-count"><asp:Literal ID="litCompletedCount" runat="server" /></span></h2>
+                <div class="kitchen-card-list"><asp:Repeater ID="rptCompleted" runat="server" OnItemDataBound="StatusItemDataBound"><ItemTemplate>
+                <article class="kitchen-card">
+                    <div class="kitchen-card-head"><div><strong class="kitchen-order-number"><%#: Eval("OrderNumberDisplay") %></strong><small class="kitchen-time">Ordered <%#: Eval("TimeDisplay") %></small></div><span class='<%# Eval("OrderTypeClass") %>'><%#: Eval("OrderTypeDisplay") %></span></div>
+                    <p class="kitchen-fulfillment"><%#: Eval("FulfillmentDisplay") %></p>
+                    <ul class="kitchen-items"><asp:Repeater runat="server" DataSource='<%# Eval("Items") %>'><ItemTemplate><li class="kitchen-item"><asp:Image runat="server" Visible='<%# HasImage(Eval("ImagePath")) %>' ImageUrl='<%# ResolveProductImage(Eval("ImagePath")) %>' AlternateText="" CssClass="kitchen-item-image" /><span runat="server" visible='<%# !HasImage(Eval("ImagePath")) %>' class="kitchen-item-placeholder" aria-hidden="true"></span><span class="kitchen-item-copy"><strong><%#: Eval("Quantity") %> × <%#: Eval("ProductName") %></strong><small><%#: Eval("DisplaySize") %></small></span></li></ItemTemplate></asp:Repeater></ul>
+                    <div class="kitchen-status-row"><span class="kitchen-status-label">Status</span><asp:HiddenField ID="hidOrderID" runat="server" Value='<%# Eval("OrderID") %>' /><asp:HiddenField ID="hidCurrentStatus" runat="server" Value='<%# Eval("KitchenStatus") %>' /><asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="StatusChanged" CssClass="kitchen-status" aria-label='<%# "Status for order " + Eval("OrderNumberDisplay") %>'><asp:ListItem Text="Queued" Value="QUEUED" /><asp:ListItem Text="Preparing" Value="PREPARING" /><asp:ListItem Text="Serving" Value="SERVING" /></asp:DropDownList></div>
+                </article>
+                </ItemTemplate></asp:Repeater><asp:PlaceHolder ID="emptyCompleted" runat="server"><p class="kitchen-empty">No completed orders yet</p></asp:PlaceHolder></div>
             </section>
         </div>
     </main>

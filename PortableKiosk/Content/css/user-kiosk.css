@@ -386,45 +386,101 @@ body:has(.user-kiosk-shell) [id^="app-dynamic-"] {
     width: 100%;
 }
 
-.order-complete-panel {
-    align-items: center;
-    background: var(--kiosk-surface);
-    border: 1px solid var(--kiosk-line);
-    border-radius: var(--kiosk-radius-xl);
-    box-shadow: var(--kiosk-shadow-card);
-    display: flex;
-    flex-direction: column;
-    max-width: 580px;
-    padding: clamp(2rem, 6vw, 3.5rem);
+.complete-receipt {
+    width: min(100%, 420px);
+    padding-top: 1.5rem;
+}
+
+.complete-receipt-printer {
+    position: relative;
+    height: 78px;
+    margin: 0 10px -40px;
+    border: 2px solid #8d9299;
+    border-radius: 19px;
+    background: linear-gradient(#d8d9dc, #a5a8ad 72%, #8e9298);
+    box-shadow: inset 0 3px 5px #fff9, inset 0 -5px 7px #5558, 0 8px 18px #18233326;
+}
+
+.complete-receipt-printer::before {
+    content: "";
+    position: absolute;
+    inset: 28px 20px 18px;
+    border-radius: 7px;
+    background: #5c6067;
+    box-shadow: inset 0 2px 4px #20232988;
+}
+
+.complete-receipt-paper {
+    position: relative;
+    margin: 0 34px;
+    padding: 2rem clamp(1rem, 4vw, 1.5rem) 2.5rem;
+    background: #fff;
+    color: #172033;
+    box-shadow: 0 9px 20px #18233326;
+    font-family: Courier, "Courier New", monospace;
     text-align: center;
-    width: 100%;
+}
+
+.complete-receipt-paper::before,
+.complete-receipt-paper::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background-size: 8px 5px;
+}
+
+.complete-receipt-paper::before {
+    top: 0;
+    background-image: radial-gradient(circle at 4px 0, #e2e8f0 4px, transparent 4.5px);
+}
+
+.complete-receipt-paper::after {
+    bottom: 0;
+    background-image: radial-gradient(circle at 4px 5px, #e2e8f0 4px, transparent 4.5px);
 }
 
 .complete-order-title {
-    color: var(--kiosk-ink);
-    font-size: clamp(1.8rem, 4vw, 2.75rem);
-    font-weight: 900;
-    letter-spacing: -0.045em;
-    line-height: 1.1;
-    margin: 0 0 clamp(0.75rem, 2vh, 1.5rem);
+    margin: 0;
+    font-size: clamp(0.95rem, 2.4vw, 1.1rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.45;
 }
 
 .complete-order-number {
-    color: var(--kiosk-navy);
-    font-size: clamp(4.5rem, 16vw, 7rem);
-    font-weight: 900;
-    letter-spacing: -0.055em;
+    margin: 1.75rem 0 1.25rem;
+    padding: 1.6rem 0;
+    border-block: 1px dashed #94a3b8;
+    font-size: clamp(2.75rem, 9vw, 4.25rem);
+    font-weight: 700;
     line-height: 1;
-    margin: 0;
+}
+
+.complete-order-type {
+    margin: 0 0 1.5rem;
+    font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+    line-height: 1.5;
+    text-align: left;
+}
+
+.complete-order-items {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0 0 1.5rem;
+    padding: 0 0 1.5rem;
+    border-bottom: 1px dashed #94a3b8;
+    list-style: none;
+    font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+    line-height: 1.5;
+    text-align: left;
 }
 
 .complete-instruction {
-    color: var(--kiosk-ink-secondary);
-    font-size: clamp(1.05rem, 2.7vw, 1.4rem);
-    font-weight: 600;
-    line-height: 1.4;
-    margin: clamp(1.25rem, 3vh, 2rem) 0;
-    max-width: 30ch;
+    margin: 0;
+    font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+    line-height: 1.6;
 }
 
 @media screen and (max-width: 540px) {
@@ -1288,10 +1344,6 @@ body:has(.user-kiosk-shell) [id^="app-dynamic-"] {
     .table-number-keypad button {
         min-height: 44px;
         font-size: 1.35rem;
-    }
-
-    .order-complete-panel {
-        padding: 2rem;
     }
 
     .kiosk-attract-actions {
