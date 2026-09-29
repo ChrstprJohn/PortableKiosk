@@ -148,6 +148,7 @@
     <Content Include="Site.Master" />
     <Content Include="UI\Account\AdminLogin.aspx" />
     <Content Include="UI\Account\SignOut.aspx" />
+    <Content Include="UI\Kitchen\Board.aspx" />
     <Content Include="UI\Admin\CatalogConfig.aspx" />
     <Content Include="UI\Admin\Orders.aspx" />
     <Content Include="UI\Admin\Analytics.aspx" />
@@ -263,6 +264,13 @@
     </Compile>
     <Compile Include="UI\Account\SignOut.aspx.designer.cs">
       <DependentUpon>SignOut.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Kitchen\Board.aspx.cs">
+      <DependentUpon>Board.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Kitchen\Board.aspx.designer.cs">
+      <DependentUpon>Board.aspx</DependentUpon>
     </Compile>
     <Compile Include="UI\Admin\CatalogConfig.aspx.cs">
       <DependentUpon>CatalogConfig.aspx</DependentUpon>

@@ -14,6 +14,10 @@ namespace PortableKiosk.UI.Account
     public partial class AdminLogin
     {
 
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl rolePicker;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl loginForm;
+        protected global::System.Web.UI.WebControls.Literal litWorkspace;
+
         /// <summary>
         /// validationSummary control.
         /// </summary>

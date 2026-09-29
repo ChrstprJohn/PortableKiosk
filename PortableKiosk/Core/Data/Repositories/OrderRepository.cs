@@ -169,6 +169,36 @@ namespace PortableKiosk.Core.Data.Repositories
             return orders;
         }
 
+        public List<Order> GetPaidKitchenOrders()
+        {
+            const string sql = @"
+                SELECT o.OrderID, o.OrderNumber, o.OrderType,
+                    o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
+                    o.ExpiresAt, o.CreatedAt
+                FROM Orders o
+                WHERE o.KitchenStatus IN (N'QUEUED', N'PREPARING', N'READY')
+                    AND EXISTS (
+                        SELECT 1 FROM Payments p
+                        WHERE p.OrderID = o.OrderID AND p.PaymentStatus = N'PAID'
+                    )
+                ORDER BY o.CreatedAt, o.OrderID;";
+
+            List<Order> orders = new List<Order>();
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        orders.Add(Map(reader));
+                    }
+                }
+            }
+            return orders;
+        }
+
         public int CancelExpiredPendingOrders()
         {
             const string sql = @"
@@ -276,6 +306,37 @@ namespace PortableKiosk.Core.Data.Repositories
                     SqlDbType.Int).Value = order.OrderID;
                 connection.Open();
                 return command.ExecuteNonQuery() > 0;
+            }
+        }
+
+        public bool SetKitchenStatus(int orderID, string currentStatus, string nextStatus)
+        {
+            ValidateID(orderID, "orderID");
+            bool validCurrent = currentStatus == "QUEUED" ||
+                currentStatus == "PREPARING" || currentStatus == "READY";
+            bool validNext = nextStatus == "QUEUED" ||
+                nextStatus == "PREPARING" || nextStatus == "READY" ||
+                (currentStatus == "READY" && nextStatus == "COMPLETED");
+            if (!validCurrent || !validNext || currentStatus == nextStatus)
+            {
+                throw new ArgumentException("Invalid kitchen status transition.");
+            }
+
+            const string sql = @"
+                UPDATE Orders
+                SET KitchenStatus = @NextStatus
+                WHERE OrderID = @OrderID AND KitchenStatus = @CurrentStatus
+                    AND EXISTS (SELECT 1 FROM Payments
+                        WHERE Payments.OrderID = Orders.OrderID
+                            AND PaymentStatus = N'PAID');";
+            using (SqlConnection connection = DatabaseConnection.GetConnection())
+            using (SqlCommand command = new SqlCommand(sql, connection))
+            {
+                command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
+                command.Parameters.Add("@CurrentStatus", SqlDbType.NVarChar, 20).Value = currentStatus;
+                command.Parameters.Add("@NextStatus", SqlDbType.NVarChar, 20).Value = nextStatus;
+                connection.Open();
+                return command.ExecuteNonQuery() == 1;
             }
         }
 

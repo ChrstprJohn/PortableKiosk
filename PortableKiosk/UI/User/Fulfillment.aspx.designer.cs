@@ -8,6 +8,8 @@ namespace PortableKiosk.UI.User
 {
     public partial class Fulfillment
     {
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl fulfillmentBackFooter;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkBackToPayment;
         protected global::System.Web.UI.WebControls.Label lblFulfillmentError;
         protected global::System.Web.UI.WebControls.LinkButton btnTableService;
         protected global::System.Web.UI.WebControls.LinkButton btnCounterPickup;

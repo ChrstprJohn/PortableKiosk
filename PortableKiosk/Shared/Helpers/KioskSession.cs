@@ -133,6 +133,18 @@ namespace PortableKiosk.Shared.Helpers
             session[OnlinePaymentConfirmedKey] = true;
         }
 
+        public static bool HasConfirmedOnlinePayment(
+            HttpSessionState session)
+        {
+            return session != null &&
+                string.Equals(
+                    GetPaymentMethod(session),
+                    "CASHLESS",
+                    StringComparison.OrdinalIgnoreCase) &&
+                session[OnlinePaymentConfirmedKey] is bool &&
+                (bool)session[OnlinePaymentConfirmedKey];
+        }
+
         public static bool CanContinueFromPayment(
             HttpSessionState session)
         {
@@ -146,12 +158,7 @@ namespace PortableKiosk.Shared.Helpers
                 return true;
             }
 
-            return string.Equals(
-                    paymentMethod,
-                    "CASHLESS",
-                    StringComparison.OrdinalIgnoreCase) &&
-                session[OnlinePaymentConfirmedKey] is bool &&
-                (bool)session[OnlinePaymentConfirmedKey];
+            return HasConfirmedOnlinePayment(session);
         }
 
         public static string GetFulfillmentMethod(

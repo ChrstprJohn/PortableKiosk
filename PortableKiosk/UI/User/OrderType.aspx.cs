@@ -10,6 +10,17 @@ namespace PortableKiosk.UI.User
             if (!KioskSession.HasActiveOrder(Session))
             {
                 Redirect("~/Default.aspx");
+                return;
+            }
+
+            if (KioskSession.HasConfirmedOnlinePayment(Session))
+            {
+                Response.Redirect(
+                    KioskSession.HasCompletedOrder(Session)
+                        ? "~/UI/User/Complete.aspx"
+                        : "~/UI/User/Fulfillment.aspx",
+                    true);
+                return;
             }
         }
 

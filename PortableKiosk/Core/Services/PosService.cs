@@ -77,6 +77,14 @@ namespace PortableKiosk.Core.Services
                     "This kiosk order has expired. Choose another order.");
             }
 
+            if (payment != null && payment.PaymentStatus == "PAID")
+            {
+                throw new InvalidOperationException(
+                    payment.PaymentMethod == "CASHLESS"
+                        ? "This kiosk order has already been paid online. No payment is needed at the counter."
+                        : "This kiosk order has already been paid. No payment is needed at the counter.");
+            }
+
             if (payment == null ||
                 payment.PaymentMethod != "CASH_COUNTER" ||
                 payment.PaymentStatus != "PENDING" ||

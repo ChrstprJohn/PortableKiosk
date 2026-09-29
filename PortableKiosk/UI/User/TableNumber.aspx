@@ -57,7 +57,7 @@
         </section>
     </main>
     <footer class="kiosk-flow-footer kiosk-cta-footer"><div class="kiosk-flow-footer-inner kiosk-cta-footer-inner">
-        <a runat="server" href="~/UI/User/Fulfillment.aspx" class="kiosk-cta-button kiosk-cta-button-secondary kiosk-flow-back">Back</a>
+        <a id="lnkBackToFulfillment" runat="server" href="~/UI/User/Fulfillment.aspx" class="kiosk-cta-button kiosk-cta-button-secondary kiosk-flow-back">Back</a>
         <asp:Button ID="btnContinue" runat="server" Text="Go"
             CssClass="kiosk-cta-button kiosk-cta-button-primary kiosk-flow-primary"
             OnClick="btnContinue_Click" />

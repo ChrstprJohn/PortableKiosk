@@ -67,13 +67,8 @@ namespace PortableKiosk.UI.POS
             }
 
             string role = Convert.ToString(Session["StaffRole"]);
-            if (string.Equals(role, "ADMIN", StringComparison.OrdinalIgnoreCase))
-            {
-                Redirect("~/UI/Admin/CatalogConfig.aspx");
-                return;
-            }
-
-            if (!string.Equals(role, "CREW", StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(role, "CREW", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(role, "ADMIN", StringComparison.OrdinalIgnoreCase))
             {
                 Session.Clear();
                 Redirect("~/UI/Account/AdminLogin.aspx");

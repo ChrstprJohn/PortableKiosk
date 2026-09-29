@@ -123,8 +123,8 @@
                         CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Workspace role *" />
                     <asp:DropDownList ID="ddlRole" runat="server"
                         CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
-                        <asp:ListItem Text="Crew — POS access" Value="CREW" />
-                        <asp:ListItem Text="Admin — management access" Value="ADMIN" />
+                          <asp:ListItem Text="Crew — POS and kitchen access" Value="CREW" />
+                        <asp:ListItem Text="Admin — all workspaces" Value="ADMIN" />
                     </asp:DropDownList>
                 </div>
 
@@ -268,8 +268,8 @@
                         <div>
                             <asp:Label ID="lblEditStaffRole" runat="server" AssociatedControlID="ddlEditStaffRole" CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Workspace role *" />
                             <asp:DropDownList ID="ddlEditStaffRole" runat="server" CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
-                                <asp:ListItem Text="Crew — POS access" Value="CREW" />
-                                <asp:ListItem Text="Admin — management access" Value="ADMIN" />
+                                  <asp:ListItem Text="Crew — POS and kitchen access" Value="CREW" />
+                                <asp:ListItem Text="Admin — all workspaces" Value="ADMIN" />
                             </asp:DropDownList>
                         </div>
                         <div class="flex min-h-10 items-center">

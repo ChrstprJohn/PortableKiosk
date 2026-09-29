@@ -33,6 +33,9 @@ namespace PortableKiosk.UI.User
                 Redirect("~/UI/User/Fulfillment.aspx");
                 return;
             }
+
+            lnkBackToFulfillment.Visible =
+                !KioskSession.HasConfirmedOnlinePayment(Session);
         }
 
         protected void btnContinue_Click(

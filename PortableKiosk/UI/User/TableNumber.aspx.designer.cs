@@ -8,6 +8,7 @@ namespace PortableKiosk.UI.User
 {
     public partial class TableNumber
     {
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkBackToFulfillment;
         protected global::System.Web.UI.WebControls.Label lblTableNumber;
         protected global::System.Web.UI.WebControls.TextBox txtTableNumber;
         protected global::System.Web.UI.WebControls.Label lblTableNumberError;

@@ -14,13 +14,25 @@ namespace PortableKiosk.UI.Account
             object sender,
             EventArgs e)
         {
+            string mode = SelectedMode;
+            rolePicker.Visible = mode == null;
+            loginForm.Visible = mode != null;
+            litWorkspace.Text = mode == "admin" ? "Admin" : mode == "kitchen" ? "Kitchen" : "POS";
+
             if (!IsPostBack &&
-                Session["StaffAccountID"] != null)
+                Session["StaffAccountID"] != null && mode != null)
             {
-                RedirectForRole(
-                    Convert.ToString(
-                        Session["StaffRole"]));
+                RedirectForRole(Convert.ToString(Session["StaffRole"]), mode);
                 return;
+            }
+        }
+
+        private string SelectedMode
+        {
+            get
+            {
+                string mode = (Request.QueryString["mode"] ?? string.Empty).ToLowerInvariant();
+                return mode == "admin" || mode == "pos" || mode == "kitchen" ? mode : null;
             }
         }
 
@@ -32,6 +44,12 @@ namespace PortableKiosk.UI.Account
 
             if (!Page.IsValid)
             {
+                return;
+            }
+
+            if (SelectedMode == null)
+            {
+                ShowError("Choose a workspace before signing in.");
                 return;
             }
 
@@ -47,6 +65,12 @@ namespace PortableKiosk.UI.Account
                     ShowError(
                         "The email or password is incorrect.");
 
+                    return;
+                }
+
+                if (!CanAccess(staff.StaffRole, SelectedMode))
+                {
+                    ShowError("This account does not have access to the selected workspace.");
                     return;
                 }
 
@@ -67,7 +91,7 @@ namespace PortableKiosk.UI.Account
                 Session["StaffRole"] =
                     staff.StaffRole;
 
-                RedirectForRole(staff.StaffRole);
+                RedirectForRole(staff.StaffRole, SelectedMode);
             }
             catch (SqlException)
             {
@@ -89,14 +113,28 @@ namespace PortableKiosk.UI.Account
             lblMessage.Visible = true;
         }
 
-        private void RedirectForRole(string staffRole)
+        private static bool CanAccess(string staffRole, string mode)
         {
-            string destination = string.Equals(
-                staffRole,
-                "ADMIN",
-                StringComparison.OrdinalIgnoreCase)
-                    ? "~/UI/Admin/CatalogConfig.aspx"
-                    : "~/UI/POS/Index.aspx";
+            if (string.Equals(staffRole, "ADMIN", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return mode != "admin" &&
+                string.Equals(staffRole, "CREW", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private void RedirectForRole(string staffRole, string mode)
+        {
+            if (!CanAccess(staffRole, mode))
+            {
+                ShowError("This account does not have access to the selected workspace.");
+                return;
+            }
+
+            string destination = mode == "admin"
+                ? "~/UI/Admin/CatalogConfig.aspx"
+                : mode == "kitchen" ? "~/UI/Kitchen/Board.aspx" : "~/UI/POS/Index.aspx";
 
             Response.Redirect(destination, false);
 

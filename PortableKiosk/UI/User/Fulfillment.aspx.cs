@@ -43,6 +43,9 @@ namespace PortableKiosk.UI.User
                             : "~/UI/User/Payment.aspx");
                 return;
             }
+
+            fulfillmentBackFooter.Visible =
+                !KioskSession.HasConfirmedOnlinePayment(Session);
         }
 
         protected void btnTableService_Click(

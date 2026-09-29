@@ -14,6 +14,16 @@ namespace PortableKiosk.UI.User
                 return;
             }
 
+            if (KioskSession.HasConfirmedOnlinePayment(Session))
+            {
+                Response.Redirect(
+                    KioskSession.HasCompletedOrder(Session)
+                        ? "~/UI/User/Complete.aspx"
+                        : "~/UI/User/Fulfillment.aspx",
+                    true);
+                return;
+            }
+
             Cart cart = KioskSession.GetCart(Session);
 
             if (cart.IsEmpty)

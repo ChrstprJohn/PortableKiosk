@@ -150,6 +150,11 @@ namespace PortableKiosk.Core.Services
             return orderRepository.GetAll();
         }
 
+        public List<Order> GetPaidKitchenOrders()
+        {
+            return orderRepository.GetPaidKitchenOrders();
+        }
+
         public int CancelExpiredPendingOrders()
         {
             return orderRepository.CancelExpiredPendingOrders();
@@ -158,6 +163,11 @@ namespace PortableKiosk.Core.Services
         public bool Update(Order order)
         {
             return orderRepository.Update(order);
+        }
+
+        public bool SetKitchenStatus(int orderID, string currentStatus, string nextStatus)
+        {
+            return orderRepository.SetKitchenStatus(orderID, currentStatus, nextStatus);
         }
 
         public bool Delete(int orderID)

@@ -61,7 +61,7 @@
         </div>
 
     </main>
-    <footer class="kiosk-flow-footer kiosk-cta-footer"><div class="kiosk-flow-footer-inner kiosk-cta-footer-inner">
-        <a runat="server" href="~/UI/User/Payment.aspx" class="kiosk-cta-button kiosk-cta-button-secondary kiosk-flow-back">Back</a>
+    <footer id="fulfillmentBackFooter" runat="server" class="kiosk-flow-footer kiosk-cta-footer"><div class="kiosk-flow-footer-inner kiosk-cta-footer-inner">
+        <a id="lnkBackToPayment" runat="server" href="~/UI/User/Payment.aspx" class="kiosk-cta-button kiosk-cta-button-secondary kiosk-flow-back">Back</a>
     </div></footer>
 </asp:Content>

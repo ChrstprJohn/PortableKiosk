@@ -3,9 +3,19 @@
     Inherits="PortableKiosk.UI.Account.AdminLogin" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <main class="-m-3 flex min-h-dvh items-center justify-center bg-slate-50 px-6 py-12 text-slate-950 md:-mx-6 md:-my-4" aria-labelledby="loginHeading">
-        <section class="w-full max-w-sm py-8" aria-labelledby="loginHeading">
-                <h1 id="loginHeading" class="text-4xl font-semibold tracking-tight text-slate-950">Staff sign in</h1>
+    <main class="-m-3 flex min-h-dvh items-center justify-center bg-slate-50 px-6 py-12 text-slate-950 md:-mx-6 md:-my-4">
+        <section id="rolePicker" runat="server" class="w-full max-w-2xl">
+            <h1 id="roleHeading" class="text-3xl font-semibold tracking-tight md:text-4xl">Choose your workspace</h1>
+            <p class="mt-2 text-slate-600">Select where you want to sign in.</p>
+            <div class="mt-6 grid gap-3">
+                <a href="AdminLogin.aspx?mode=admin" class="flex min-h-24 items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"><span><span class="block text-xl font-semibold">Admin</span><span class="mt-1 block text-sm text-slate-600">Manage products, orders, and staff.</span></span><span class="shrink-0 text-sm font-semibold text-blue-700">Sign in</span></a>
+                <a href="AdminLogin.aspx?mode=pos" class="flex min-h-24 items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"><span><span class="block text-xl font-semibold">POS</span><span class="mt-1 block text-sm text-slate-600">Take orders and collect payment.</span></span><span class="shrink-0 text-sm font-semibold text-blue-700">Sign in</span></a>
+                <a href="AdminLogin.aspx?mode=kitchen" class="flex min-h-24 items-center justify-between gap-4 rounded-xl bg-white px-5 py-4 shadow-sm transition hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"><span><span class="block text-xl font-semibold">Kitchen</span><span class="mt-1 block text-sm text-slate-600">Prepare and serve paid orders.</span></span><span class="shrink-0 text-sm font-semibold text-blue-700">Sign in</span></a>
+            </div>
+        </section>
+        <section id="loginForm" runat="server" class="w-full max-w-sm py-8" aria-labelledby="loginHeading">
+                <a href="AdminLogin.aspx" class="mb-8 inline-block text-sm font-medium text-blue-700 hover:underline">← Choose workspace</a>
+                <h1 id="loginHeading" class="text-4xl font-semibold tracking-tight text-slate-950"><asp:Literal ID="litWorkspace" runat="server" /> sign in</h1>
                 <div class="mt-5 h-px w-full bg-slate-200" aria-hidden="true"></div>
 
                 <asp:ValidationSummary ID="validationSummary" runat="server" ValidationGroup="StaffLoginForm"
