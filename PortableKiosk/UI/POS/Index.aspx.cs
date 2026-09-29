@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.IO;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -326,6 +328,136 @@ namespace PortableKiosk.UI.POS
             ResetFilters();
         }
 
+        protected void btnDownloadReceipt_Click(object sender, EventArgs e)
+        {
+            if (!CanAct(ReceiptStage) || Current.Receipt == null) return;
+            PosReceipt receipt = Current.Receipt;
+            byte[] pdf = CreateReceiptPdf(receipt);
+            string safeNumber = new string((receipt.Order.OrderNumber ?? "receipt")
+                .Where(c => char.IsLetterOrDigit(c) || c == '-').ToArray());
+            if (safeNumber.Length == 0) safeNumber = "receipt";
+            Response.Clear();
+            Response.ContentType = "application/pdf";
+            Response.AddHeader("Content-Disposition", "attachment; filename=receipt-" + safeNumber + ".pdf");
+            Response.BinaryWrite(pdf);
+            Response.End();
+        }
+
+        private static byte[] CreateReceiptPdf(PosReceipt receipt)
+        {
+            List<string> lines = BuildReceiptLines(receipt);
+            int height = 46 + lines.Count * 16;
+            var content = new StringBuilder();
+            content.Append("BT /F1 10 Tf 16 ").Append(height - 28).Append(" Td 16 TL\n");
+            foreach (string line in lines)
+                content.Append('(').Append(EscapePdf(line)).Append(") Tj T*\n");
+            content.Append("ET\n");
+            byte[] stream = Encoding.ASCII.GetBytes(content.ToString());
+            using (var output = new MemoryStream())
+            {
+                var offsets = new List<long> { 0 };
+                WritePdf(output, "%PDF-1.4\n");
+                WriteObject(output, offsets, 1, "<< /Type /Catalog /Pages 2 0 R >>");
+                WriteObject(output, offsets, 2, "<< /Type /Pages /Kids [3 0 R] /Count 1 >>");
+                WriteObject(output, offsets, 3, "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 226 " + height + "] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>");
+                WriteObject(output, offsets, 4, "<< /Type /Font /Subtype /Type1 /BaseFont /Courier /Encoding /WinAnsiEncoding >>");
+                offsets.Add(output.Position);
+                WritePdf(output, "5 0 obj\n<< /Length " + stream.Length + " >>\nstream\n");
+                output.Write(stream, 0, stream.Length);
+                WritePdf(output, "endstream\nendobj\n");
+                long xref = output.Position;
+                WritePdf(output, "xref\n0 6\n0000000000 65535 f \n");
+                for (int i = 1; i <= 5; i++)
+                    WritePdf(output, offsets[i].ToString("D10", CultureInfo.InvariantCulture) + " 00000 n \n");
+                WritePdf(output, "trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n" + xref + "\n%%EOF");
+                return output.ToArray();
+            }
+        }
+
+        private static List<string> BuildReceiptLines(PosReceipt receipt)
+        {
+            var lines = new List<string>();
+            lines.Add(receipt.Payment.PaymentMethod == "CASHLESS" ? "PAYMENT RECEIPT" : "CASH RECEIPT");
+            lines.Add(string.Empty);
+            lines.Add("--------------------------------");
+            lines.Add(string.Empty);
+            lines.Add("Receipt: #" + receipt.Order.OrderNumber);
+            DateTime paidAt = receipt.Payment.PaidAt ?? receipt.Order.CreatedAt;
+            lines.Add("Date: " + DateTime.SpecifyKind(paidAt, DateTimeKind.Utc)
+                .ToLocalTime().ToString("MMM d, yyyy h:mm tt", CultureInfo.GetCultureInfo("en-PH")));
+            lines.Add(string.Empty);
+            lines.Add(Truncate("Order: " + DescribeOrder(receipt.Order).Replace(" · ", " / "), 32));
+            lines.Add(string.Empty);
+            lines.Add("--------------------------------");
+            lines.Add(string.Empty);
+            foreach (CartItem item in receipt.Items)
+            {
+                lines.Add(Truncate(item.Quantity + " x " + item.ProductName, 32));
+                lines.Add(ReceiptAmountLine(item.DisplaySize, item.LineTotal));
+                lines.Add(string.Empty);
+            }
+            lines.Add("--------------------------------");
+            lines.Add(string.Empty);
+            lines.Add(ReceiptAmountLine("TOTAL", receipt.Payment.Amount));
+            if (receipt.Payment.PaymentMethod == "CASHLESS")
+                lines.Add("Payment: Cashless (simulated)");
+            else
+            {
+                lines.Add(ReceiptAmountLine("Cash received", receipt.Tendered));
+                lines.Add(ReceiptAmountLine("Change", receipt.Change));
+            }
+            lines.Add(string.Empty);
+            lines.Add("--------------------------------");
+            lines.Add(string.Empty);
+            lines.Add("THANK YOU FOR YOUR ORDER!");
+            lines.Add(string.Empty);
+            lines.Add("Please keep this receipt.");
+            return lines.Select(ReceiptAscii).ToList();
+        }
+
+        private static string ReceiptAscii(string value)
+        {
+            return new string((value ?? string.Empty)
+                .Select(c => c >= 32 && c <= 126 ? c : '?').ToArray());
+        }
+
+        private static string ReceiptAmountLine(string label, decimal amount)
+        {
+            string value = "PHP " + amount.ToString("N2", CultureInfo.GetCultureInfo("en-PH"));
+            string shortLabel = Truncate(label, 32 - value.Length - 1);
+            int spaces = Math.Max(1, 32 - shortLabel.Length - value.Length);
+            return shortLabel + new string(' ', spaces) + value;
+        }
+
+        private static string Truncate(string value, int length)
+        {
+            value = value ?? string.Empty;
+            return value.Length <= length ? value : value.Substring(0, length - 1) + "~";
+        }
+
+        private static string EscapePdf(string value)
+        {
+            var result = new StringBuilder();
+            foreach (char c in value ?? string.Empty)
+            {
+                if (c == '(' || c == ')' || c == '\\') result.Append('\\');
+                result.Append(c >= 32 && c <= 126 ? c : '?');
+            }
+            return result.ToString();
+        }
+
+        private static void WritePdf(Stream stream, string value)
+        {
+            byte[] bytes = Encoding.ASCII.GetBytes(value);
+            stream.Write(bytes, 0, bytes.Length);
+        }
+
+        private static void WriteObject(Stream stream, List<long> offsets, int number, string value)
+        {
+            offsets.Add(stream.Position);
+            WritePdf(stream, number + " 0 obj\n" + value + "\nendobj\n");
+        }
+
         private void SetNewOrderType(string orderType)
         {
             if (!CanAct(RegisterStage) || Current.Sale == null ||
@@ -507,25 +639,8 @@ namespace PortableKiosk.UI.POS
 
         private void BindReceipt(PosReceipt receipt)
         {
-            DateTime paidAt = receipt.Payment.PaidAt ??
-                receipt.Order.CreatedAt;
-            litReceiptDate.Text = Server.HtmlEncode(
-                DateTime.SpecifyKind(paidAt, DateTimeKind.Utc)
-                    .ToLocalTime().ToString(
-                        "MMM d, yyyy h:mm tt",
-                        CultureInfo.GetCultureInfo("en-PH")));
-            litReceiptNumber.Text = Server.HtmlEncode(
-                receipt.Order.OrderNumber);
-            litReceiptOrderDetails.Text = Server.HtmlEncode(
-                DescribeOrder(receipt.Order));
-            rptReceiptItems.DataSource = receipt.Items;
-            rptReceiptItems.DataBind();
-            litReceiptTotal.Text = FormatMoney(receipt.Payment.Amount);
-            litReceiptTendered.Text = FormatMoney(receipt.Tendered);
-            litReceiptChange.Text = FormatMoney(receipt.Change);
-            bool cashless = receipt.Payment.PaymentMethod == "CASHLESS";
-            pnlReceiptCash.Visible = !cashless;
-            pnlReceiptCashless.Visible = cashless;
+            litReceiptPreview.Text = Server.HtmlEncode(
+                string.Join("\n", BuildReceiptLines(receipt)));
         }
 
         protected string FormatMoney(object value)

@@ -2,6 +2,22 @@
     AutoEventWireup="true" CodeBehind="Index.aspx.cs"
     Inherits="PortableKiosk.UI.POS.Index" %>
 
+<asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
+    <style>
+        .receipt-preview { width: min(100%, 370px); margin: 0 auto; padding-top: 2rem; }
+        .receipt-printer { position: relative; height: 74px; margin: 0 9px -40px; border: 2px solid #8d9299; border-radius: 19px; background: linear-gradient(#d8d9dc, #a5a8ad 72%, #8e9298); box-shadow: inset 0 3px 5px #fff9, inset 0 -5px 7px #5558, 0 8px 18px #18233326; }
+        .receipt-printer::before { content: ""; position: absolute; inset: 28px 20px 18px; border-radius: 7px; background: #5c6067; box-shadow: inset 0 2px 4px #20232988; }
+        .receipt-paper { position: relative; margin: 0 35px; padding: 18pt 16pt 28pt; background: #fff; color: #222; box-shadow: 0 9px 20px #18233326; }
+        .receipt-paper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: radial-gradient(circle at 4px 0, #e2e8f0 4px, transparent 4.5px) repeat-x; background-size: 8px 5px; }
+        .receipt-paper::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 5px; background: radial-gradient(circle at 4px 5px, #e2e8f0 4px, transparent 4.5px) repeat-x; background-size: 8px 5px; }
+        .receipt-paper pre { margin: 0; font-family: Courier, "Courier New", monospace; font-size: 10pt; line-height: 16pt; font-weight: 400; letter-spacing: 0; white-space: pre; overflow-x: auto; }
+        .receipt-actions { display: flex; gap: 12px; width: min(100%, 370px); margin: 32px auto 0; }
+        .receipt-actions > input { flex: 1; min-width: 0; }
+        @media (max-width: 440px) { .receipt-actions { flex-direction: column; } }
+        @media (max-width: 400px) { .receipt-paper { margin: 0 22px; padding-inline: 10pt; } }
+    </style>
+</asp:Content>
+
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="-mx-3 -my-3 min-h-dvh bg-slate-100 text-slate-900 md:-mx-6 md:-my-4">
         <asp:Label ID="lblError" runat="server" ClientIDMode="Static" EnableViewState="false" Visible="false" role="alert"
@@ -291,39 +307,16 @@
         </asp:Panel>
 
         <asp:Panel ID="pnlReceipt" runat="server" Visible="false">
-            <main class="mx-auto max-w-xl px-5 py-10 sm:px-8">
-                <div class="text-center">
-                    <span class="mx-auto inline-flex size-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-800" aria-hidden="true">
-                        <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4 4L19 6" /></svg>
-                    </span>
-                    <h1 class="mt-4 text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Payment complete</h1>
-                    <p class="mt-2 text-sm text-slate-600">The order has been sent to the kitchen queue.</p>
+            <main class="mx-auto max-w-2xl px-5 pb-10 pt-4 sm:px-8">
+                <div class="receipt-preview"><div class="receipt-printer" aria-hidden="true"></div>
+                <section aria-label="Receipt preview" class="receipt-paper"><pre><asp:Literal ID="litReceiptPreview" runat="server" /></pre></section>
                 </div>
-                <section aria-labelledby="finalReceiptHeading" class="mt-8 rounded-xl border border-slate-200 bg-white p-5 sm:p-7">
-                    <div class="flex items-start justify-between gap-4 border-b border-slate-200 pb-5">
-                        <div><h2 id="finalReceiptHeading" class="text-lg font-semibold text-slate-950">Receipt</h2>
-                            <p class="mt-1 text-sm text-slate-600"><asp:Literal ID="litReceiptDate" runat="server" /></p></div>
-                        <strong class="text-lg font-semibold text-slate-950">#<asp:Literal ID="litReceiptNumber" runat="server" /></strong>
-                    </div>
-                    <p class="mt-4 text-sm text-slate-600"><asp:Literal ID="litReceiptOrderDetails" runat="server" /></p>
-                    <div class="mt-5 divide-y divide-slate-100">
-                        <asp:Repeater ID="rptReceiptItems" runat="server"><ItemTemplate>
-                            <div class="flex items-start justify-between gap-4 py-3 text-sm">
-                                <span><strong class="font-medium text-slate-950"><%# Eval("Quantity") %> × <%#: Eval("ProductName") %></strong><br />
-                                    <span class="text-xs text-slate-600"><%#: Eval("DisplaySize") %> · <%# FormatMoney(Eval("UnitPrice")) %> each</span></span>
-                                <strong class="shrink-0 font-semibold tabular-nums text-slate-950"><%# FormatMoney(Eval("LineTotal")) %></strong>
-                            </div>
-                        </ItemTemplate></asp:Repeater>
-                    </div>
-                    <dl class="mt-5 space-y-3 border-t border-slate-200 pt-5 text-sm">
-                        <div class="flex justify-between"><dt class="text-slate-600">Total</dt><dd class="font-semibold tabular-nums text-slate-950"><asp:Literal ID="litReceiptTotal" runat="server" /></dd></div>
-                        <asp:Panel ID="pnlReceiptCash" runat="server"><div class="flex justify-between"><dt class="text-slate-600">Cash received</dt><dd class="font-medium tabular-nums text-slate-950"><asp:Literal ID="litReceiptTendered" runat="server" /></dd></div>
-                        <div class="mt-3 flex justify-between border-t border-slate-200 pt-3"><dt class="font-semibold text-slate-950">Change</dt><dd class="font-semibold tabular-nums text-slate-950"><asp:Literal ID="litReceiptChange" runat="server" /></dd></div></asp:Panel>
-                        <asp:Panel ID="pnlReceiptCashless" runat="server" Visible="false"><div class="flex justify-between"><dt class="text-slate-600">Payment method</dt><dd class="font-medium text-slate-950">Cashless (simulated)</dd></div></asp:Panel>
-                    </dl>
-                </section>
-                <asp:Button ID="btnCloseReceipt" runat="server" OnClick="btnCloseReceipt_Click" Text="Close and start next sale"
-                    CssClass="mt-6 min-h-12 w-full cursor-pointer rounded-lg bg-blue-700 px-4 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                <div class="receipt-actions">
+                    <asp:Button ID="btnDownloadReceipt" runat="server" OnClick="btnDownloadReceipt_Click" Text="Download PDF"
+                        CssClass="min-h-12 flex-1 cursor-pointer rounded-lg bg-blue-700 px-4 text-sm font-semibold text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                    <asp:Button ID="btnCloseReceipt" runat="server" OnClick="btnCloseReceipt_Click" Text="Next sale"
+                        CssClass="min-h-12 flex-1 cursor-pointer rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-900 hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                </div>
             </main>
         </asp:Panel>
     </div>

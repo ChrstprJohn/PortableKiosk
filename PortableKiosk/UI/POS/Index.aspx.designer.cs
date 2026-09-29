@@ -43,15 +43,8 @@ namespace PortableKiosk.UI.POS
         protected global::System.Web.UI.WebControls.TextBox txtTendered;
         protected global::System.Web.UI.WebControls.Button btnCompletePayment;
         protected global::System.Web.UI.WebControls.Panel pnlReceipt;
-        protected global::System.Web.UI.WebControls.Literal litReceiptDate;
-        protected global::System.Web.UI.WebControls.Literal litReceiptNumber;
-        protected global::System.Web.UI.WebControls.Literal litReceiptOrderDetails;
-        protected global::System.Web.UI.WebControls.Repeater rptReceiptItems;
-        protected global::System.Web.UI.WebControls.Literal litReceiptTotal;
-        protected global::System.Web.UI.WebControls.Literal litReceiptTendered;
-        protected global::System.Web.UI.WebControls.Literal litReceiptChange;
-        protected global::System.Web.UI.WebControls.Panel pnlReceiptCash;
-        protected global::System.Web.UI.WebControls.Panel pnlReceiptCashless;
+        protected global::System.Web.UI.WebControls.Literal litReceiptPreview;
+        protected global::System.Web.UI.WebControls.Button btnDownloadReceipt;
         protected global::System.Web.UI.WebControls.Button btnCloseReceipt;
         protected global::System.Web.UI.WebControls.HiddenField hdnProductVariantID;
         protected global::System.Web.UI.WebControls.HiddenField hdnLineAction;
