@@ -64,6 +64,7 @@ window.AppModal = (function () {
     var variants = {
         primary: {header: 'bg-blue-700 text-white', button: 'border-blue-700 bg-blue-700 text-white hover:bg-blue-800'},
         danger: {header: 'bg-red-700 text-white', button: 'border-red-700 bg-red-700 text-white hover:bg-red-800'},
+        quietDanger: {header: 'bg-white text-slate-950', button: 'border-red-600 bg-red-600 text-white hover:bg-red-700', cancel: 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'},
         success: {header: 'bg-emerald-700 text-white', button: 'border-emerald-700 bg-emerald-700 text-white hover:bg-emerald-800'},
         warning: {header: 'bg-amber-300 text-slate-900', button: 'border-amber-500 bg-amber-400 text-slate-900 hover:bg-amber-500'},
         dark: {header: 'bg-slate-900 text-white', button: 'border-slate-900 bg-slate-900 text-white hover:bg-slate-800'},
@@ -78,7 +79,7 @@ window.AppModal = (function () {
         var id = 'app-dynamic-' + Date.now() + '-' + Math.random().toString(36).slice(2);
         var style = variants[options.variant] || variants.primary;
         var button = 'inline-flex items-center justify-center rounded-lg border px-4 py-2 font-semibold transition-colors';
-        var cancel = '<button type="button" class="' + button + ' border-slate-600 bg-slate-600 text-white hover:bg-slate-700" data-modal-dismiss="true" data-action="cancel">' + escapeHtml(options.cancelText) + '</button>';
+        var cancel = '<button type="button" class="' + button + ' ' + (style.cancel || 'border-slate-600 bg-slate-600 text-white hover:bg-slate-700') + '" data-modal-dismiss="true" data-action="cancel">' + escapeHtml(options.cancelText) + '</button>';
         var html = '<div id="' + id + '" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/60 p-4" tabindex="-1" aria-hidden="true" data-modal-backdrop="static">' +
             '<div class="w-full max-w-lg"><div class="flex max-h-[90vh] flex-col overflow-hidden rounded-xl bg-white shadow-xl">' +
             '<div class="flex items-center justify-between gap-3 border-b border-slate-200 px-5 py-4 ' + style.header + '">' +

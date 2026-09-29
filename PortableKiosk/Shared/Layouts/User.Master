@@ -74,6 +74,6 @@
     ID="UserScripts"
     ContentPlaceHolderID="ScriptsContent"
     runat="server">
-    <script src="<%= ResolveUrl("~/Scripts/app/user/kiosk.js") %>?v=2"></script>
+    <script src="<%= ResolveUrl("~/Scripts/app/user/kiosk.js") %>?v=3"></script>
     <asp:ContentPlaceHolder ID="UserScriptsContent" runat="server" />
 </asp:Content>

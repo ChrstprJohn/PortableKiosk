@@ -71,6 +71,10 @@ body:has(.kiosk-attract-page) {
     overflow: hidden;
 }
 
+body:has(.user-kiosk-shell) [id^="app-dynamic-"] {
+    z-index: 2000;
+}
+
 /* ==========================================================================
    Buttons & Common Components
    ========================================================================== */

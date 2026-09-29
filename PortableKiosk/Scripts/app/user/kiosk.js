@@ -1,6 +1,8 @@
 (function () {
     "use strict";
 
+    var confirmedCancelButton = null;
+
     document.addEventListener("click", function (event) {
         var target = event.target;
 
@@ -10,8 +12,26 @@
 
         var cancelButton = target.closest("[data-confirm-cancel]");
 
-        if (cancelButton && !window.confirm("Cancel this order and clear the cart?")) {
+        if (cancelButton) {
+            if (confirmedCancelButton === cancelButton) {
+                confirmedCancelButton = null;
+                return;
+            }
+
             event.preventDefault();
+            if (window.AppModal) {
+                window.AppModal.confirm({
+                    title: "Cancel order?",
+                    message: "This will clear your cart and end the current order.",
+                    variant: "quietDanger",
+                    confirmText: "Cancel order",
+                    cancelText: "Keep order",
+                    onConfirm: function () {
+                        confirmedCancelButton = cancelButton;
+                        cancelButton.click();
+                    }
+                });
+            }
             return;
         }
 
