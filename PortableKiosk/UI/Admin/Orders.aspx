@@ -65,7 +65,7 @@
                     <Columns>
                         <asp:TemplateField HeaderText="Order number" ItemStyle-Width="1%" HeaderStyle-Width="1%" ItemStyle-CssClass="whitespace-nowrap" HeaderStyle-CssClass="whitespace-nowrap">
                             <ItemTemplate>
-                                <span class="font-medium tabular-nums text-slate-950"><%#: Eval("OrderNumber") %></span>
+                                <span class="font-medium tabular-nums text-slate-950">#<%#: Eval("OrderNumber") %></span>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Placed" ItemStyle-Width="160px">
