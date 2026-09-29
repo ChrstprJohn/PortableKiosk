@@ -23,6 +23,44 @@ namespace PortableKiosk.Core.Services
             return posRepository.GetAvailableCatalog();
         }
 
+        public PosCatalogGroup GetCatalogGroup()
+        {
+            List<PosCatalogItem> catalog = GetAvailableCatalog();
+            return new PosCatalogGroup
+            {
+                Categories = catalog.GroupBy(item => item.CategoryID)
+                    .Select(group => new PosCatalogCategory
+                    {
+                        CategoryID = group.Key,
+                        CategoryName = group.First().CategoryName
+                    }).ToList(),
+                Sizes = catalog.GroupBy(item => item.SizeID.HasValue
+                        ? item.SizeID.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                        : "standard")
+                    .Select(group => new PosCatalogSizeGroup
+                    {
+                        SizeKey = group.Key,
+                        SizeName = group.First().SizeName,
+                        Items = group.ToList()
+                    })
+                    .OrderBy(group => GetSizeOrder(group.SizeName))
+                    .ThenBy(group => group.SizeName).ToList(),
+                CategoryIDs = catalog.Select(item => item.CategoryID).Distinct().ToList()
+            };
+        }
+
+        private static int GetSizeOrder(string sizeName)
+        {
+            switch ((sizeName ?? string.Empty).Trim().ToLowerInvariant())
+            {
+                case "regular": return 0;
+                case "medium": return 1;
+                case "large": return 2;
+                case "standard": return -1;
+                default: return 3;
+            }
+        }
+
         public PosSale StartNewSale()
         {
             return new PosSale();

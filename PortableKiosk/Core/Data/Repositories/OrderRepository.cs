@@ -176,7 +176,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
                     o.ExpiresAt, o.CreatedAt
                 FROM Orders o
-                WHERE o.KitchenStatus IN (N'QUEUED', N'PREPARING', N'READY')
+                WHERE o.KitchenStatus IN (N'QUEUED', N'PREPARING', N'SERVING')
                     AND EXISTS (
                         SELECT 1 FROM Payments p
                         WHERE p.OrderID = o.OrderID AND p.PaymentStatus = N'PAID'
@@ -313,10 +313,10 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(orderID, "orderID");
             bool validCurrent = currentStatus == "QUEUED" ||
-                currentStatus == "PREPARING" || currentStatus == "READY";
+                currentStatus == "PREPARING" || currentStatus == "SERVING";
             bool validNext = nextStatus == "QUEUED" ||
-                nextStatus == "PREPARING" || nextStatus == "READY" ||
-                (currentStatus == "READY" && nextStatus == "COMPLETED");
+                nextStatus == "PREPARING" || nextStatus == "SERVING" ||
+                (currentStatus == "SERVING" && nextStatus == "COMPLETED");
             if (!validCurrent || !validNext || currentStatus == nextStatus)
             {
                 throw new ArgumentException("Invalid kitchen status transition.");
@@ -618,7 +618,7 @@ namespace PortableKiosk.Core.Data.Repositories
             if (kitchenStatus != "AWAITING_PAYMENT" &&
                 kitchenStatus != "QUEUED" &&
                 kitchenStatus != "PREPARING" &&
-                kitchenStatus != "READY" &&
+                kitchenStatus != "SERVING" &&
                 kitchenStatus != "COMPLETED" &&
                 kitchenStatus != "CANCELLED")
             {

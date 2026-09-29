@@ -317,7 +317,7 @@ namespace PortableKiosk.UI.Admin
                     return "bg-sky-50 text-sky-700";
                 case "PREPARING":
                     return "bg-blue-50 text-blue-800";
-                case "READY":
+                case "SERVING":
                     return "bg-emerald-50 text-emerald-700";
                 case "COMPLETED":
                     return "bg-slate-100 text-slate-700";

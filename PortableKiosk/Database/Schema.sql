@@ -239,7 +239,7 @@ CREATE TABLE Orders
                 N'AWAITING_PAYMENT',
                 N'QUEUED',
                 N'PREPARING',
-                N'READY',
+                N'SERVING',
                 N'COMPLETED',
                 N'CANCELLED'
             )

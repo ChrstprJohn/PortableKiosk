@@ -13,25 +13,13 @@ namespace PortableKiosk.UI.Kitchen
     public partial class Board : Page
     {
         private readonly OrderService orderService = new OrderService();
-        private readonly OrderItemService itemService = new OrderItemService();
-
-        protected class KitchenCard
-        {
-            public int OrderID { get; set; }
-            public string OrderNumberDisplay { get; set; }
-            public string TimeDisplay { get; set; }
-            public string FulfillmentDisplay { get; set; }
-            public string OrderTypeDisplay { get; set; }
-            public string OrderTypeClass { get; set; }
-            public string KitchenStatus { get; set; }
-            public List<OrderItem> Items { get; set; }
-        }
+        private readonly KitchenBoardService boardService = new KitchenBoardService();
 
         protected string ProfileName { get; private set; }
 
         protected void Page_Init(object sender, EventArgs e)
         {
-            if (IsAuthorized())
+            if (IsAuthorized() && !IsPostBack)
             {
                 BindBoard();
             }
@@ -73,14 +61,14 @@ namespace PortableKiosk.UI.Kitchen
                 return;
             }
 
-            KitchenCard card = e.Item.DataItem as KitchenCard;
+            KitchenOrderCard card = e.Item.DataItem as KitchenOrderCard;
             DropDownList status = e.Item.FindControl("ddlStatus") as DropDownList;
             if (card == null || status == null)
             {
                 return;
             }
 
-            if (card.KitchenStatus == "READY")
+            if (card.KitchenStatus == "SERVING")
             {
                 status.Items.Add(new ListItem("Completed", "COMPLETED"));
             }
@@ -113,8 +101,11 @@ namespace PortableKiosk.UI.Kitchen
                 if (!orderService.SetKitchenStatus(orderID, currentStatus, nextStatus))
                 {
                     ShowError("This order changed or is no longer paid. The board has been refreshed.");
+                    BindBoard();
+                    return;
                 }
-                BindBoard();
+                Response.Redirect(Request.Url.AbsolutePath, false);
+                Context.ApplicationInstance.CompleteRequest();
             }
             catch (SqlException)
             {
@@ -126,24 +117,11 @@ namespace PortableKiosk.UI.Kitchen
         {
             try
             {
-                List<KitchenCard> cards = orderService.GetPaidKitchenOrders()
-                    .Select(o => new KitchenCard
-                    {
-                        OrderID = o.OrderID,
-                        OrderNumberDisplay = FormatOrderNumber(o.OrderNumber),
-                        KitchenStatus = o.KitchenStatus,
-                        TimeDisplay = o.CreatedAt.AddHours(8).ToString("h:mm tt", CultureInfo.InvariantCulture),
-                        OrderTypeDisplay = o.OrderType == "TAKEOUT" ? "Takeout" : "Dine in",
-                        OrderTypeClass = o.OrderType == "TAKEOUT" ? "kitchen-type kitchen-type-takeout" : "kitchen-type kitchen-type-dinein",
-                        FulfillmentDisplay = o.FulfillmentMethod == "TABLE_SERVICE"
-                            ? "Table " + o.TableNumber
-                            : "Counter pickup",
-                        Items = itemService.GetByOrderID(o.OrderID)
-                    }).ToList();
+                List<KitchenOrderCard> cards = boardService.GetPaidOrders();
 
                 BindColumn(rptQueued, litQueuedCount, emptyQueued, cards, "QUEUED");
                 BindColumn(rptPreparing, litPreparingCount, emptyPreparing, cards, "PREPARING");
-                BindColumn(rptServing, litServingCount, emptyServing, cards, "READY");
+                BindColumn(rptServing, litServingCount, emptyServing, cards, "SERVING");
             }
             catch (SqlException)
             {
@@ -152,22 +130,13 @@ namespace PortableKiosk.UI.Kitchen
         }
 
         private static void BindColumn(Repeater repeater, Literal count, PlaceHolder empty,
-            List<KitchenCard> cards, string status)
+            List<KitchenOrderCard> cards, string status)
         {
-            List<KitchenCard> column = cards.Where(c => c.KitchenStatus == status).ToList();
+            List<KitchenOrderCard> column = cards.Where(c => c.KitchenStatus == status).ToList();
             count.Text = column.Count.ToString(CultureInfo.InvariantCulture);
             empty.Visible = column.Count == 0;
             repeater.DataSource = column;
             repeater.DataBind();
-        }
-
-        private static string FormatOrderNumber(string orderNumber)
-        {
-            string value = (orderNumber ?? string.Empty).Trim().TrimStart('#');
-            int numeric;
-            return int.TryParse(value, out numeric)
-                ? "#" + numeric.ToString("D4", CultureInfo.InvariantCulture)
-                : "#" + value;
         }
 
         protected bool HasImage(object imagePath)

@@ -25,27 +25,14 @@ namespace PortableKiosk.UI.POS
         private readonly PosService posService = new PosService();
         private bool isAuthorized;
 
-        [Serializable]
-        private class RegisterState
-        {
-            public RegisterState()
-            {
-                Stage = IdleStage;
-            }
-
-            public string Stage { get; set; }
-            public PosSale Sale { get; set; }
-            public PosReceipt Receipt { get; set; }
-        }
-
-        private RegisterState Current
+        private PosRegisterState Current
         {
             get
             {
-                RegisterState state = Session[SessionKey] as RegisterState;
+                PosRegisterState state = Session[SessionKey] as PosRegisterState;
                 if (state == null)
                 {
-                    state = new RegisterState();
+                    state = new PosRegisterState();
                     Session[SessionKey] = state;
                 }
 
@@ -119,7 +106,7 @@ namespace PortableKiosk.UI.POS
         protected void btnBackToIdle_Click(object sender, EventArgs e)
         {
             if (!isAuthorized || Current.Stage == ReceiptStage) return;
-            Session[SessionKey] = new RegisterState();
+            Session[SessionKey] = new PosRegisterState();
             ResetFilters();
         }
 
@@ -335,7 +322,7 @@ namespace PortableKiosk.UI.POS
         protected void btnCloseReceipt_Click(object sender, EventArgs e)
         {
             if (!CanAct(ReceiptStage)) return;
-            Session[SessionKey] = new RegisterState();
+            Session[SessionKey] = new PosRegisterState();
             ResetFilters();
         }
 
@@ -357,7 +344,7 @@ namespace PortableKiosk.UI.POS
 
         private void BindStage()
         {
-            RegisterState state = Current;
+            PosRegisterState state = Current;
             if ((state.Stage == RegisterStage || state.Stage == ChoiceStage ||
                 state.Stage == PaymentStage || state.Stage == CashlessStage) &&
                 state.Sale == null)
@@ -422,36 +409,16 @@ namespace PortableKiosk.UI.POS
 
             try
             {
-                List<PosCatalogItem> catalog =
-                    posService.GetAvailableCatalog();
-                pnlCatalogEmpty.Visible = catalog.Count == 0;
+                PosCatalogGroup catalog = posService.GetCatalogGroup();
+                pnlCatalogEmpty.Visible = catalog.CategoryIDs.Count == 0;
 
-                rptCategories.DataSource = catalog
-                    .GroupBy(item => item.CategoryID)
-                    .Select(group => new
-                    {
-                        CategoryID = group.Key,
-                        CategoryName = group.First().CategoryName
-                    })
-                    .ToList();
+                rptCategories.DataSource = catalog.Categories;
                 rptCategories.DataBind();
 
-                var sizes = catalog
-                    .GroupBy(item => GetSizeKey(item.SizeID))
-                    .Select(group => new
-                    {
-                        SizeKey = group.Key,
-                        SizeName = group.First().SizeName,
-                        Items = group.ToList()
-                    })
-                    .OrderBy(item => GetSizeOrder(item.SizeName))
-                    .ThenBy(item => item.SizeName)
-                    .ToList();
-                rptProducts.DataSource = sizes;
+                rptProducts.DataSource = catalog.Sizes;
                 rptProducts.DataBind();
 
-                List<int> categoryIDs = catalog.Select(item => item.CategoryID)
-                    .Distinct().ToList();
+                List<int> categoryIDs = catalog.CategoryIDs;
                 if (!categoryIDs.Any(id => id.ToString(CultureInfo.InvariantCulture) == hdnCategory.Value))
                 {
                     hdnCategory.Value = categoryIDs.Count == 0
@@ -566,25 +533,6 @@ namespace PortableKiosk.UI.POS
             decimal amount = Convert.ToDecimal(value);
             return "\u20B1" + amount.ToString(
                 "N2", CultureInfo.GetCultureInfo("en-PH"));
-        }
-
-        protected string GetSizeKey(object value)
-        {
-            return value == null || value == DBNull.Value
-                ? "standard"
-                : Convert.ToString(value, CultureInfo.InvariantCulture);
-        }
-
-        private static int GetSizeOrder(string sizeName)
-        {
-            switch ((sizeName ?? string.Empty).Trim().ToLowerInvariant())
-            {
-                case "regular": return 0;
-                case "medium": return 1;
-                case "large": return 2;
-                case "standard": return -1;
-                default: return 3;
-            }
         }
 
         protected bool HasImage(object value)
