@@ -38,7 +38,7 @@ namespace PortableKiosk.Core.Services
                 .Where(order => order.KitchenStatus == "PREPARING" || order.KitchenStatus == "SERVING")
                 .Select(order => new KitchenOrderCard
                 {
-                    OrderNumberDisplay = FormatOrderNumber(order.OrderNumber),
+                    OrderNumberDisplay = FormatOrderNumber(order.OrderNumber).TrimStart('#'),
                     KitchenStatus = order.KitchenStatus
                 }).ToList();
         }
