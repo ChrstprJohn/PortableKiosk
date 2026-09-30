@@ -1,0 +1,485 @@
+{
+  "generator": "Built-in image_gen",
+  "jobs": [
+    {
+      "product": "BBQ Burger",
+      "category": "Burgers",
+      "size": "regular",
+      "slug": "bbq-burger",
+      "prompt": "Use case: product-mockup. Square photorealistic fast-food kiosk catalog photo. Subject: beef burger with glossy barbecue sauce, cheddar and crispy onion strings, Regular portion: one single-patty burger in a small open white paper burger sleeve. Pure white seamless background, soft studio lighting, faint natural contact shadow, front three-quarter angle, entire food and container centered with generous margins, crisp appetizing detail. No text, labels, logos, watermark, props or collage. One standalone product. Essential food identity: beef burger with glossy barbecue sauce, cheddar and crispy onion strings. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Obvious crispy golden onion strings piled over glossy dark barbecue sauce.",
+      "file": "PortableKiosk/Content/images/products/bbq-burger/bbq-burger-regular.jpg"
+    },
+    {
+      "product": "BBQ Burger",
+      "category": "Burgers",
+      "size": "medium",
+      "slug": "bbq-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: beef burger with glossy barbecue sauce, cheddar and crispy onion strings. medium size: one double-patty burger in a medium shallow white paper tray. Show this specific portion and container clearly. Essential food identity: beef burger with glossy barbecue sauce, cheddar and crispy onion strings. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Obvious crispy golden onion strings piled over glossy dark barbecue sauce.",
+      "file": "PortableKiosk/Content/images/products/bbq-burger/bbq-burger-medium.jpg"
+    },
+    {
+      "product": "BBQ Burger",
+      "category": "Burgers",
+      "size": "large",
+      "slug": "bbq-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: beef burger with glossy barbecue sauce, cheddar and crispy onion strings. large size: one triple-patty burger in a large open white cardboard clamshell box. Show this specific portion and container clearly. Essential food identity: beef burger with glossy barbecue sauce, cheddar and crispy onion strings. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Obvious crispy golden onion strings piled over glossy dark barbecue sauce.",
+      "file": "PortableKiosk/Content/images/products/bbq-burger/bbq-burger-large.jpg"
+    },
+    {
+      "product": "Mushroom Swiss Burger",
+      "category": "Burgers",
+      "size": "regular",
+      "slug": "mushroom-swiss-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: beef burger with sauteed brown mushrooms and melted Swiss cheese. regular size: one single-patty burger in a small open white paper sleeve. Show this specific portion and container clearly. Essential food identity: beef burger with sauteed brown mushrooms and melted Swiss cheese. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Piles of clearly visible sauteed sliced mushrooms and ivory-white Swiss cheese. No bacon or yellow cheddar.",
+      "file": "PortableKiosk/Content/images/products/mushroom-swiss-burger/mushroom-swiss-burger-regular.jpg"
+    },
+    {
+      "product": "Mushroom Swiss Burger",
+      "category": "Burgers",
+      "size": "medium",
+      "slug": "mushroom-swiss-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: beef burger with sauteed brown mushrooms and melted Swiss cheese. medium size: one double-patty burger in a medium shallow white paper tray. Show this specific portion and container clearly. Essential food identity: beef burger with sauteed brown mushrooms and melted Swiss cheese. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Piles of clearly visible sauteed sliced mushrooms and ivory-white Swiss cheese. No bacon or yellow cheddar.",
+      "file": "PortableKiosk/Content/images/products/mushroom-swiss-burger/mushroom-swiss-burger-medium.jpg"
+    },
+    {
+      "product": "Mushroom Swiss Burger",
+      "category": "Burgers",
+      "size": "large",
+      "slug": "mushroom-swiss-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: beef burger with sauteed brown mushrooms and melted Swiss cheese. large size: one triple-patty burger in a large open white cardboard clamshell box. Show this specific portion and container clearly. Essential food identity: beef burger with sauteed brown mushrooms and melted Swiss cheese. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Piles of clearly visible sauteed sliced mushrooms and ivory-white Swiss cheese. No bacon or yellow cheddar.",
+      "file": "PortableKiosk/Content/images/products/mushroom-swiss-burger/mushroom-swiss-burger-large.jpg"
+    },
+    {
+      "product": "Spicy Jalapeno Burger",
+      "category": "Burgers",
+      "size": "regular",
+      "slug": "spicy-jalapeno-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: beef burger with green jalapeno slices, pepper jack cheese and orange spicy sauce. regular size: one single-patty burger in a small open white paper sleeve. Show this specific portion and container clearly. Essential food identity: beef burger with green jalapeno slices, pepper jack cheese and orange spicy sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Many obvious sliced green jalapeno rings on top of pale pepper jack cheese.",
+      "file": "PortableKiosk/Content/images/products/spicy-jalapeno-burger/spicy-jalapeno-burger-regular.jpg"
+    },
+    {
+      "product": "Spicy Jalapeno Burger",
+      "category": "Burgers",
+      "size": "medium",
+      "slug": "spicy-jalapeno-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: beef burger with green jalapeno slices, pepper jack cheese and orange spicy sauce. medium size: one double-patty burger in a medium shallow white paper tray. Show this specific portion and container clearly. Essential food identity: beef burger with green jalapeno slices, pepper jack cheese and orange spicy sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Many obvious sliced green jalapeno rings on top of pale pepper jack cheese.",
+      "file": "PortableKiosk/Content/images/products/spicy-jalapeno-burger/spicy-jalapeno-burger-medium.jpg"
+    },
+    {
+      "product": "Spicy Jalapeno Burger",
+      "category": "Burgers",
+      "size": "large",
+      "slug": "spicy-jalapeno-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: beef burger with green jalapeno slices, pepper jack cheese and orange spicy sauce. large size: one triple-patty burger in a large open white cardboard clamshell box. Show this specific portion and container clearly. Essential food identity: beef burger with green jalapeno slices, pepper jack cheese and orange spicy sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods. Many obvious sliced green jalapeno rings on top of pale pepper jack cheese.",
+      "file": "PortableKiosk/Content/images/products/spicy-jalapeno-burger/spicy-jalapeno-burger-large.jpg"
+    },
+    {
+      "product": "Veggie Burger",
+      "category": "Burgers",
+      "size": "regular",
+      "slug": "veggie-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden vegetable burger patty with visible peas and carrots, lettuce, tomato and herb sauce. regular size: one single-patty burger in a small open white paper sleeve. Show this specific portion and container clearly. Essential food identity: golden vegetable burger patty with visible peas and carrots, lettuce, tomato and herb sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods. No meat: light golden vegetable patties with clearly visible peas, corn and carrot pieces.",
+      "file": "PortableKiosk/Content/images/products/veggie-burger/veggie-burger-regular.jpg"
+    },
+    {
+      "product": "Veggie Burger",
+      "category": "Burgers",
+      "size": "medium",
+      "slug": "veggie-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden vegetable burger patty with visible peas and carrots, lettuce, tomato and herb sauce. medium size: one double-patty burger in a medium shallow white paper tray. Show this specific portion and container clearly. Essential food identity: golden vegetable burger patty with visible peas and carrots, lettuce, tomato and herb sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods. No meat: light golden vegetable patties with clearly visible peas, corn and carrot pieces.",
+      "file": "PortableKiosk/Content/images/products/veggie-burger/veggie-burger-medium.jpg"
+    },
+    {
+      "product": "Veggie Burger",
+      "category": "Burgers",
+      "size": "large",
+      "slug": "veggie-burger",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden vegetable burger patty with visible peas and carrots, lettuce, tomato and herb sauce. large size: one triple-patty burger in a large open white cardboard clamshell box. Show this specific portion and container clearly. Essential food identity: golden vegetable burger patty with visible peas and carrots, lettuce, tomato and herb sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods. No meat: light golden vegetable patties with clearly visible peas, corn and carrot pieces.",
+      "file": "PortableKiosk/Content/images/products/veggie-burger/veggie-burger-large.jpg"
+    },
+    {
+      "product": "Garlic Parmesan Wings",
+      "category": "Chicken",
+      "size": "regular",
+      "slug": "garlic-parmesan-wings",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: chicken wings coated with golden garlic butter, grated parmesan and parsley. regular size: a modest portion in a small shallow white paper boat. Show this specific portion and container clearly. Essential food identity: chicken wings coated with golden garlic butter, grated parmesan and parsley. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/garlic-parmesan-wings/garlic-parmesan-wings-regular.jpg"
+    },
+    {
+      "product": "Garlic Parmesan Wings",
+      "category": "Chicken",
+      "size": "medium",
+      "slug": "garlic-parmesan-wings",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: chicken wings coated with golden garlic butter, grated parmesan and parsley. medium size: a generous portion in a medium rectangular white cardboard tray. Show this specific portion and container clearly. Essential food identity: chicken wings coated with golden garlic butter, grated parmesan and parsley. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/garlic-parmesan-wings/garlic-parmesan-wings-medium.jpg"
+    },
+    {
+      "product": "Garlic Parmesan Wings",
+      "category": "Chicken",
+      "size": "large",
+      "slug": "garlic-parmesan-wings",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: chicken wings coated with golden garlic butter, grated parmesan and parsley. large size: a family portion in a large deep round white paper tub. Show this specific portion and container clearly. Essential food identity: chicken wings coated with golden garlic butter, grated parmesan and parsley. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/garlic-parmesan-wings/garlic-parmesan-wings-large.jpg"
+    },
+    {
+      "product": "Honey Soy Chicken",
+      "category": "Chicken",
+      "size": "regular",
+      "slug": "honey-soy-chicken",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: crispy chicken bites with glossy dark honey soy glaze and sesame seeds. regular size: a modest portion in a small shallow white paper boat. Show this specific portion and container clearly. Essential food identity: crispy chicken bites with glossy dark honey soy glaze and sesame seeds. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/honey-soy-chicken/honey-soy-chicken-regular.jpg"
+    },
+    {
+      "product": "Honey Soy Chicken",
+      "category": "Chicken",
+      "size": "medium",
+      "slug": "honey-soy-chicken",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: crispy chicken bites with glossy dark honey soy glaze and sesame seeds. medium size: a generous portion in a medium rectangular white cardboard tray. Show this specific portion and container clearly. Essential food identity: crispy chicken bites with glossy dark honey soy glaze and sesame seeds. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/honey-soy-chicken/honey-soy-chicken-medium.jpg"
+    },
+    {
+      "product": "Honey Soy Chicken",
+      "category": "Chicken",
+      "size": "large",
+      "slug": "honey-soy-chicken",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: crispy chicken bites with glossy dark honey soy glaze and sesame seeds. large size: a family portion in a large deep round white paper tub. Show this specific portion and container clearly. Essential food identity: crispy chicken bites with glossy dark honey soy glaze and sesame seeds. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/honey-soy-chicken/honey-soy-chicken-large.jpg"
+    },
+    {
+      "product": "Chicken Nuggets",
+      "category": "Chicken",
+      "size": "regular",
+      "slug": "chicken-nuggets",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden crispy chicken nuggets with a small white cup of barbecue dip. regular size: a modest portion in a small shallow white paper boat. Show this specific portion and container clearly. Essential food identity: golden crispy chicken nuggets with a small white cup of barbecue dip. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/chicken-nuggets/chicken-nuggets-regular.jpg"
+    },
+    {
+      "product": "Chicken Nuggets",
+      "category": "Chicken",
+      "size": "medium",
+      "slug": "chicken-nuggets",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden crispy chicken nuggets with a small white cup of barbecue dip. medium size: a generous portion in a medium rectangular white cardboard tray. Show this specific portion and container clearly. Essential food identity: golden crispy chicken nuggets with a small white cup of barbecue dip. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/chicken-nuggets/chicken-nuggets-medium.jpg"
+    },
+    {
+      "product": "Chicken Nuggets",
+      "category": "Chicken",
+      "size": "large",
+      "slug": "chicken-nuggets",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden crispy chicken nuggets with a small white cup of barbecue dip. large size: a family portion in a large deep round white paper tub. Show this specific portion and container clearly. Essential food identity: golden crispy chicken nuggets with a small white cup of barbecue dip. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/chicken-nuggets/chicken-nuggets-large.jpg"
+    },
+    {
+      "product": "Spicy Chicken Bites",
+      "category": "Chicken",
+      "size": "regular",
+      "slug": "spicy-chicken-bites",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: crispy chicken bites coated in glossy spicy red chili glaze. regular size: a modest portion in a small shallow white paper boat. Show this specific portion and container clearly. Essential food identity: crispy chicken bites coated in glossy spicy red chili glaze. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/spicy-chicken-bites/spicy-chicken-bites-regular.jpg"
+    },
+    {
+      "product": "Spicy Chicken Bites",
+      "category": "Chicken",
+      "size": "medium",
+      "slug": "spicy-chicken-bites",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: crispy chicken bites coated in glossy spicy red chili glaze. medium size: a generous portion in a medium rectangular white cardboard tray. Show this specific portion and container clearly. Essential food identity: crispy chicken bites coated in glossy spicy red chili glaze. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/spicy-chicken-bites/spicy-chicken-bites-medium.jpg"
+    },
+    {
+      "product": "Spicy Chicken Bites",
+      "category": "Chicken",
+      "size": "large",
+      "slug": "spicy-chicken-bites",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: crispy chicken bites coated in glossy spicy red chili glaze. large size: a family portion in a large deep round white paper tub. Show this specific portion and container clearly. Essential food identity: crispy chicken bites coated in glossy spicy red chili glaze. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/spicy-chicken-bites/spicy-chicken-bites-large.jpg"
+    },
+    {
+      "product": "Potato Wedges",
+      "category": "Sides",
+      "size": "regular",
+      "slug": "potato-wedges",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden skin-on seasoned potato wedges with a small white garlic dip cup. regular size: a modest portion in a small shallow white paper boat. Show this specific portion and container clearly. Essential food identity: golden skin-on seasoned potato wedges with a small white garlic dip cup. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/potato-wedges/potato-wedges-regular.jpg"
+    },
+    {
+      "product": "Potato Wedges",
+      "category": "Sides",
+      "size": "medium",
+      "slug": "potato-wedges",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden skin-on seasoned potato wedges with a small white garlic dip cup. medium size: a generous portion in a medium rectangular white cardboard tray. Show this specific portion and container clearly. Essential food identity: golden skin-on seasoned potato wedges with a small white garlic dip cup. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/potato-wedges/potato-wedges-medium.jpg"
+    },
+    {
+      "product": "Potato Wedges",
+      "category": "Sides",
+      "size": "large",
+      "slug": "potato-wedges",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden skin-on seasoned potato wedges with a small white garlic dip cup. large size: a family portion in a large deep round white paper tub. Show this specific portion and container clearly. Essential food identity: golden skin-on seasoned potato wedges with a small white garlic dip cup. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/potato-wedges/potato-wedges-large.jpg"
+    },
+    {
+      "product": "Cheese Fries",
+      "category": "Sides",
+      "size": "regular",
+      "slug": "cheese-fries",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden French fries generously drizzled with bright cheddar cheese sauce. regular size: a modest portion in a small shallow white paper boat. Show this specific portion and container clearly. Essential food identity: golden French fries generously drizzled with bright cheddar cheese sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/cheese-fries/cheese-fries-regular.jpg"
+    },
+    {
+      "product": "Cheese Fries",
+      "category": "Sides",
+      "size": "medium",
+      "slug": "cheese-fries",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden French fries generously drizzled with bright cheddar cheese sauce. medium size: a generous portion in a medium rectangular white cardboard tray. Show this specific portion and container clearly. Essential food identity: golden French fries generously drizzled with bright cheddar cheese sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/cheese-fries/cheese-fries-medium.jpg"
+    },
+    {
+      "product": "Cheese Fries",
+      "category": "Sides",
+      "size": "large",
+      "slug": "cheese-fries",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: golden French fries generously drizzled with bright cheddar cheese sauce. large size: a family portion in a large deep round white paper tub. Show this specific portion and container clearly. Essential food identity: golden French fries generously drizzled with bright cheddar cheese sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/cheese-fries/cheese-fries-large.jpg"
+    },
+    {
+      "product": "Coleslaw",
+      "category": "Sides",
+      "size": "regular",
+      "slug": "coleslaw",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: creamy coleslaw with shredded white cabbage, purple cabbage and orange carrots. regular size: a modest portion in a small shallow white paper boat. Show this specific portion and container clearly. Essential food identity: creamy coleslaw with shredded white cabbage, purple cabbage and orange carrots. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/coleslaw/coleslaw-regular.jpg"
+    },
+    {
+      "product": "Coleslaw",
+      "category": "Sides",
+      "size": "medium",
+      "slug": "coleslaw",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: creamy coleslaw with shredded white cabbage, purple cabbage and orange carrots. medium size: a generous portion in a medium rectangular white cardboard tray. Show this specific portion and container clearly. Essential food identity: creamy coleslaw with shredded white cabbage, purple cabbage and orange carrots. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/coleslaw/coleslaw-medium.jpg"
+    },
+    {
+      "product": "Coleslaw",
+      "category": "Sides",
+      "size": "large",
+      "slug": "coleslaw",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: creamy coleslaw with shredded white cabbage, purple cabbage and orange carrots. large size: a family portion in a large deep round white paper tub. Show this specific portion and container clearly. Essential food identity: creamy coleslaw with shredded white cabbage, purple cabbage and orange carrots. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/coleslaw/coleslaw-large.jpg"
+    },
+    {
+      "product": "Mac and Cheese",
+      "category": "Sides",
+      "size": "regular",
+      "slug": "mac-and-cheese",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: elbow macaroni covered in creamy golden cheddar cheese sauce. regular size: a modest portion in a small shallow white paper boat. Show this specific portion and container clearly. Essential food identity: elbow macaroni covered in creamy golden cheddar cheese sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/mac-and-cheese/mac-and-cheese-regular.jpg"
+    },
+    {
+      "product": "Mac and Cheese",
+      "category": "Sides",
+      "size": "medium",
+      "slug": "mac-and-cheese",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: elbow macaroni covered in creamy golden cheddar cheese sauce. medium size: a generous portion in a medium rectangular white cardboard tray. Show this specific portion and container clearly. Essential food identity: elbow macaroni covered in creamy golden cheddar cheese sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/mac-and-cheese/mac-and-cheese-medium.jpg"
+    },
+    {
+      "product": "Mac and Cheese",
+      "category": "Sides",
+      "size": "large",
+      "slug": "mac-and-cheese",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: elbow macaroni covered in creamy golden cheddar cheese sauce. large size: a family portion in a large deep round white paper tub. Show this specific portion and container clearly. Essential food identity: elbow macaroni covered in creamy golden cheddar cheese sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/mac-and-cheese/mac-and-cheese-large.jpg"
+    },
+    {
+      "product": "Iced Coffee",
+      "category": "Drinks",
+      "size": "regular",
+      "slug": "iced-coffee",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: iced coffee with brown coffee and creamy milk swirls, clear ice cubes. regular size: a short straight clear 12-ounce tumbler. Show this specific portion and container clearly. Essential food identity: iced coffee with brown coffee and creamy milk swirls, clear ice cubes. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/iced-coffee/iced-coffee-regular.jpg"
+    },
+    {
+      "product": "Iced Coffee",
+      "category": "Drinks",
+      "size": "medium",
+      "slug": "iced-coffee",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: iced coffee with brown coffee and creamy milk swirls, clear ice cubes. medium size: a taller tapered clear 16-ounce cup. Show this specific portion and container clearly. Essential food identity: iced coffee with brown coffee and creamy milk swirls, clear ice cubes. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/iced-coffee/iced-coffee-medium.jpg"
+    },
+    {
+      "product": "Iced Coffee",
+      "category": "Drinks",
+      "size": "large",
+      "slug": "iced-coffee",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: iced coffee with brown coffee and creamy milk swirls, clear ice cubes. large size: a tall broad clear 22-ounce takeaway cup. Show this specific portion and container clearly. Essential food identity: iced coffee with brown coffee and creamy milk swirls, clear ice cubes. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/iced-coffee/iced-coffee-large.jpg"
+    },
+    {
+      "product": "Strawberry Milkshake",
+      "category": "Drinks",
+      "size": "regular",
+      "slug": "strawberry-milkshake",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: pink strawberry milkshake topped with whipped cream and a strawberry slice. regular size: a short straight clear 12-ounce tumbler. Show this specific portion and container clearly. Essential food identity: pink strawberry milkshake topped with whipped cream and a strawberry slice. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/strawberry-milkshake/strawberry-milkshake-regular.jpg"
+    },
+    {
+      "product": "Strawberry Milkshake",
+      "category": "Drinks",
+      "size": "medium",
+      "slug": "strawberry-milkshake",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: pink strawberry milkshake topped with whipped cream and a strawberry slice. medium size: a taller tapered clear 16-ounce cup. Show this specific portion and container clearly. Essential food identity: pink strawberry milkshake topped with whipped cream and a strawberry slice. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/strawberry-milkshake/strawberry-milkshake-medium.jpg"
+    },
+    {
+      "product": "Strawberry Milkshake",
+      "category": "Drinks",
+      "size": "large",
+      "slug": "strawberry-milkshake",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: pink strawberry milkshake topped with whipped cream and a strawberry slice. large size: a tall broad clear 22-ounce takeaway cup. Show this specific portion and container clearly. Essential food identity: pink strawberry milkshake topped with whipped cream and a strawberry slice. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/strawberry-milkshake/strawberry-milkshake-large.jpg"
+    },
+    {
+      "product": "Mango Smoothie",
+      "category": "Drinks",
+      "size": "regular",
+      "slug": "mango-smoothie",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: thick vibrant golden mango smoothie with a mango cube garnish. regular size: a short straight clear 12-ounce tumbler. Show this specific portion and container clearly. Essential food identity: thick vibrant golden mango smoothie with a mango cube garnish. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/mango-smoothie/mango-smoothie-regular.jpg"
+    },
+    {
+      "product": "Mango Smoothie",
+      "category": "Drinks",
+      "size": "medium",
+      "slug": "mango-smoothie",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: thick vibrant golden mango smoothie with a mango cube garnish. medium size: a taller tapered clear 16-ounce cup. Show this specific portion and container clearly. Essential food identity: thick vibrant golden mango smoothie with a mango cube garnish. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/mango-smoothie/mango-smoothie-medium.jpg"
+    },
+    {
+      "product": "Mango Smoothie",
+      "category": "Drinks",
+      "size": "large",
+      "slug": "mango-smoothie",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: thick vibrant golden mango smoothie with a mango cube garnish. large size: a tall broad clear 22-ounce takeaway cup. Show this specific portion and container clearly. Essential food identity: thick vibrant golden mango smoothie with a mango cube garnish. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/mango-smoothie/mango-smoothie-large.jpg"
+    },
+    {
+      "product": "Calamansi Cooler",
+      "category": "Drinks",
+      "size": "regular",
+      "slug": "calamansi-cooler",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: pale yellow-green calamansi citrus cooler with ice and small green calamansi slices. regular size: a short straight clear 12-ounce tumbler. Show this specific portion and container clearly. Essential food identity: pale yellow-green calamansi citrus cooler with ice and small green calamansi slices. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/calamansi-cooler/calamansi-cooler-regular.jpg"
+    },
+    {
+      "product": "Calamansi Cooler",
+      "category": "Drinks",
+      "size": "medium",
+      "slug": "calamansi-cooler",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: pale yellow-green calamansi citrus cooler with ice and small green calamansi slices. medium size: a taller tapered clear 16-ounce cup. Show this specific portion and container clearly. Essential food identity: pale yellow-green calamansi citrus cooler with ice and small green calamansi slices. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/calamansi-cooler/calamansi-cooler-medium.jpg"
+    },
+    {
+      "product": "Calamansi Cooler",
+      "category": "Drinks",
+      "size": "large",
+      "slug": "calamansi-cooler",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: pale yellow-green calamansi citrus cooler with ice and small green calamansi slices. large size: a tall broad clear 22-ounce takeaway cup. Show this specific portion and container clearly. Essential food identity: pale yellow-green calamansi citrus cooler with ice and small green calamansi slices. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/calamansi-cooler/calamansi-cooler-large.jpg"
+    },
+    {
+      "product": "Strawberry Sundae",
+      "category": "Desserts",
+      "size": "regular",
+      "slug": "strawberry-sundae",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: vanilla soft serve with glossy red strawberry sauce and small strawberry pieces. regular size: a small round clear dessert cup. Show this specific portion and container clearly. Essential food identity: vanilla soft serve with glossy red strawberry sauce and small strawberry pieces. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/strawberry-sundae/strawberry-sundae-regular.jpg"
+    },
+    {
+      "product": "Strawberry Sundae",
+      "category": "Desserts",
+      "size": "medium",
+      "slug": "strawberry-sundae",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: vanilla soft serve with glossy red strawberry sauce and small strawberry pieces. medium size: a medium wider clear dessert bowl. Show this specific portion and container clearly. Essential food identity: vanilla soft serve with glossy red strawberry sauce and small strawberry pieces. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/strawberry-sundae/strawberry-sundae-medium.jpg"
+    },
+    {
+      "product": "Strawberry Sundae",
+      "category": "Desserts",
+      "size": "large",
+      "slug": "strawberry-sundae",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: vanilla soft serve with glossy red strawberry sauce and small strawberry pieces. large size: a large deep flared clear dessert tub. Show this specific portion and container clearly. Essential food identity: vanilla soft serve with glossy red strawberry sauce and small strawberry pieces. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/strawberry-sundae/strawberry-sundae-large.jpg"
+    },
+    {
+      "product": "Caramel Sundae",
+      "category": "Desserts",
+      "size": "regular",
+      "slug": "caramel-sundae",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: vanilla soft serve generously drizzled with glossy golden caramel sauce. regular size: a small round clear dessert cup. Show this specific portion and container clearly. Essential food identity: vanilla soft serve generously drizzled with glossy golden caramel sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/caramel-sundae/caramel-sundae-regular.jpg"
+    },
+    {
+      "product": "Caramel Sundae",
+      "category": "Desserts",
+      "size": "medium",
+      "slug": "caramel-sundae",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: vanilla soft serve generously drizzled with glossy golden caramel sauce. medium size: a medium wider clear dessert bowl. Show this specific portion and container clearly. Essential food identity: vanilla soft serve generously drizzled with glossy golden caramel sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/caramel-sundae/caramel-sundae-medium.jpg"
+    },
+    {
+      "product": "Caramel Sundae",
+      "category": "Desserts",
+      "size": "large",
+      "slug": "caramel-sundae",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: vanilla soft serve generously drizzled with glossy golden caramel sauce. large size: a large deep flared clear dessert tub. Show this specific portion and container clearly. Essential food identity: vanilla soft serve generously drizzled with glossy golden caramel sauce. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/caramel-sundae/caramel-sundae-large.jpg"
+    },
+    {
+      "product": "Cookies and Cream",
+      "category": "Desserts",
+      "size": "regular",
+      "slug": "cookies-and-cream",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: cookies and cream ice cream with crushed dark chocolate sandwich cookies. regular size: a small round clear dessert cup. Show this specific portion and container clearly. Essential food identity: cookies and cream ice cream with crushed dark chocolate sandwich cookies. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/cookies-and-cream/cookies-and-cream-regular.jpg"
+    },
+    {
+      "product": "Cookies and Cream",
+      "category": "Desserts",
+      "size": "medium",
+      "slug": "cookies-and-cream",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: cookies and cream ice cream with crushed dark chocolate sandwich cookies. medium size: a medium wider clear dessert bowl. Show this specific portion and container clearly. Essential food identity: cookies and cream ice cream with crushed dark chocolate sandwich cookies. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/cookies-and-cream/cookies-and-cream-medium.jpg"
+    },
+    {
+      "product": "Cookies and Cream",
+      "category": "Desserts",
+      "size": "large",
+      "slug": "cookies-and-cream",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: cookies and cream ice cream with crushed dark chocolate sandwich cookies. large size: a large deep flared clear dessert tub. Show this specific portion and container clearly. Essential food identity: cookies and cream ice cream with crushed dark chocolate sandwich cookies. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/cookies-and-cream/cookies-and-cream-large.jpg"
+    },
+    {
+      "product": "Chocolate Mousse",
+      "category": "Desserts",
+      "size": "regular",
+      "slug": "chocolate-mousse",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: rich brown chocolate mousse with piped swirls and dark chocolate shavings. regular size: a small round clear dessert cup. Show this specific portion and container clearly. Essential food identity: rich brown chocolate mousse with piped swirls and dark chocolate shavings. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/chocolate-mousse/chocolate-mousse-regular.jpg"
+    },
+    {
+      "product": "Chocolate Mousse",
+      "category": "Desserts",
+      "size": "medium",
+      "slug": "chocolate-mousse",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: rich brown chocolate mousse with piped swirls and dark chocolate shavings. medium size: a medium wider clear dessert bowl. Show this specific portion and container clearly. Essential food identity: rich brown chocolate mousse with piped swirls and dark chocolate shavings. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/chocolate-mousse/chocolate-mousse-medium.jpg"
+    },
+    {
+      "product": "Chocolate Mousse",
+      "category": "Desserts",
+      "size": "large",
+      "slug": "chocolate-mousse",
+      "prompt": "Use case: product-mockup. Asset type: square fast-food kiosk catalog photograph. Photorealistic appetizing food on pure white seamless background with soft studio lighting, subtle contact shadow, front three-quarter view, centered entire food and container, generous clear margins. Match clean existing catalog style. No text, logo, label, watermark, hands, utensils, extra props or collage. One standalone product. Subject: rich brown chocolate mousse with piped swirls and dark chocolate shavings. large size: a large deep flared clear dessert tub. Show this specific portion and container clearly. Essential food identity: rich brown chocolate mousse with piped swirls and dark chocolate shavings. Make the named ingredients prominent and unmistakable. Do not substitute other foods.",
+      "file": "PortableKiosk/Content/images/products/chocolate-mousse/chocolate-mousse-large.jpg"
+    }
+  ]
+}
