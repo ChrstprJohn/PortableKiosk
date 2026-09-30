@@ -1,5 +1,9 @@
 -- Portable Kiosk database schema
 -- Microsoft SQL Server
+-- Fresh database setup: run this entire file once; migrations 001-006 are included.
+-- Includes product descriptions, takeout table service, AWAITING_PAYMENT,
+-- EXPIRED payments, kiosk settings, and SERVING (formerly READY).
+-- For an existing installation, use the migration scripts instead.
 
 IF DB_ID(N'portable_kiosk_db') IS NULL
 BEGIN
@@ -10,7 +14,13 @@ GO
 USE portable_kiosk_db;
 GO
 
-CREATE TABLE KioskSettings
+SET XACT_ABORT ON;
+GO
+
+BEGIN TRY
+    BEGIN TRANSACTION;
+
+CREATE TABLE dbo.KioskSettings
 (
     SettingsID INT NOT NULL CONSTRAINT PK_KioskSettings PRIMARY KEY,
     IsAvailable BIT NOT NULL CONSTRAINT DF_KioskSettings_IsAvailable DEFAULT (1),
@@ -18,16 +28,14 @@ CREATE TABLE KioskSettings
     CONSTRAINT CK_KioskSettings_SingleRow CHECK (SettingsID = 1),
     CONSTRAINT CK_KioskSettings_Expiry CHECK (PendingPaymentExpiryMinutes BETWEEN 1 AND 1440)
 );
-GO
-INSERT INTO KioskSettings (SettingsID, IsAvailable, PendingPaymentExpiryMinutes)
+INSERT INTO dbo.KioskSettings (SettingsID, IsAvailable, PendingPaymentExpiryMinutes)
 VALUES (1, 1, 30);
-GO
 
 /* =========================================================
    STAFF ACCOUNTS
    ========================================================= */
 
-CREATE TABLE StaffAccounts
+CREATE TABLE dbo.StaffAccounts
 (
     StaffAccountID INT IDENTITY(1, 1) PRIMARY KEY,
 
@@ -83,13 +91,12 @@ CREATE TABLE StaffAccounts
             )
         )
 );
-GO
 
 /* =========================================================
    CATEGORIES
    ========================================================= */
 
-CREATE TABLE Categories
+CREATE TABLE dbo.Categories
 (
     CategoryID INT IDENTITY(1, 1) PRIMARY KEY,
 
@@ -101,13 +108,12 @@ CREATE TABLE Categories
     CONSTRAINT UQ_Categories_CategoryName
         UNIQUE (CategoryName)
 );
-GO
 
 /* =========================================================
    SIZES
    ========================================================= */
 
-CREATE TABLE Sizes
+CREATE TABLE dbo.Sizes
 (
     SizeID INT IDENTITY(1, 1) PRIMARY KEY,
 
@@ -116,13 +122,12 @@ CREATE TABLE Sizes
     CONSTRAINT UQ_Sizes_SizeName
         UNIQUE (SizeName)
 );
-GO
 
 /* =========================================================
    PRODUCTS
    ========================================================= */
 
-CREATE TABLE Products
+CREATE TABLE dbo.Products
 (
     ProductID INT IDENTITY(1, 1) PRIMARY KEY,
 
@@ -137,15 +142,14 @@ CREATE TABLE Products
 
     CONSTRAINT FK_Products_Categories
         FOREIGN KEY (CategoryID)
-        REFERENCES Categories(CategoryID)
+        REFERENCES dbo.Categories(CategoryID)
 );
-GO
 
 /* =========================================================
    PRODUCT VARIANTS
    ========================================================= */
 
-CREATE TABLE ProductVariants
+CREATE TABLE dbo.ProductVariants
 (
     ProductVariantID INT IDENTITY(1, 1) PRIMARY KEY,
 
@@ -168,19 +172,18 @@ CREATE TABLE ProductVariants
 
     CONSTRAINT FK_ProductVariants_Products
         FOREIGN KEY (ProductID)
-        REFERENCES Products(ProductID),
+        REFERENCES dbo.Products(ProductID),
 
     CONSTRAINT FK_ProductVariants_Sizes
         FOREIGN KEY (SizeID)
-        REFERENCES Sizes(SizeID)
+        REFERENCES dbo.Sizes(SizeID)
 );
-GO
 
 /* =========================================================
    ORDERS
    ========================================================= */
 
-CREATE TABLE Orders
+CREATE TABLE dbo.Orders
 (
     OrderID INT IDENTITY(1, 1) PRIMARY KEY,
 
@@ -245,13 +248,12 @@ CREATE TABLE Orders
             )
         )
 );
-GO
 
 /* =========================================================
    PAYMENTS
    ========================================================= */
 
-CREATE TABLE Payments
+CREATE TABLE dbo.Payments
 (
     PaymentID INT IDENTITY(1, 1) PRIMARY KEY,
 
@@ -298,16 +300,15 @@ CREATE TABLE Payments
 
     CONSTRAINT FK_Payments_Orders
         FOREIGN KEY (OrderID)
-        REFERENCES Orders(OrderID)
+        REFERENCES dbo.Orders(OrderID)
         ON DELETE CASCADE
 );
-GO
 
 /* =========================================================
    ORDER ITEMS
    ========================================================= */
 
-CREATE TABLE OrderItems
+CREATE TABLE dbo.OrderItems
 (
     OrderItemID INT IDENTITY(1, 1) PRIMARY KEY,
 
@@ -328,11 +329,18 @@ CREATE TABLE OrderItems
 
     CONSTRAINT FK_OrderItems_Orders
         FOREIGN KEY (OrderID)
-        REFERENCES Orders(OrderID)
+        REFERENCES dbo.Orders(OrderID)
         ON DELETE CASCADE,
 
     CONSTRAINT FK_OrderItems_ProductVariants
         FOREIGN KEY (ProductVariantID)
-        REFERENCES ProductVariants(ProductVariantID)
+        REFERENCES dbo.ProductVariants(ProductVariantID)
 );
+
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+    THROW;
+END CATCH;
 GO
