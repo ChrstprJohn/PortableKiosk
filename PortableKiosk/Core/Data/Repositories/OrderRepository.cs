@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -106,7 +106,7 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(orderID, "orderID");
             return GetSingle(
-                "OrderID = @Value",
+                "dbo.Order_GetByID",
                 orderID,
                 null);
         }
@@ -122,7 +122,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
             string trimmedNumber = orderNumber.Trim();
             Order order = GetSingle(
-                "OrderNumber = @Value",
+                "dbo.Order_GetByOrderNumber",
                 null,
                 trimmedNumber);
             if (order != null)
@@ -135,25 +135,14 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<Order> GetAll()
         {
-            const string sql = @"
-                SELECT
-                    OrderID,
-                    OrderNumber,
-                    OrderType,
-                    FulfillmentMethod,
-                    TableNumber,
-                    KitchenStatus,
-                    ExpiresAt,
-                    CreatedAt
-                FROM Orders
-                ORDER BY CreatedAt DESC, OrderID DESC;";
+            const string sql = "dbo.Order_GetAll";
 
             List<Order> orders = new List<Order>();
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
 
@@ -171,22 +160,11 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<Order> GetPaidKitchenOrders(bool includeCompleted = false)
         {
-            const string sql = @"
-                SELECT o.OrderID, o.OrderNumber, o.OrderType,
-                    o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
-                    o.ExpiresAt, o.CreatedAt
-                FROM Orders o
-                WHERE (o.KitchenStatus IN (N'QUEUED', N'PREPARING', N'SERVING')
-                    OR (@IncludeCompleted = 1 AND o.KitchenStatus = N'COMPLETED'))
-                    AND EXISTS (
-                        SELECT 1 FROM Payments p
-                        WHERE p.OrderID = o.OrderID AND p.PaymentStatus = N'PAID'
-                    )
-                ORDER BY o.CreatedAt, o.OrderID;";
+            const string sql = "dbo.Order_GetPaidKitchenOrders";
 
             List<Order> orders = new List<Order>();
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add("@IncludeCompleted", SqlDbType.Bit).Value = includeCompleted;
                 connection.Open();
@@ -203,40 +181,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public int CancelExpiredPendingOrders()
         {
-            const string sql = @"
-                SET NOCOUNT ON;
-
-                DECLARE @ExpiredOrders TABLE (OrderID INT PRIMARY KEY);
-                DECLARE @ExpiredCount INT = 0;
-                DECLARE @Now DATETIME2(7) = SYSUTCDATETIME();
-
-                UPDATE p
-                SET PaymentStatus = N'EXPIRED'
-                OUTPUT inserted.OrderID INTO @ExpiredOrders (OrderID)
-                FROM Payments p
-                INNER JOIN Orders o ON o.OrderID = p.OrderID
-                WHERE p.PaymentMethod = N'CASH_COUNTER'
-                    AND p.PaymentStatus = N'PENDING'
-                    AND COALESCE(
-                        o.ExpiresAt,
-                        DATEADD(
-                            MINUTE,
-                            @ExpiryMinutes,
-                            o.CreatedAt)) <= @Now;
-
-                SET @ExpiredCount = @@ROWCOUNT;
-
-                UPDATE o
-                SET KitchenStatus = N'CANCELLED'
-                FROM Orders o
-                INNER JOIN @ExpiredOrders expired
-                    ON expired.OrderID = o.OrderID
-                WHERE o.KitchenStatus IN (
-                    N'AWAITING_PAYMENT',
-                    N'QUEUED'
-                );
-
-                SELECT @ExpiredCount;";
+            const string sql = "dbo.Order_CancelExpiredPendingOrders";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
@@ -251,7 +196,7 @@ namespace PortableKiosk.Core.Data.Repositories
                         int expiredCount;
 
                         using (SqlCommand command =
-                            new SqlCommand(sql, connection, transaction))
+                            new SqlCommand(sql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             command.Parameters.Add(
                                 "@ExpiryMinutes",
@@ -278,29 +223,12 @@ namespace PortableKiosk.Core.Data.Repositories
             Validate(order);
             ValidateID(order.OrderID, "orderID");
 
-            const string sql = @"
-                UPDATE Orders
-                SET
-                    OrderType = @OrderType,
-                    FulfillmentMethod = @FulfillmentMethod,
-                    TableNumber = @TableNumber,
-                    KitchenStatus = @KitchenStatus,
-                    ExpiresAt = @ExpiresAt
-                WHERE OrderID = @OrderID
-                    AND (
-                        @KitchenStatus IN (N'AWAITING_PAYMENT', N'CANCELLED')
-                        OR EXISTS (
-                            SELECT 1
-                            FROM Payments p
-                            WHERE p.OrderID = Orders.OrderID
-                                AND p.PaymentStatus = N'PAID'
-                        )
-                    );";
+            const string sql = "dbo.Order_Update";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, order, order.OrderNumber);
                 command.Parameters.Add(
@@ -325,15 +253,9 @@ namespace PortableKiosk.Core.Data.Repositories
                 throw new ArgumentException("Invalid kitchen status transition.");
             }
 
-            const string sql = @"
-                UPDATE Orders
-                SET KitchenStatus = @NextStatus
-                WHERE OrderID = @OrderID AND KitchenStatus = @CurrentStatus
-                    AND EXISTS (SELECT 1 FROM Payments
-                        WHERE Payments.OrderID = Orders.OrderID
-                            AND PaymentStatus = N'PAID');";
+            const string sql = "dbo.Order_SetKitchenStatus";
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                 command.Parameters.Add("@CurrentStatus", SqlDbType.NVarChar, 20).Value = currentStatus;
@@ -347,14 +269,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(orderID, "orderID");
 
-            const string sql = @"
-                DELETE FROM Orders
-                WHERE OrderID = @OrderID;";
+            const string sql = "dbo.Order_Delete";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@OrderID",
@@ -377,29 +297,10 @@ namespace PortableKiosk.Core.Data.Repositories
                 ? "TMP" + Guid.NewGuid().ToString("N").Substring(0, 17)
                 : order.OrderNumber.Trim();
 
-            const string insertSql = @"
-                INSERT INTO Orders
-                    (
-                        OrderNumber,
-                        OrderType,
-                        FulfillmentMethod,
-                        TableNumber,
-                        KitchenStatus,
-                        ExpiresAt
-                    )
-                OUTPUT INSERTED.OrderID, INSERTED.CreatedAt
-                VALUES
-                    (
-                        @OrderNumber,
-                        @OrderType,
-                        @FulfillmentMethod,
-                        @TableNumber,
-                        @KitchenStatus,
-                        @ExpiresAt
-                    );";
+            const string insertSql = "dbo.Order_Add_Insert";
 
             using (SqlCommand command =
-                new SqlCommand(insertSql, connection, transaction))
+                new SqlCommand(insertSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(
                     command,
@@ -418,16 +319,13 @@ namespace PortableKiosk.Core.Data.Repositories
             {
                 order.OrderNumber = order.OrderID.ToString("D4");
 
-                const string updateNumberSql = @"
-                    UPDATE Orders
-                    SET OrderNumber = @OrderNumber
-                    WHERE OrderID = @OrderID;";
+                const string updateNumberSql = "dbo.Order_Add_UpdateNumber";
 
                 using (SqlCommand command =
                     new SqlCommand(
                         updateNumberSql,
                         connection,
-                        transaction))
+                        transaction) { CommandType = CommandType.StoredProcedure })
                 {
                     command.Parameters.Add(
                         "@OrderNumber",
@@ -448,27 +346,16 @@ namespace PortableKiosk.Core.Data.Repositories
         }
 
         private static Order GetSingle(
-            string predicate,
+            string procedureName,
             int? integerValue,
             string stringValue)
         {
-            string sql = @"
-                SELECT
-                    OrderID,
-                    OrderNumber,
-                    OrderType,
-                    FulfillmentMethod,
-                    TableNumber,
-                    KitchenStatus,
-                    ExpiresAt,
-                    CreatedAt
-                FROM Orders
-                WHERE " + predicate + ";";
+            string sql = procedureName;
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 if (integerValue.HasValue)
                 {

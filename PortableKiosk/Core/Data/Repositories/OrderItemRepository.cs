@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -70,29 +70,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(orderItemID, "orderItemID");
 
-            const string sql = @"
-                SELECT
-                    oi.OrderItemID,
-                    oi.OrderID,
-                    oi.ProductVariantID,
-                    p.ProductName,
-                    pv.ImagePath,
-                    s.SizeName,
-                    oi.UnitPrice,
-                    oi.Quantity
-                FROM OrderItems oi
-                INNER JOIN ProductVariants pv
-                    ON pv.ProductVariantID = oi.ProductVariantID
-                INNER JOIN Products p
-                    ON p.ProductID = pv.ProductID
-                LEFT JOIN Sizes s
-                    ON s.SizeID = pv.SizeID
-                WHERE oi.OrderItemID = @OrderItemID;";
+            const string sql = "dbo.OrderItem_GetByID";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@OrderItemID",
@@ -110,32 +93,14 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(orderID, "orderID");
 
-            const string sql = @"
-                SELECT
-                    oi.OrderItemID,
-                    oi.OrderID,
-                    oi.ProductVariantID,
-                    p.ProductName,
-                    pv.ImagePath,
-                    s.SizeName,
-                    oi.UnitPrice,
-                    oi.Quantity
-                FROM OrderItems oi
-                INNER JOIN ProductVariants pv
-                    ON pv.ProductVariantID = oi.ProductVariantID
-                INNER JOIN Products p
-                    ON p.ProductID = pv.ProductID
-                LEFT JOIN Sizes s
-                    ON s.SizeID = pv.SizeID
-                WHERE oi.OrderID = @OrderID
-                ORDER BY oi.OrderItemID ASC;";
+            const string sql = "dbo.OrderItem_GetByOrderID";
 
             List<OrderItem> items = new List<OrderItem>();
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@OrderID",
@@ -159,19 +124,12 @@ namespace PortableKiosk.Core.Data.Repositories
             Validate(item);
             ValidateID(item.OrderItemID, "orderItemID");
 
-            const string sql = @"
-                UPDATE OrderItems
-                SET
-                    OrderID = @OrderID,
-                    ProductVariantID = @ProductVariantID,
-                    UnitPrice = @UnitPrice,
-                    Quantity = @Quantity
-                WHERE OrderItemID = @OrderItemID;";
+            const string sql = "dbo.OrderItem_Update";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, item);
                 command.Parameters.Add(
@@ -186,14 +144,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(orderItemID, "orderItemID");
 
-            const string sql = @"
-                DELETE FROM OrderItems
-                WHERE OrderItemID = @OrderItemID;";
+            const string sql = "dbo.OrderItem_Delete";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@OrderItemID",
@@ -210,15 +166,10 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             Validate(item);
 
-            const string sql = @"
-                INSERT INTO OrderItems
-                    (OrderID, ProductVariantID, UnitPrice, Quantity)
-                OUTPUT INSERTED.OrderItemID
-                VALUES
-                    (@OrderID, @ProductVariantID, @UnitPrice, @Quantity);";
+            const string sql = "dbo.OrderItem_Add";
 
             using (SqlCommand command =
-                new SqlCommand(sql, connection, transaction))
+                new SqlCommand(sql, connection, transaction) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, item);
                 item.OrderItemID = Convert.ToInt32(

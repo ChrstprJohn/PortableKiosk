@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using PortableKiosk.Core.Models;
@@ -9,10 +9,9 @@ namespace PortableKiosk.Core.Data.Repositories
     {
         public KioskSettings Get()
         {
-            const string sql = @"SELECT IsAvailable, PendingPaymentExpiryMinutes
-                FROM KioskSettings WHERE SettingsID = 1;";
+            const string sql = "dbo.KioskSettings_Get";
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -32,12 +31,9 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public void Save(KioskSettings settings)
         {
-            const string sql = @"UPDATE KioskSettings
-                SET IsAvailable = @IsAvailable,
-                    PendingPaymentExpiryMinutes = @ExpiryMinutes
-                WHERE SettingsID = 1;";
+            const string sql = "dbo.KioskSettings_Save";
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add("@IsAvailable", SqlDbType.Bit).Value = settings.IsAvailable;
                 command.Parameters.Add("@ExpiryMinutes", SqlDbType.Int).Value =

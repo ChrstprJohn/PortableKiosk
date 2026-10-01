@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -41,7 +41,7 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(paymentID, "paymentID");
             return GetSingle(
-                "PaymentID = @ID",
+                "dbo.Payment_GetByID",
                 paymentID);
         }
 
@@ -49,31 +49,20 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(orderID, "orderID");
             return GetSingle(
-                "OrderID = @ID",
+                "dbo.Payment_GetByOrderID",
                 orderID);
         }
 
         public List<Payment> GetAll()
         {
-            const string sql = @"
-                SELECT
-                    PaymentID,
-                    OrderID,
-                    PaymentMethod,
-                    PaymentStatus,
-                    Amount,
-                    TransactionReference,
-                    PaidAt,
-                    CreatedAt
-                FROM Payments
-                ORDER BY CreatedAt DESC, PaymentID DESC;";
+            const string sql = "dbo.Payment_GetAll";
 
             List<Payment> payments = new List<Payment>();
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
 
@@ -94,33 +83,7 @@ namespace PortableKiosk.Core.Data.Repositories
             Validate(payment);
             ValidateID(payment.PaymentID, "paymentID");
 
-            const string sql = @"
-                UPDATE p
-                SET
-                    OrderID = @OrderID,
-                    PaymentMethod = @PaymentMethod,
-                    PaymentStatus = @PaymentStatus,
-                    Amount = @Amount,
-                    TransactionReference = @TransactionReference,
-                    PaidAt = @PaidAt
-                FROM Payments p
-                WHERE p.PaymentID = @PaymentID
-                    AND NOT (
-                        @PaymentStatus = N'PAID'
-                        AND p.PaymentStatus <> N'PAID'
-                        AND p.PaymentMethod = N'CASH_COUNTER'
-                        AND EXISTS (
-                            SELECT 1
-                            FROM Orders o
-                            WHERE o.OrderID = p.OrderID
-                                AND COALESCE(
-                                    o.ExpiresAt,
-                                    DATEADD(
-                                        MINUTE,
-                                        @ExpiryMinutes,
-                                        o.CreatedAt)) <= SYSUTCDATETIME()
-                        )
-                    );";
+            const string sql = "dbo.Payment_Update";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
@@ -135,7 +98,7 @@ namespace PortableKiosk.Core.Data.Repositories
                         int affectedRows;
 
                         using (SqlCommand command =
-                            new SqlCommand(sql, connection, transaction))
+                            new SqlCommand(sql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             AddWriteParameters(command, payment);
                             command.Parameters.Add(
@@ -159,17 +122,13 @@ namespace PortableKiosk.Core.Data.Repositories
                             "PAID",
                             StringComparison.OrdinalIgnoreCase))
                         {
-                            const string queueOrderSql = @"
-                                UPDATE Orders
-                                SET KitchenStatus = N'QUEUED'
-                                WHERE OrderID = @OrderID
-                                    AND KitchenStatus = N'AWAITING_PAYMENT';";
+                            const string queueOrderSql = "dbo.Payment_Update_QueueOrder";
 
                             using (SqlCommand command =
                                 new SqlCommand(
                                     queueOrderSql,
                                     connection,
-                                    transaction))
+                                    transaction) { CommandType = CommandType.StoredProcedure })
                             {
                                 command.Parameters.Add(
                                     "@OrderID",
@@ -194,14 +153,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(paymentID, "paymentID");
 
-            const string sql = @"
-                DELETE FROM Payments
-                WHERE PaymentID = @PaymentID;";
+            const string sql = "dbo.Payment_Delete";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@PaymentID",
@@ -218,29 +175,10 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             Validate(payment);
 
-            const string sql = @"
-                INSERT INTO Payments
-                    (
-                        OrderID,
-                        PaymentMethod,
-                        PaymentStatus,
-                        Amount,
-                        TransactionReference,
-                        PaidAt
-                    )
-                OUTPUT INSERTED.PaymentID
-                VALUES
-                    (
-                        @OrderID,
-                        @PaymentMethod,
-                        @PaymentStatus,
-                        @Amount,
-                        @TransactionReference,
-                        @PaidAt
-                    );";
+            const string sql = "dbo.Payment_Add";
 
             using (SqlCommand command =
-                new SqlCommand(sql, connection, transaction))
+                new SqlCommand(sql, connection, transaction) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, payment);
                 payment.PaymentID = Convert.ToInt32(
@@ -250,26 +188,15 @@ namespace PortableKiosk.Core.Data.Repositories
         }
 
         private static Payment GetSingle(
-            string predicate,
+            string procedureName,
             int id)
         {
-            string sql = @"
-                SELECT
-                    PaymentID,
-                    OrderID,
-                    PaymentMethod,
-                    PaymentStatus,
-                    Amount,
-                    TransactionReference,
-                    PaidAt,
-                    CreatedAt
-                FROM Payments
-                WHERE " + predicate + ";";
+            string sql = procedureName;
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@ID",

@@ -1,4 +1,4 @@
-using PortableKiosk.Core.Models;
+﻿using PortableKiosk.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,17 +12,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             Validate(size);
 
-            const string sql = @"
-                INSERT INTO Sizes
-                    (SizeName)
-                OUTPUT INSERTED.SizeID
-                VALUES
-                    (@SizeName);";
+            const string sql = "dbo.Size_Add";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, size);
                 connection.Open();
@@ -38,17 +33,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(sizeID);
 
-            const string sql = @"
-                SELECT
-                    SizeID,
-                    SizeName
-                FROM Sizes
-                WHERE SizeID = @SizeID;";
+            const string sql = "dbo.Size_GetByID";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@SizeID",
@@ -66,19 +56,14 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<Size> GetAll()
         {
-            const string sql = @"
-                SELECT
-                    SizeID,
-                    SizeName
-                FROM Sizes
-                ORDER BY SizeName ASC, SizeID ASC;";
+            const string sql = "dbo.Size_GetAll";
 
             List<Size> sizes = new List<Size>();
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
 
@@ -99,16 +84,12 @@ namespace PortableKiosk.Core.Data.Repositories
             Validate(size);
             ValidateID(size.SizeID);
 
-            const string sql = @"
-                UPDATE Sizes
-                SET
-                    SizeName = @SizeName
-                WHERE SizeID = @SizeID;";
+            const string sql = "dbo.Size_Update";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, size);
                 command.Parameters.Add(
@@ -124,14 +105,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(sizeID);
 
-            const string sql = @"
-                DELETE FROM Sizes
-                WHERE SizeID = @SizeID;";
+            const string sql = "dbo.Size_Delete";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@SizeID",

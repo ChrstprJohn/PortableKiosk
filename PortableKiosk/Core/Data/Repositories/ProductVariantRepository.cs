@@ -12,29 +12,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             Validate(variant);
 
-            const string sql = @"
-                INSERT INTO ProductVariants
-                    (
-                        ProductID,
-                        SizeID,
-                        Price,
-                        ImagePath,
-                        IsAvailable
-                    )
-                OUTPUT INSERTED.ProductVariantID
-                VALUES
-                    (
-                        @ProductID,
-                        @SizeID,
-                        @Price,
-                        @ImagePath,
-                        @IsAvailable
-                    );";
+            const string sql = "dbo.ProductVariant_Add";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@ProductID",
@@ -104,24 +87,7 @@ namespace PortableKiosk.Core.Data.Repositories
                 Validate(variant);
             }
 
-            const string sql = @"
-                INSERT INTO ProductVariants
-                    (
-                        ProductID,
-                        SizeID,
-                        Price,
-                        ImagePath,
-                        IsAvailable
-                    )
-                OUTPUT INSERTED.ProductVariantID
-                VALUES
-                    (
-                        @ProductID,
-                        @SizeID,
-                        @Price,
-                        @ImagePath,
-                        @IsAvailable
-                    );";
+            const string sql = "dbo.ProductVariant_AddRange";
 
             List<int> productVariantIDs = new List<int>();
 
@@ -141,7 +107,7 @@ namespace PortableKiosk.Core.Data.Repositories
                                 new SqlCommand(
                                     sql,
                                     connection,
-                                    transaction))
+                                    transaction) { CommandType = CommandType.StoredProcedure })
                             {
                                 AddInsertParameters(command, variant);
 
@@ -172,29 +138,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<ProductVariant> GetAll()
         {
-            const string sql = @"
-                SELECT
-                    pv.ProductVariantID,
-                    pv.ProductID,
-                    pv.SizeID,
-                    pv.Price,
-                    pv.ImagePath,
-                    pv.IsAvailable,
-                    p.ProductName,
-                    c.CategoryName,
-                    s.SizeName
-                FROM ProductVariants AS pv
-                INNER JOIN Products AS p
-                    ON p.ProductID = pv.ProductID
-                INNER JOIN Categories AS c
-                    ON c.CategoryID = p.CategoryID
-                LEFT JOIN Sizes AS s
-                    ON s.SizeID = pv.SizeID
-                ORDER BY
-                    c.CategoryName ASC,
-                    p.ProductName ASC,
-                    s.SizeName ASC,
-                    pv.ProductVariantID ASC;";
+            const string sql = "dbo.ProductVariant_GetAll";
 
             List<ProductVariant> variants =
                 new List<ProductVariant>();
@@ -202,7 +146,7 @@ namespace PortableKiosk.Core.Data.Repositories
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
 
@@ -229,28 +173,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     "productID");
             }
 
-            const string sql = @"
-                SELECT
-                    pv.ProductVariantID,
-                    pv.ProductID,
-                    pv.SizeID,
-                    pv.Price,
-                    pv.ImagePath,
-                    pv.IsAvailable,
-                    p.ProductName,
-                    c.CategoryName,
-                    s.SizeName
-                FROM ProductVariants AS pv
-                INNER JOIN Products AS p
-                    ON p.ProductID = pv.ProductID
-                INNER JOIN Categories AS c
-                    ON c.CategoryID = p.CategoryID
-                LEFT JOIN Sizes AS s
-                    ON s.SizeID = pv.SizeID
-                WHERE pv.ProductID = @ProductID
-                ORDER BY
-                    s.SizeName ASC,
-                    pv.ProductVariantID ASC;";
+            const string sql = "dbo.ProductVariant_GetByProductID";
 
             List<ProductVariant> variants =
                 new List<ProductVariant>();
@@ -258,7 +181,7 @@ namespace PortableKiosk.Core.Data.Repositories
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@ProductID",
@@ -289,33 +212,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     "productID");
             }
 
-            const string sql = @"
-                SELECT
-                    pv.ProductVariantID,
-                    pv.ProductID,
-                    pv.SizeID,
-                    pv.Price,
-                    pv.ImagePath,
-                    pv.IsAvailable,
-                    p.ProductName,
-                    c.CategoryName,
-                    s.SizeName
-                FROM ProductVariants AS pv
-                INNER JOIN Products AS p
-                    ON p.ProductID = pv.ProductID
-                INNER JOIN Categories AS c
-                    ON c.CategoryID = p.CategoryID
-                LEFT JOIN Sizes AS s
-                    ON s.SizeID = pv.SizeID
-                WHERE pv.ProductID = @ProductID
-                    AND pv.IsAvailable = 1
-                    AND p.IsAvailable = 1
-                    AND c.IsAvailable = 1
-                ORDER BY
-                    CASE WHEN pv.SizeID IS NULL THEN 0 ELSE 1 END,
-                    pv.Price ASC,
-                    s.SizeName ASC,
-                    pv.ProductVariantID ASC;";
+            const string sql = "dbo.ProductVariant_GetAvailableByProductID";
 
             List<ProductVariant> variants =
                 new List<ProductVariant>();
@@ -323,7 +220,7 @@ namespace PortableKiosk.Core.Data.Repositories
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@ProductID",
@@ -348,30 +245,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(productVariantID);
 
-            const string sql = @"
-                SELECT
-                    pv.ProductVariantID,
-                    pv.ProductID,
-                    pv.SizeID,
-                    pv.Price,
-                    pv.ImagePath,
-                    pv.IsAvailable,
-                    p.ProductName,
-                    c.CategoryName,
-                    s.SizeName
-                FROM ProductVariants AS pv
-                INNER JOIN Products AS p
-                    ON p.ProductID = pv.ProductID
-                INNER JOIN Categories AS c
-                    ON c.CategoryID = p.CategoryID
-                LEFT JOIN Sizes AS s
-                    ON s.SizeID = pv.SizeID
-                WHERE pv.ProductVariantID = @ProductVariantID;";
+            const string sql = "dbo.ProductVariant_GetByID";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@ProductVariantID",
@@ -392,33 +271,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(productVariantID);
 
-            const string sql = @"
-                SELECT
-                    pv.ProductVariantID,
-                    pv.ProductID,
-                    pv.SizeID,
-                    pv.Price,
-                    pv.ImagePath,
-                    pv.IsAvailable,
-                    p.ProductName,
-                    c.CategoryName,
-                    s.SizeName
-                FROM ProductVariants AS pv
-                INNER JOIN Products AS p
-                    ON p.ProductID = pv.ProductID
-                INNER JOIN Categories AS c
-                    ON c.CategoryID = p.CategoryID
-                LEFT JOIN Sizes AS s
-                    ON s.SizeID = pv.SizeID
-                WHERE pv.ProductVariantID = @ProductVariantID
-                    AND pv.IsAvailable = 1
-                    AND p.IsAvailable = 1
-                    AND c.IsAvailable = 1;";
+            const string sql = "dbo.ProductVariant_GetAvailableByID";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@ProductVariantID",
@@ -439,20 +297,12 @@ namespace PortableKiosk.Core.Data.Repositories
             Validate(variant);
             ValidateID(variant.ProductVariantID);
 
-            const string sql = @"
-                UPDATE ProductVariants
-                SET
-                    ProductID = @ProductID,
-                    SizeID = @SizeID,
-                    Price = @Price,
-                    ImagePath = @ImagePath,
-                    IsAvailable = @IsAvailable
-                WHERE ProductVariantID = @ProductVariantID;";
+            const string sql = "dbo.ProductVariant_Update";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddInsertParameters(command, variant);
                 command.Parameters.Add(
@@ -469,14 +319,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(productVariantID);
 
-            const string sql = @"
-                DELETE FROM ProductVariants
-                WHERE ProductVariantID = @ProductVariantID;";
+            const string sql = "dbo.ProductVariant_Delete";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@ProductVariantID",

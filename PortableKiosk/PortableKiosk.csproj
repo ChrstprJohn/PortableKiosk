@@ -415,6 +415,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Database\StoredProcedures\*.sql" />
+    <None Include="Database\StoredProcedures\README.md" />
+    <None Include="Database\InstallStoredProcedures.sql" />
+    <None Include="Database\BuildStoredProcedures.ps1" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
     <None Include="Web.Debug.config">

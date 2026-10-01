@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -30,25 +30,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(staffAccountID);
 
-            const string sql = @"
-                SELECT
-                    StaffAccountID,
-                    FirstName,
-                    MiddleName,
-                    LastName,
-                    Suffix,
-                    Email,
-                    StaffRole,
-                    IsActive,
-                    CreatedAt,
-                    UpdatedAt
-                FROM StaffAccounts
-                WHERE StaffAccountID = @StaffAccountID;";
+            const string sql = "dbo.StaffAccount_GetByID";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@StaffAccountID",
@@ -73,28 +60,12 @@ namespace PortableKiosk.Core.Data.Repositories
                 return null;
             }
 
-            const string sql = @"
-                SELECT
-                    StaffAccountID,
-                    FirstName,
-                    MiddleName,
-                    LastName,
-                    Suffix,
-                    Email,
-                    PasswordHash,
-                    PasswordSalt,
-                    PasswordIterations,
-                    StaffRole,
-                    IsActive,
-                    CreatedAt,
-                    UpdatedAt
-                FROM StaffAccounts
-                WHERE Email = @Email;";
+            const string sql = "dbo.StaffAccount_GetByEmail";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@Email",
@@ -115,20 +86,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<StaffAccount> GetAll()
         {
-            const string sql = @"
-                SELECT
-                    StaffAccountID,
-                    FirstName,
-                    MiddleName,
-                    LastName,
-                    Suffix,
-                    Email,
-                    StaffRole,
-                    IsActive,
-                    CreatedAt,
-                    UpdatedAt
-                FROM StaffAccounts
-                ORDER BY LastName, FirstName, StaffAccountID;";
+            const string sql = "dbo.StaffAccount_GetAll";
 
             List<StaffAccount> accounts =
                 new List<StaffAccount>();
@@ -136,7 +94,7 @@ namespace PortableKiosk.Core.Data.Repositories
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
 
@@ -161,23 +119,12 @@ namespace PortableKiosk.Core.Data.Repositories
             ValidateAccount(account);
             ValidateRole(account.StaffRole);
 
-            const string sql = @"
-                UPDATE StaffAccounts
-                SET
-                    FirstName = @FirstName,
-                    MiddleName = @MiddleName,
-                    LastName = @LastName,
-                    Suffix = @Suffix,
-                    Email = @Email,
-                    StaffRole = @StaffRole,
-                    IsActive = @IsActive,
-                    UpdatedAt = SYSUTCDATETIME()
-                WHERE StaffAccountID = @StaffAccountID;";
+            const string sql = "dbo.StaffAccount_Update";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@StaffAccountID",
@@ -236,14 +183,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(staffAccountID);
 
-            const string sql = @"
-                DELETE FROM StaffAccounts
-                WHERE StaffAccountID = @StaffAccountID;";
+            const string sql = "dbo.StaffAccount_Delete";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@StaffAccountID",
@@ -270,41 +215,12 @@ namespace PortableKiosk.Core.Data.Repositories
                 out passwordSalt,
                 out passwordHash);
 
-            const string sql = @"
-                INSERT INTO StaffAccounts
-                (
-                    FirstName,
-                    MiddleName,
-                    LastName,
-                    Suffix,
-                    Email,
-                    PasswordHash,
-                    PasswordSalt,
-                    PasswordIterations,
-                    StaffRole,
-                    IsActive
-                )
-                OUTPUT
-                    INSERTED.StaffAccountID,
-                    INSERTED.CreatedAt
-                VALUES
-                (
-                    @FirstName,
-                    @MiddleName,
-                    @LastName,
-                    @Suffix,
-                    @Email,
-                    @PasswordHash,
-                    @PasswordSalt,
-                    @PasswordIterations,
-                    @StaffRole,
-                    @IsActive
-                );";
+            const string sql = "dbo.StaffAccount_Add";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@FirstName",

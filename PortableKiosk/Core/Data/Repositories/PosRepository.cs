@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -29,23 +29,8 @@ namespace PortableKiosk.Core.Data.Repositories
                 throw new ArgumentException("A valid cash sale is required.");
             }
 
-            const string lockSql = @"
-                DECLARE @Result INT;
-                EXEC @Result = sp_getapplock
-                    @Resource = @Resource,
-                    @LockMode = N'Exclusive',
-                    @LockOwner = N'Transaction',
-                    @LockTimeout = 10000;
-                SELECT @Result;";
-            const string existingSql = @"
-                SELECT o.OrderID, o.OrderNumber, o.OrderType,
-                    o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
-                    o.CreatedAt, p.PaymentID, p.Amount, p.PaidAt
-                FROM Payments p
-                INNER JOIN Orders o ON o.OrderID = p.OrderID
-                WHERE p.TransactionReference = @Reference
-                    AND p.PaymentMethod IN (N'CASH_COUNTER', N'CASHLESS')
-                    AND p.PaymentStatus = N'PAID';";
+            const string lockSql = "dbo.Pos_CompleteNewCashSale_Lock";
+            const string existingSql = "dbo.Pos_CompleteNewCashSale_Existing";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
@@ -55,7 +40,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     try
                     {
                         using (SqlCommand command = new SqlCommand(
-                            lockSql, connection, transaction))
+                            lockSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             command.Parameters.Add("@Resource", SqlDbType.NVarChar, 255)
                                 .Value = "POS:" + saleKey.ToString("N");
@@ -68,7 +53,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
                         Order existingOrder = null;
                         using (SqlCommand command = new SqlCommand(
-                            existingSql, connection, transaction))
+                            existingSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             command.Parameters.Add("@Reference", SqlDbType.NVarChar, 100)
                                 .Value = payment.TransactionReference;
@@ -128,31 +113,12 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<PosCatalogItem> GetAvailableCatalog()
         {
-            const string sql = @"
-                SELECT
-                    pv.ProductVariantID,
-                    pv.ProductID,
-                    c.CategoryID,
-                    pv.SizeID,
-                    p.ProductName,
-                    c.CategoryName,
-                    s.SizeName,
-                    pv.ImagePath,
-                    pv.Price
-                FROM ProductVariants pv
-                INNER JOIN Products p ON p.ProductID = pv.ProductID
-                INNER JOIN Categories c ON c.CategoryID = p.CategoryID
-                LEFT JOIN Sizes s ON s.SizeID = pv.SizeID
-                WHERE pv.IsAvailable = 1
-                    AND p.IsAvailable = 1
-                    AND c.IsAvailable = 1
-                ORDER BY c.CategoryName, p.ProductName,
-                    pv.Price, pv.ProductVariantID;";
+            const string sql = "dbo.Pos_GetAvailableCatalog";
 
             List<PosCatalogItem> items = new List<PosCatalogItem>();
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
 
@@ -208,56 +174,15 @@ namespace PortableKiosk.Core.Data.Repositories
                 throw new ArgumentException("A valid cash sale is required.");
             }
 
-            const string lockSql = @"
-                SELECT
-                    o.OrderID,
-                    o.OrderNumber,
-                    o.OrderType,
-                    o.FulfillmentMethod,
-                    o.TableNumber,
-                    o.KitchenStatus,
-                    o.CreatedAt,
-                    COALESCE(
-                        o.ExpiresAt,
-                        DATEADD(MINUTE, @ExpiryMinutes, o.CreatedAt)
-                    ) AS EffectiveExpiresAt,
-                    p.PaymentID,
-                    p.PaymentMethod,
-                    p.PaymentStatus
-                FROM Payments p WITH (UPDLOCK, HOLDLOCK)
-                INNER JOIN Orders o WITH (UPDLOCK, HOLDLOCK)
-                    ON o.OrderID = p.OrderID
-                WHERE p.OrderID = @OrderID;";
+            const string lockSql = "dbo.Pos_CompleteKioskCashOrder_Lock";
 
-            const string deleteItemsSql = @"
-                DELETE FROM OrderItems WHERE OrderID = @OrderID;";
+            const string deleteItemsSql = "dbo.Pos_CompleteKioskCashOrder_DeleteItems";
 
-            const string currentItemsSql = @"
-                SELECT OrderItemID, ProductVariantID, UnitPrice, Quantity
-                FROM OrderItems WITH (UPDLOCK, HOLDLOCK)
-                WHERE OrderID = @OrderID
-                ORDER BY OrderItemID;";
+            const string currentItemsSql = "dbo.Pos_CompleteKioskCashOrder_CurrentItems";
 
-            const string paySql = @"
-                UPDATE Payments
-                SET PaymentMethod = @PaymentMethod,
-                    PaymentStatus = N'PAID',
-                    Amount = @Amount,
-                    TransactionReference = @TransactionReference,
-                    PaidAt = @PaidAt
-                WHERE OrderID = @OrderID
-                    AND PaymentMethod = N'CASH_COUNTER'
-                    AND PaymentStatus = N'PENDING';";
+            const string paySql = "dbo.Pos_CompleteKioskCashOrder_Pay";
 
-            const string queueSql = @"
-                UPDATE Orders
-                SET KitchenStatus = N'QUEUED', ExpiresAt = NULL
-                WHERE OrderID = @OrderID
-                    AND KitchenStatus = N'AWAITING_PAYMENT'
-                    AND COALESCE(
-                        ExpiresAt,
-                        DATEADD(MINUTE, @ExpiryMinutes, CreatedAt)
-                    ) > SYSUTCDATETIME();";
+            const string queueSql = "dbo.Pos_CompleteKioskCashOrder_Queue";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
@@ -273,7 +198,7 @@ namespace PortableKiosk.Core.Data.Repositories
                         DateTime expiresAt;
 
                         using (SqlCommand command = new SqlCommand(
-                            lockSql, connection, transaction))
+                            lockSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                             command.Parameters.Add("@ExpiryMinutes", SqlDbType.Int).Value =
@@ -324,7 +249,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
                         List<OrderItem> currentItems = new List<OrderItem>();
                         using (SqlCommand command = new SqlCommand(
-                            currentItemsSql, connection, transaction))
+                            currentItemsSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                             using (SqlDataReader reader = command.ExecuteReader())
@@ -348,7 +273,7 @@ namespace PortableKiosk.Core.Data.Repositories
                         }
 
                         using (SqlCommand command = new SqlCommand(
-                            deleteItemsSql, connection, transaction))
+                            deleteItemsSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                             command.ExecuteNonQuery();
@@ -358,7 +283,7 @@ namespace PortableKiosk.Core.Data.Repositories
                             items, connection, transaction);
 
                         using (SqlCommand command = new SqlCommand(
-                            paySql, connection, transaction))
+                            paySql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                             command.Parameters.Add("@PaymentMethod", SqlDbType.NVarChar, 20).Value = payment.PaymentMethod;
@@ -381,7 +306,7 @@ namespace PortableKiosk.Core.Data.Repositories
                         }
 
                         using (SqlCommand command = new SqlCommand(
-                            queueSql, connection, transaction))
+                            queueSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             command.Parameters.Add("@OrderID", SqlDbType.Int).Value = orderID;
                             command.Parameters.Add("@ExpiryMinutes", SqlDbType.Int).Value =

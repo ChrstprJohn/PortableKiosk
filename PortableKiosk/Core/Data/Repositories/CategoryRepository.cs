@@ -1,4 +1,4 @@
-using PortableKiosk.Core.Models;
+﻿using PortableKiosk.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,17 +12,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             Validate(category);
 
-            const string sql = @"
-                INSERT INTO Categories
-                    (CategoryName, IsAvailable)
-                OUTPUT INSERTED.CategoryID
-                VALUES
-                    (@CategoryName, @IsAvailable);";
+            const string sql = "dbo.Category_Add";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, category);
                 connection.Open();
@@ -38,18 +33,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(categoryID);
 
-            const string sql = @"
-                SELECT
-                    CategoryID,
-                    CategoryName,
-                    IsAvailable
-                FROM Categories
-                WHERE CategoryID = @CategoryID;";
+            const string sql = "dbo.Category_GetByID";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@CategoryID",
@@ -67,20 +56,14 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<Category> GetAll()
         {
-            const string sql = @"
-                SELECT
-                    CategoryID,
-                    CategoryName,
-                    IsAvailable
-                FROM Categories
-                ORDER BY CategoryName ASC, CategoryID ASC;";
+            const string sql = "dbo.Category_GetAll";
 
             List<Category> categories = new List<Category>();
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
 
@@ -98,21 +81,14 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<Category> GetAvailable()
         {
-            const string sql = @"
-                SELECT
-                    CategoryID,
-                    CategoryName,
-                    IsAvailable
-                FROM Categories
-                WHERE IsAvailable = 1
-                ORDER BY CategoryName ASC, CategoryID ASC;";
+            const string sql = "dbo.Category_GetAvailable";
 
             List<Category> categories = new List<Category>();
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
 
@@ -133,17 +109,12 @@ namespace PortableKiosk.Core.Data.Repositories
             Validate(category);
             ValidateID(category.CategoryID);
 
-            const string sql = @"
-                UPDATE Categories
-                SET
-                    CategoryName = @CategoryName,
-                    IsAvailable = @IsAvailable
-                WHERE CategoryID = @CategoryID;";
+            const string sql = "dbo.Category_Update";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, category);
                 command.Parameters.Add(
@@ -159,14 +130,12 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(categoryID);
 
-            const string sql = @"
-                DELETE FROM Categories
-                WHERE CategoryID = @CategoryID;";
+            const string sql = "dbo.Category_Delete";
 
             using (SqlConnection connection =
                 DatabaseConnection.GetConnection())
             using (SqlCommand command =
-                new SqlCommand(sql, connection))
+                new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add(
                     "@CategoryID",

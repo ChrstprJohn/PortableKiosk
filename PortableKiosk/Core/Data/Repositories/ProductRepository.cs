@@ -1,4 +1,4 @@
-using PortableKiosk.Core.Models;
+﻿using PortableKiosk.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,15 +12,10 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateForSave(product, false);
 
-            const string sql = @"
-                INSERT INTO Products
-                    (CategoryID, ProductName, ProductDescription, IsAvailable)
-                OUTPUT INSERTED.ProductID
-                VALUES
-                    (@CategoryID, @ProductName, @ProductDescription, @IsAvailable);";
+            const string sql = "dbo.Product_Add";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, product);
                 connection.Open();
@@ -31,16 +26,11 @@ namespace PortableKiosk.Core.Data.Repositories
 
         public List<Product> GetAll()
         {
-            const string sql = @"
-                SELECT p.ProductID, p.CategoryID, c.CategoryName,
-                    p.ProductName, p.ProductDescription, p.IsAvailable
-                FROM Products AS p
-                INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
-                ORDER BY p.ProductName ASC, p.ProductID ASC;";
+            const string sql = "dbo.Product_GetAll";
 
             List<Product> products = new List<Product>();
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
@@ -59,15 +49,10 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(productID);
 
-            const string sql = @"
-                SELECT p.ProductID, p.CategoryID, c.CategoryName,
-                    p.ProductName, p.ProductDescription, p.IsAvailable
-                FROM Products AS p
-                INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
-                WHERE p.ProductID = @ProductID;";
+            const string sql = "dbo.Product_GetByID";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add("@ProductID", SqlDbType.Int).Value = productID;
                 connection.Open();
@@ -82,24 +67,10 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(productID);
 
-            const string sql = @"
-                SELECT p.ProductID, p.CategoryID, c.CategoryName,
-                    p.ProductName, p.ProductDescription, p.IsAvailable
-                FROM Products AS p
-                INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
-                WHERE p.ProductID = @ProductID
-                    AND p.IsAvailable = 1
-                    AND c.IsAvailable = 1
-                    AND EXISTS
-                    (
-                        SELECT 1
-                        FROM ProductVariants AS pv
-                        WHERE pv.ProductID = p.ProductID
-                            AND pv.IsAvailable = 1
-                    );";
+            const string sql = "dbo.Product_GetAvailableByID";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add("@ProductID", SqlDbType.Int).Value = productID;
                 connection.Open();
@@ -119,27 +90,12 @@ namespace PortableKiosk.Core.Data.Repositories
                     "categoryID");
             }
 
-            const string sql = @"
-                SELECT p.ProductID, p.CategoryID, c.CategoryName,
-                    p.ProductName, p.ProductDescription, p.IsAvailable
-                FROM Products AS p
-                INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
-                WHERE p.CategoryID = @CategoryID
-                    AND p.IsAvailable = 1
-                    AND c.IsAvailable = 1
-                    AND EXISTS
-                    (
-                        SELECT 1
-                        FROM ProductVariants AS pv
-                        WHERE pv.ProductID = p.ProductID
-                            AND pv.IsAvailable = 1
-                    )
-                ORDER BY p.ProductName ASC, p.ProductID ASC;";
+            const string sql = "dbo.Product_GetAvailableByCategoryID";
 
             List<Product> products = new List<Product>();
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add("@CategoryID", SqlDbType.Int).Value = categoryID;
                 connection.Open();
@@ -164,39 +120,11 @@ namespace PortableKiosk.Core.Data.Repositories
 
             // Match Analytics popular products: units from paid orders, across variants.
             // Only return products that a customer can open and add to the cart now.
-            const string sql = @"
-                WITH SoldUnits AS
-                (
-                    SELECT pv.ProductID, SUM(oi.Quantity) AS Units
-                    FROM ProductVariants AS pv
-                    INNER JOIN OrderItems AS oi
-                        ON oi.ProductVariantID = pv.ProductVariantID
-                    WHERE EXISTS
-                    (
-                        SELECT 1 FROM Payments AS pay
-                        WHERE pay.OrderID = oi.OrderID
-                            AND pay.PaymentStatus = N'PAID'
-                    )
-                    GROUP BY pv.ProductID
-                )
-                SELECT TOP (@Count) p.ProductID, p.CategoryID, c.CategoryName,
-                    p.ProductName, p.ProductDescription, p.IsAvailable
-                FROM Products AS p
-                INNER JOIN Categories AS c ON c.CategoryID = p.CategoryID
-                INNER JOIN SoldUnits AS sold ON sold.ProductID = p.ProductID
-                WHERE p.IsAvailable = 1 AND c.IsAvailable = 1
-                    AND EXISTS
-                    (
-                        SELECT 1 FROM ProductVariants AS available
-                        WHERE available.ProductID = p.ProductID
-                            AND available.IsAvailable = 1
-                    )
-                ORDER BY sold.Units DESC, p.ProductName ASC,
-                    p.ProductID ASC;";
+            const string sql = "dbo.Product_GetTopSellingAvailable";
 
             List<Product> products = new List<Product>();
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 command.Parameters.Add("@Count", SqlDbType.Int).Value = count;
                 connection.Open();
@@ -216,16 +144,10 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateForSave(product, true);
 
-            const string sql = @"
-                UPDATE Products
-                SET CategoryID = @CategoryID,
-                    ProductName = @ProductName,
-                    ProductDescription = @ProductDescription,
-                    IsAvailable = @IsAvailable
-                WHERE ProductID = @ProductID;";
+            const string sql = "dbo.Product_Update";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
-            using (SqlCommand command = new SqlCommand(sql, connection))
+            using (SqlCommand command = new SqlCommand(sql, connection) { CommandType = CommandType.StoredProcedure })
             {
                 AddWriteParameters(command, product);
                 command.Parameters.Add("@ProductID", SqlDbType.Int).Value = product.ProductID;
@@ -238,12 +160,8 @@ namespace PortableKiosk.Core.Data.Repositories
         {
             ValidateID(productID);
 
-            const string deleteVariantsSql = @"
-                DELETE FROM ProductVariants
-                WHERE ProductID = @ProductID;";
-            const string deleteProductSql = @"
-                DELETE FROM Products
-                WHERE ProductID = @ProductID;";
+            const string deleteVariantsSql = "dbo.Product_Delete_DeleteVariants";
+            const string deleteProductSql = "dbo.Product_Delete_DeleteProduct";
 
             using (SqlConnection connection = DatabaseConnection.GetConnection())
             {
@@ -254,7 +172,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     try
                     {
                         using (SqlCommand deleteVariants =
-                            new SqlCommand(deleteVariantsSql, connection, transaction))
+                            new SqlCommand(deleteVariantsSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             deleteVariants.Parameters.Add(
                                 "@ProductID",
@@ -264,7 +182,7 @@ namespace PortableKiosk.Core.Data.Repositories
 
                         int deletedProducts;
                         using (SqlCommand deleteProduct =
-                            new SqlCommand(deleteProductSql, connection, transaction))
+                            new SqlCommand(deleteProductSql, connection, transaction) { CommandType = CommandType.StoredProcedure })
                         {
                             deleteProduct.Parameters.Add(
                                 "@ProductID",
