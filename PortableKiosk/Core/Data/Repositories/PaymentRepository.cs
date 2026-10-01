@@ -211,7 +211,7 @@ namespace PortableKiosk.Core.Data.Repositories
             }
         }
 
-        internal int Add(
+        public int Add(
             Payment payment,
             SqlConnection connection,
             SqlTransaction transaction)

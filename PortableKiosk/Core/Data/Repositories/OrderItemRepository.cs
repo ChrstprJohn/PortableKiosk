@@ -203,7 +203,7 @@ namespace PortableKiosk.Core.Data.Repositories
             }
         }
 
-        internal int Add(
+        public int Add(
             OrderItem item,
             SqlConnection connection,
             SqlTransaction transaction)
@@ -227,7 +227,7 @@ namespace PortableKiosk.Core.Data.Repositories
             }
         }
 
-        internal List<int> AddRange(
+        public List<int> AddRange(
             IList<OrderItem> items,
             SqlConnection connection,
             SqlTransaction transaction)

@@ -364,7 +364,7 @@ namespace PortableKiosk.Core.Data.Repositories
             }
         }
 
-        internal int Add(
+        public int Add(
             Order order,
             SqlConnection connection,
             SqlTransaction transaction)
