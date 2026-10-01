@@ -11,49 +11,55 @@
     runat="server">
 
     <div class="-m-4 grid min-h-screen grid-cols-1 bg-slate-50 text-slate-900 md:-mx-6 md:-my-4 lg:grid-cols-[248px_minmax(0,1fr)]">
-        <aside class="relative z-20 flex flex-col gap-4 border-b border-slate-200 bg-white px-4 py-4 lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r lg:px-5 lg:py-6" aria-label="Admin navigation">
-            <div class="px-1">
-                <strong class="text-lg font-semibold tracking-tight text-slate-950">Admin workspace</strong>
-            </div>
+        <aside class="relative z-20 flex flex-col gap-6 border-b border-slate-200 bg-white px-4 py-4 lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r lg:px-5 lg:py-6" aria-label="Admin navigation">
+            <a href="<%= ResolveUrl("~/UI/Admin/Orders.aspx") %>" class="flex items-center gap-3 rounded-lg px-1 py-1 no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600" aria-label="Portable Kiosk admin workspace">
+                <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-slate-900">
+                    <img src="<%= ResolveUrl("~/Content/images/portable-kiosk-logo.png") %>" alt="" width="36" height="36" class="size-9 object-contain" />
+                </span>
+                <span class="min-w-0">
+                    <strong class="block text-base font-semibold tracking-tight text-slate-950">Portable Kiosk</strong>
+                    <span class="mt-0.5 block text-xs font-medium text-slate-500">Admin workspace</span>
+                </span>
+            </a>
 
-            <nav class="flex gap-1 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible" aria-label="Workspace">
+            <nav class="flex gap-1.5 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible" aria-label="Workspace">
                 <a ID="lnkCatalogConfig" runat="server"
                     href="~/UI/Admin/CatalogConfig.aspx"
-                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
-                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1" /><rect x="13.5" y="3.5" width="7" height="7" rx="1" /><rect x="3.5" y="13.5" width="7" height="7" rx="1" /><rect x="13.5" y="13.5" width="7" height="7" rx="1" /></svg>
+                    class="group/nav flex min-h-11 min-w-max items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-amber-100 aria-[current=page]:font-semibold aria-[current=page]:text-amber-900 aria-[current=page]:hover:bg-amber-100 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500 group-aria-[current=page]/nav:text-amber-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1" /><rect x="13.5" y="3.5" width="7" height="7" rx="1" /><rect x="3.5" y="13.5" width="7" height="7" rx="1" /><rect x="13.5" y="13.5" width="7" height="7" rx="1" /></svg>
                     Catalog setup
                 </a>
 
                 <a ID="lnkOrders" runat="server"
                     href="~/UI/Admin/Orders.aspx"
-                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
-                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3.5h10a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Z" /><path d="M8.5 8h7M8.5 12h7M8.5 16h4" /></svg>
+                    class="group/nav flex min-h-11 min-w-max items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-amber-100 aria-[current=page]:font-semibold aria-[current=page]:text-amber-900 aria-[current=page]:hover:bg-amber-100 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500 group-aria-[current=page]/nav:text-amber-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3.5h10a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-13a2 2 0 0 1 2-2Z" /><path d="M8.5 8h7M8.5 12h7M8.5 16h4" /></svg>
                     Orders
                 </a>
 
                 <a ID="lnkAnalytics" runat="server"
                     href="~/UI/Admin/Analytics.aspx"
-                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
-                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16M6.5 16V10m5 6V5m5 11v-4" /></svg>
+                    class="group/nav flex min-h-11 min-w-max items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-amber-100 aria-[current=page]:font-semibold aria-[current=page]:text-amber-900 aria-[current=page]:hover:bg-amber-100 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500 group-aria-[current=page]/nav:text-amber-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5h16M6.5 16V10m5 6V5m5 11v-4" /></svg>
                     Analytics
                 </a>
 
                 <a ID="lnkProducts" runat="server"
                     href="~/UI/Admin/Products.aspx"
-                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
-                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8.5 4.5v9L12 21l-8.5-4.5v-9L12 3Z" /><path d="m3.8 7.7 8.2 4.4 8.2-4.4M12 12v9" /></svg>
+                    class="group/nav flex min-h-11 min-w-max items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-amber-100 aria-[current=page]:font-semibold aria-[current=page]:text-amber-900 aria-[current=page]:hover:bg-amber-100 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500 group-aria-[current=page]/nav:text-amber-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8.5 4.5v9L12 21l-8.5-4.5v-9L12 3Z" /><path d="m3.8 7.7 8.2 4.4 8.2-4.4M12 12v9" /></svg>
                     Products
                 </a>
 
                 <a ID="lnkStaff" runat="server"
                     href="~/UI/Admin/StaffAccounts.aspx"
-                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
-                    <svg class="size-4 shrink-0 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20" /><circle cx="10" cy="7.5" r="3.5" /><path d="M16 4.2a3.5 3.5 0 0 1 0 6.6M20 20v-1.5a3.5 3.5 0 0 0-2.7-3.4" /></svg>
+                    class="group/nav flex min-h-11 min-w-max items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-amber-100 aria-[current=page]:font-semibold aria-[current=page]:text-amber-900 aria-[current=page]:hover:bg-amber-100 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500 group-aria-[current=page]/nav:text-amber-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20" /><circle cx="10" cy="7.5" r="3.5" /><path d="M16 4.2a3.5 3.5 0 0 1 0 6.6M20 20v-1.5a3.5 3.5 0 0 0-2.7-3.4" /></svg>
                     Staff accounts
                 </a>
                 <a ID="lnkSettings" runat="server"
                     href="~/UI/Admin/Settings.aspx"
-                    class="flex min-h-10 min-w-max items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-slate-100 aria-[current=page]:font-semibold aria-[current=page]:text-slate-950 lg:min-w-0">
+                    class="group/nav flex min-h-11 min-w-max items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-amber-100 aria-[current=page]:font-semibold aria-[current=page]:text-amber-900 aria-[current=page]:hover:bg-amber-100 lg:min-w-0">
                     <svg class="size-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.9l.06.06-2.1 2.1-.06-.06a1.7 1.7 0 0 0-1.9-.34 1.7 1.7 0 0 0-1 1.55V21h-3v-.79a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.9.34l-.06.06-2.1-2.1.06-.06A1.7 1.7 0 0 0 7.1 15a1.7 1.7 0 0 0-1.55-1H5v-3h.55A1.7 1.7 0 0 0 7.1 10a1.7 1.7 0 0 0-.34-1.9L6.7 8.04l2.1-2.1.06.06a1.7 1.7 0 0 0 1.9.34 1.7 1.7 0 0 0 1-1.55V4h3v.79a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.9-.34l.06-.06 2.1 2.1-.06.06a1.7 1.7 0 0 0-.34 1.9 1.7 1.7 0 0 0 1.55 1H21v3h-.79A1.7 1.7 0 0 0 19.4 15Z" /></svg>
                     Settings
                 </a>

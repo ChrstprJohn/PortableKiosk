@@ -17,28 +17,64 @@
             <p class="mt-1 text-sm text-slate-500">Review kiosk orders and payment information.</p>
         </header>
 
-        <div class="mb-5 grid gap-3 sm:grid-cols-2">
-            <div class="rounded-lg border border-slate-200 bg-white p-4" aria-label="Search orders">
+        <div class="mb-5 grid items-end gap-x-4 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div class="min-w-0" aria-label="Search orders">
                 <asp:Label ID="lblOrderSearch" runat="server" AssociatedControlID="txtOrderSearch" Text="Search by order number" CssClass="mb-1.5 block text-xs font-medium text-slate-600" />
                 <div class="flex gap-2">
-                    <asp:TextBox ID="txtOrderSearch" runat="server" MaxLength="20" CssClass="block min-h-9 min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" placeholder="Enter order number" />
-                    <asp:Button ID="btnSearchOrders" runat="server" Text="Search" CssClass="inline-flex min-h-9 cursor-pointer items-center justify-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" OnClick="btnSearchOrders_Click" />
+                    <asp:TextBox ID="txtOrderSearch" runat="server" MaxLength="20" CssClass="block h-10 min-w-0 flex-1 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" placeholder="Enter order number" />
+                    <asp:Button ID="btnSearchOrders" runat="server" Text="Search" CssClass="inline-flex h-10 cursor-pointer items-center justify-center rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" OnClick="btnSearchOrders_Click" />
                 </div>
             </div>
 
-            <div class="rounded-lg border border-slate-200 bg-white p-4" aria-label="Filter orders by payment status">
+            <div class="min-w-0" aria-label="Filter orders by payment status">
                 <asp:Label ID="lblPaymentStatus" runat="server" AssociatedControlID="ddlPaymentStatus" Text="Payment status" CssClass="mb-1.5 block text-xs font-medium text-slate-600" />
-                <div>
-                    <asp:DropDownList ID="ddlPaymentStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlPaymentStatus_SelectedIndexChanged" CssClass="block min-h-9 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
-                        <asp:ListItem Text="All payment statuses" Value="" />
+                <div class="min-w-0">
+                    <asp:DropDownList ID="ddlPaymentStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlOrderFilter_SelectedIndexChanged" CssClass="block h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                        <asp:ListItem Text="All payment statuses" Value="" Selected="True" />
                         <asp:ListItem Text="Paid" Value="PAID" />
                         <asp:ListItem Text="Pending" Value="PENDING" />
                         <asp:ListItem Text="Expired" Value="EXPIRED" />
                         <asp:ListItem Text="Failed" Value="FAILED" />
                         <asp:ListItem Text="Cancelled" Value="CANCELLED" />
-                        <asp:ListItem Text="Not recorded" Value="NOT_RECORDED" />
                     </asp:DropDownList>
                 </div>
+            </div>
+            <div class="min-w-0">
+                <asp:Label runat="server" AssociatedControlID="ddlKitchenStatus" Text="Kitchen status" CssClass="mb-1.5 block text-xs font-medium text-slate-600" />
+                <asp:DropDownList ID="ddlKitchenStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlOrderFilter_SelectedIndexChanged" CssClass="block h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                    <asp:ListItem Text="All kitchen statuses" Value="" Selected="True" />
+                    <asp:ListItem Text="Awaiting payment" Value="AWAITING_PAYMENT" />
+                    <asp:ListItem Text="Queued" Value="QUEUED" />
+                    <asp:ListItem Text="Preparing" Value="PREPARING" />
+                    <asp:ListItem Text="Serving" Value="SERVING" />
+                    <asp:ListItem Text="Completed" Value="COMPLETED" />
+                    <asp:ListItem Text="Cancelled" Value="CANCELLED" />
+                    <asp:ListItem Text="Expired" Value="EXPIRED" />
+                </asp:DropDownList>
+            </div>
+            <div class="min-w-0">
+                <asp:Label runat="server" AssociatedControlID="ddlOrderType" Text="Order type" CssClass="mb-1.5 block text-xs font-medium text-slate-600" />
+                <asp:DropDownList ID="ddlOrderType" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlOrderFilter_SelectedIndexChanged" CssClass="block h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                    <asp:ListItem Text="All order types" Value="" Selected="True" />
+                    <asp:ListItem Text="Dine in" Value="DINE_IN" />
+                    <asp:ListItem Text="Takeout" Value="TAKEOUT" />
+                </asp:DropDownList>
+            </div>
+            <div class="min-w-0">
+                <asp:Label runat="server" AssociatedControlID="ddlFulfillment" Text="Fulfillment" CssClass="mb-1.5 block text-xs font-medium text-slate-600" />
+                <asp:DropDownList ID="ddlFulfillment" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlOrderFilter_SelectedIndexChanged" CssClass="block h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                    <asp:ListItem Text="All fulfillment methods" Value="" Selected="True" />
+                    <asp:ListItem Text="Counter pickup" Value="COUNTER_PICKUP" />
+                    <asp:ListItem Text="Table service" Value="TABLE_SERVICE" />
+                </asp:DropDownList>
+            </div>
+            <div class="min-w-0">
+                <asp:Label runat="server" AssociatedControlID="ddlPaymentMethod" Text="Payment method" CssClass="mb-1.5 block text-xs font-medium text-slate-600" />
+                <asp:DropDownList ID="ddlPaymentMethod" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlOrderFilter_SelectedIndexChanged" CssClass="block h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                    <asp:ListItem Text="All payment methods" Value="" Selected="True" />
+                    <asp:ListItem Text="Cash at counter" Value="CASH_COUNTER" />
+                    <asp:ListItem Text="Cashless" Value="CASHLESS" />
+                </asp:DropDownList>
             </div>
         </div>
 
@@ -111,7 +147,7 @@
                     <EmptyDataTemplate>
                         <div class="px-5 py-12 text-center">
                             <p class="text-sm font-medium text-slate-800">No orders found</p>
-                            <p class="mt-1 text-sm text-slate-500">Try another order number or choose a different payment status.</p>
+                            <p class="mt-1 text-sm text-slate-500">Try another order number or choose different filters.</p>
                         </div>
                     </EmptyDataTemplate>
                 </asp:GridView>

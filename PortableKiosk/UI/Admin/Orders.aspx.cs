@@ -70,7 +70,7 @@ namespace PortableKiosk.UI.Admin
             BindOrders();
         }
 
-        protected void ddlPaymentStatus_SelectedIndexChanged(
+        protected void ddlOrderFilter_SelectedIndexChanged(
             object sender,
             EventArgs e)
         {
@@ -197,18 +197,22 @@ namespace PortableKiosk.UI.Admin
                         continue;
                     }
 
-                    if (selectedPaymentStatus == "NOT_RECORDED" &&
-                        row.PaymentStatus != null)
-                    {
-                        continue;
-                    }
-
                     if (!string.IsNullOrWhiteSpace(selectedPaymentStatus) &&
-                        selectedPaymentStatus != "NOT_RECORDED" &&
                         !string.Equals(
                             row.PaymentStatus,
                             selectedPaymentStatus,
                             StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if (!MatchesFilter(order.KitchenStatus, ddlKitchenStatus.SelectedValue) ||
+                        !MatchesFilter(order.OrderType, ddlOrderType.SelectedValue) ||
+                        !MatchesFilter(
+                            string.Equals(order.FulfillmentMethod, "TABLE_SERVICE", StringComparison.OrdinalIgnoreCase)
+                                ? "TABLE_SERVICE" : "COUNTER_PICKUP",
+                            ddlFulfillment.SelectedValue) ||
+                        !MatchesFilter(payment == null ? null : payment.PaymentMethod, ddlPaymentMethod.SelectedValue))
                     {
                         continue;
                     }
@@ -229,6 +233,16 @@ namespace PortableKiosk.UI.Admin
                 ((AdminLayout)Master).ShowErrorAlert(
                     "Orders could not be loaded. Refresh the page to try again.");
             }
+        }
+
+        private static bool MatchesFilter(string value, string selectedValue)
+        {
+            if (string.IsNullOrWhiteSpace(selectedValue))
+            {
+                return true;
+            }
+
+            return string.Equals(value, selectedValue, StringComparison.OrdinalIgnoreCase);
         }
 
         private void BindOrderDetails(

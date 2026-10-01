@@ -7,7 +7,7 @@
     <main class="kiosk-attract-page group flex h-screen h-dvh w-full flex-col overflow-hidden bg-white" aria-label="Welcome to Portable Kiosk">
         <div class="relative flex min-h-0 w-full flex-1 items-center justify-center overflow-hidden bg-white">
             <img src="<%= ResolveUrl("~/Content/images/kiosk-attract.jpg") %>" alt="Portable Kiosk Menu" class="h-full w-full object-cover object-[center_25%] transition-transform duration-[6000ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.03]" />
-            <span class="absolute left-[clamp(0.75rem,4vw,4rem)] top-[clamp(0.75rem,3vw,3.5rem)] z-10 select-none text-[clamp(3.25rem,7vh,5rem)] font-black leading-none tracking-[-0.04em] text-[#f59e0b] drop-shadow-[0_3px_12px_rgba(245,158,11,0.35)] kiosk-portrait:text-[clamp(4.5rem,min(12vw,10vh),18rem)] kiosk-short:text-[clamp(2.75rem,7vh,3.75rem)]" aria-label="Portable Kiosk">P</span>
+            <img src="<%= ResolveUrl("~/Content/images/portable-kiosk-logo.png") %>" alt="Portable Kiosk" width="96" height="96" class="absolute left-[clamp(0.75rem,4vw,4rem)] top-[clamp(0.75rem,3vw,3.5rem)] z-10 h-[clamp(3.25rem,7vh,5rem)] w-auto object-contain kiosk-portrait:h-[clamp(4.5rem,min(12vw,10vh),18rem)] kiosk-short:h-[clamp(2.75rem,7vh,3.75rem)]" />
         </div>
 
         <div class="kiosk-attract-actions relative z-20 flex min-h-[clamp(2.5rem,12vw,12rem)] w-full flex-col items-center justify-center border-t border-slate-200/85 bg-white px-6 py-[clamp(0.25rem,1vw,1rem)] shadow-[0_-6px_24px_rgba(15,23,42,0.05)]">

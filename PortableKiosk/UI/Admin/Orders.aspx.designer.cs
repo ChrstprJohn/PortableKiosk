@@ -17,6 +17,10 @@ namespace PortableKiosk.UI.Admin
         protected global::System.Web.UI.WebControls.Button btnSearchOrders;
         protected global::System.Web.UI.WebControls.Label lblPaymentStatus;
         protected global::System.Web.UI.WebControls.DropDownList ddlPaymentStatus;
+        protected global::System.Web.UI.WebControls.DropDownList ddlKitchenStatus;
+        protected global::System.Web.UI.WebControls.DropDownList ddlOrderType;
+        protected global::System.Web.UI.WebControls.DropDownList ddlFulfillment;
+        protected global::System.Web.UI.WebControls.DropDownList ddlPaymentMethod;
         protected global::System.Web.UI.WebControls.GridView gridOrders;
         protected global::System.Web.UI.WebControls.Literal litDetailsOrderNumber;
         protected global::System.Web.UI.WebControls.Literal litDetailsCreatedAt;

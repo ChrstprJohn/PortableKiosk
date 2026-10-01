@@ -104,6 +104,7 @@
     <None Include="Content\Site.css" />
     <Content Include="Content\tailwind.css" />
     <Content Include="Content\images\kiosk-attract.jpg" />
+    <Content Include="Content\images\portable-kiosk-logo.png" />
     <Content Include="Content\images\order-status-mascot.png" />
     <Content Include="Content\images\products\**\*.jpg" />
     <None Include="Content\tailwind.input.css" />
