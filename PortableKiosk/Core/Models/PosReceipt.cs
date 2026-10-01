@@ -20,5 +20,9 @@ namespace PortableKiosk.Core.Models
         public decimal Tendered { get; set; }
 
         public decimal Change { get; set; }
+
+        public int IssuedByStaffAccountID { get; set; }
+
+        public string IssuedByName { get; set; }
     }
 }

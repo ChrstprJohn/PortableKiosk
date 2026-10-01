@@ -266,6 +266,7 @@ namespace PortableKiosk.UI.POS
             try
             {
                 Current.Receipt = posService.CompleteMockCashlessSale(Current.Sale);
+                CaptureReceiptIssuer(Current.Receipt);
                 Current.Sale = null;
                 Current.Stage = ReceiptStage;
             }
@@ -302,6 +303,7 @@ namespace PortableKiosk.UI.POS
             {
                 PosReceipt receipt = posService.CompleteCashSale(
                     Current.Sale, tendered);
+                CaptureReceiptIssuer(receipt);
                 Current.Receipt = receipt;
                 Current.Sale = null;
                 Current.Stage = ReceiptStage;
@@ -343,12 +345,24 @@ namespace PortableKiosk.UI.POS
             Response.End();
         }
 
+        private void CaptureReceiptIssuer(PosReceipt receipt)
+        {
+            receipt.IssuedByStaffAccountID = Convert.ToInt32(Session["StaffAccountID"]);
+            string name = Convert.ToString(Session["StaffDisplayName"]);
+            if (string.IsNullOrWhiteSpace(name))
+                name = Convert.ToString(Session["StaffLastName"]);
+            receipt.IssuedByName = string.IsNullOrWhiteSpace(name)
+                ? "Staff #" + receipt.IssuedByStaffAccountID
+                : name.Trim();
+        }
+
         private static byte[] CreateReceiptPdf(PosReceipt receipt)
         {
             List<string> lines = BuildReceiptLines(receipt);
-            int height = 46 + lines.Count * 16;
+            const int lineHeight = 12;
+            int height = 40 + lines.Count * lineHeight;
             var content = new StringBuilder();
-            content.Append("BT /F1 10 Tf 16 ").Append(height - 28).Append(" Td 16 TL\n");
+            content.Append("BT /F1 10 Tf 16 ").Append(height - 24).Append(" Td ").Append(lineHeight).Append(" TL\n");
             foreach (string line in lines)
                 content.Append('(').Append(EscapePdf(line)).Append(") Tj T*\n");
             content.Append("ET\n");
@@ -377,40 +391,42 @@ namespace PortableKiosk.UI.POS
         private static List<string> BuildReceiptLines(PosReceipt receipt)
         {
             var lines = new List<string>();
+            lines.Add("PORTABLE KIOSK");
             lines.Add(receipt.Payment.PaymentMethod == "CASHLESS" ? "PAYMENT RECEIPT" : "CASH RECEIPT");
-            lines.Add(string.Empty);
             lines.Add("--------------------------------");
-            lines.Add(string.Empty);
             lines.Add("Receipt: #" + receipt.Order.OrderNumber);
             DateTime paidAt = receipt.Payment.PaidAt ?? receipt.Order.CreatedAt;
             lines.Add("Date: " + DateTime.SpecifyKind(paidAt, DateTimeKind.Utc)
                 .ToLocalTime().ToString("MMM d, yyyy h:mm tt", CultureInfo.GetCultureInfo("en-PH")));
-            lines.Add(string.Empty);
-            lines.Add(Truncate("Order: " + DescribeOrder(receipt.Order).Replace(" · ", " / "), 32));
-            lines.Add(string.Empty);
+            lines.AddRange(WrapReceiptText("Issued by: " + (string.IsNullOrWhiteSpace(receipt.IssuedByName)
+                ? "Not recorded" : receipt.IssuedByName)));
+            lines.AddRange(WrapReceiptText("Order: " + DescribeOrder(receipt.Order).Replace(" · ", " / ")));
             lines.Add("--------------------------------");
-            lines.Add(string.Empty);
+            int itemAreaStart = lines.Count;
             foreach (CartItem item in receipt.Items)
             {
-                lines.Add(Truncate(item.Quantity + " x " + item.ProductName, 32));
+                lines.AddRange(WrapReceiptText(item.Quantity + " x " + item.ProductName));
                 lines.Add(ReceiptAmountLine(item.DisplaySize, item.LineTotal));
-                lines.Add(string.Empty);
             }
+            // Reserve two compact text lines for each of five items.
+            // Extra space stays below the items, never between them.
+            const int minimumItemLines = 5 * 2;
+            while (lines.Count - itemAreaStart < minimumItemLines)
+                lines.Add(string.Empty);
             lines.Add("--------------------------------");
-            lines.Add(string.Empty);
             lines.Add(ReceiptAmountLine("TOTAL", receipt.Payment.Amount));
+            lines.Add("--------------------------------");
             if (receipt.Payment.PaymentMethod == "CASHLESS")
                 lines.Add("Payment: Cashless (simulated)");
             else
             {
+                lines.Add("Payment: Cash at counter");
                 lines.Add(ReceiptAmountLine("Cash received", receipt.Tendered));
                 lines.Add(ReceiptAmountLine("Change", receipt.Change));
             }
-            lines.Add(string.Empty);
             lines.Add("--------------------------------");
             lines.Add(string.Empty);
             lines.Add("THANK YOU FOR YOUR ORDER!");
-            lines.Add(string.Empty);
             lines.Add("Please keep this receipt.");
             return lines.Select(ReceiptAscii).ToList();
         }
@@ -419,6 +435,19 @@ namespace PortableKiosk.UI.POS
         {
             return new string((value ?? string.Empty)
                 .Select(c => c >= 32 && c <= 126 ? c : '?').ToArray());
+        }
+
+        private static IEnumerable<string> WrapReceiptText(string value)
+        {
+            string remaining = (value ?? string.Empty).Trim();
+            while (remaining.Length > 32)
+            {
+                int split = remaining.LastIndexOf(' ', 32);
+                if (split <= 0) split = 32;
+                yield return remaining.Substring(0, split);
+                remaining = remaining.Substring(split).TrimStart();
+            }
+            if (remaining.Length > 0) yield return remaining;
         }
 
         private static string ReceiptAmountLine(string label, decimal amount)

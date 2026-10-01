@@ -7,10 +7,10 @@
         .receipt-preview { width: min(100%, 370px); margin: 0 auto; padding-top: 2rem; }
         .receipt-printer { position: relative; height: 74px; margin: 0 9px -40px; border: 2px solid #8d9299; border-radius: 19px; background: linear-gradient(#d8d9dc, #a5a8ad 72%, #8e9298); box-shadow: inset 0 3px 5px #fff9, inset 0 -5px 7px #5558, 0 8px 18px #18233326; }
         .receipt-printer::before { content: ""; position: absolute; inset: 28px 20px 18px; border-radius: 7px; background: #5c6067; box-shadow: inset 0 2px 4px #20232988; }
-        .receipt-paper { position: relative; margin: 0 35px; padding: 18pt 16pt 28pt; background: #fff; color: #222; box-shadow: 0 9px 20px #18233326; }
+        .receipt-paper { position: relative; margin: 0 35px; padding: 14pt 16pt 18pt; background: #fff; color: #222; box-shadow: 0 9px 20px #18233326; }
         .receipt-paper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: radial-gradient(circle at 4px 0, #e2e8f0 4px, transparent 4.5px) repeat-x; background-size: 8px 5px; }
         .receipt-paper::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 5px; background: radial-gradient(circle at 4px 5px, #e2e8f0 4px, transparent 4.5px) repeat-x; background-size: 8px 5px; }
-        .receipt-paper pre { margin: 0; font-family: Courier, "Courier New", monospace; font-size: 10pt; line-height: 16pt; font-weight: 400; letter-spacing: 0; white-space: pre; overflow-x: auto; }
+        .receipt-paper pre { margin: 0; font-family: Courier, "Courier New", monospace; font-size: 10pt; line-height: 12pt; font-weight: 400; letter-spacing: 0; white-space: pre; overflow-x: auto; }
         .receipt-actions { display: flex; gap: 12px; width: min(100%, 370px); margin: 32px auto 0; }
         .receipt-actions > input { flex: 1; min-width: 0; }
         @media (max-width: 440px) { .receipt-actions { flex-direction: column; } }
