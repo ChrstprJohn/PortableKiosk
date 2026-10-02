@@ -10,6 +10,8 @@
     var tenderedField = byId("txtTendered");
     var changePreview = byId("posChangePreview");
     var tenderedHint = byId("posTenderedHint");
+    var receiptTendered = byId("posReceiptTendered");
+    var receiptChange = byId("posReceiptChange");
     var errorMessage = byId("lblError");
     var profileMenu = document.querySelector("[data-pos-profile-menu]");
     var profileName = byId("posProfileLastName");
@@ -65,8 +67,10 @@
         var isValid = tenderedField.value.trim() !== "" &&
             Number.isFinite(received) && received >= 0;
 
-        changePreview.textContent = formatCash(
-            isValid && received >= total ? received - total : 0);
+        var change = isValid && received >= total ? received - total : 0;
+        changePreview.textContent = formatCash(change);
+        if (receiptTendered) receiptTendered.textContent = receiptCashLine("Cash received", isValid ? received : 0);
+        if (receiptChange) receiptChange.textContent = receiptCashLine("Change", change);
 
         if (tenderedHint) {
             tenderedHint.textContent = !isValid
@@ -77,12 +81,22 @@
         }
     }
 
+    function receiptCashLine(label, amount) {
+        var value = "PHP " + amount.toLocaleString("en-PH", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        return label + " ".repeat(Math.max(1, 32 - label.length - value.length)) + value;
+    }
+
     function pressCash(key) {
         if (!tenderedField) return;
         var value = tenderedField.value;
 
         if (key === "clear") {
             value = "";
+        } else if (key === "back") {
+            value = value.slice(0, -1);
         } else if (key === ".") {
             if (value.indexOf(".") === -1) value = (value || "0") + ".";
         } else if (/^[0-9]$/.test(key)) {

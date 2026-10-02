@@ -1,16 +1,16 @@
 <%@ Page Title="Analytics" Language="C#" MasterPageFile="~/Shared/Layouts/Admin.Master" AutoEventWireup="true" CodeBehind="Analytics.aspx.cs" Inherits="PortableKiosk.UI.Admin.Analytics" %>
 <asp:Content ID="BodyContent" ContentPlaceHolderID="AdminContent" runat="server">
-    <main class="mx-auto w-full max-w-7xl pb-10 text-slate-900">
+    <main class="w-full pb-10 text-slate-900">
         <header class="mb-6 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div>
                 <h1 class="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Analytics</h1>
             </div>
             <div class="flex flex-wrap items-center gap-2">
-            <nav class="flex flex-wrap gap-1 rounded-lg border border-slate-200 bg-white p-1" aria-label="Analytics period">
-                <asp:HyperLink ID="lnkToday" runat="server" NavigateUrl="~/UI/Admin/Analytics.aspx?period=today" CssClass="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-slate-100" Text="Today" />
-                <asp:HyperLink ID="lnkWeek" runat="server" NavigateUrl="~/UI/Admin/Analytics.aspx?period=week" CssClass="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-slate-100" Text="Last 7 days" />
-                <asp:HyperLink ID="lnkMonth" runat="server" NavigateUrl="~/UI/Admin/Analytics.aspx?period=month" CssClass="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-slate-100" Text="This month" />
-                <asp:HyperLink ID="lnkYear" runat="server" NavigateUrl="~/UI/Admin/Analytics.aspx?period=year" CssClass="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-slate-100" Text="This year" />
+            <nav class="flex flex-wrap gap-2" aria-label="Analytics period">
+                <asp:HyperLink ID="lnkToday" runat="server" NavigateUrl="~/UI/Admin/Analytics.aspx?period=today" CssClass="inline-flex min-h-10 items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" Text="Today" />
+                <asp:HyperLink ID="lnkWeek" runat="server" NavigateUrl="~/UI/Admin/Analytics.aspx?period=week" CssClass="inline-flex min-h-10 items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" Text="Last 7 days" />
+                <asp:HyperLink ID="lnkMonth" runat="server" NavigateUrl="~/UI/Admin/Analytics.aspx?period=month" CssClass="inline-flex min-h-10 items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" Text="This month" />
+                <asp:HyperLink ID="lnkYear" runat="server" NavigateUrl="~/UI/Admin/Analytics.aspx?period=year" CssClass="inline-flex min-h-10 items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 no-underline hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" Text="This year" />
             </nav>
             <button type="button" class="inline-flex min-h-10 items-center gap-2 rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#analyticsExportModal">
                 <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3" /></svg>
@@ -22,10 +22,10 @@
         <p class="mb-4 text-sm text-slate-500"><asp:Literal ID="litPeriod" runat="server" /> · Philippine time</p>
         <asp:Panel ID="pnlError" runat="server" Visible="false" CssClass="mb-5 rounded-lg bg-red-50 p-4 text-sm text-red-800" role="alert"><asp:Literal ID="litError" runat="server" /></asp:Panel>
         <asp:Panel ID="pnlReport" runat="server">
-            <section class="mb-5 grid gap-5 rounded-xl bg-slate-900 p-5 text-white sm:grid-cols-3 sm:p-6" aria-label="Sales summary">
-                <div><p class="text-sm text-slate-300">Total revenue</p><strong class="mt-2 block text-3xl font-semibold tracking-tight tabular-nums sm:text-4xl"><asp:Literal ID="litSales" runat="server" /></strong></div>
-                <div class="border-t border-slate-700 pt-4 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0"><p class="text-sm text-slate-300">Paid orders</p><strong class="mt-2 block text-2xl font-semibold tabular-nums sm:text-3xl"><asp:Literal ID="litPaidOrders" runat="server" /></strong></div>
-                <div class="border-t border-slate-700 pt-4 sm:border-l sm:border-t-0 sm:pl-5 sm:pt-0"><p class="text-sm text-slate-300">Average order</p><strong class="mt-2 block text-2xl font-semibold tabular-nums sm:text-3xl"><asp:Literal ID="litAverage" runat="server" /></strong></div>
+            <section class="mb-6 grid gap-4 md:grid-cols-3" aria-label="Sales summary">
+                <div class="min-w-0 rounded-xl border border-slate-200 bg-white p-5 sm:p-6"><p class="text-sm font-medium text-slate-600">Total revenue</p><strong class="mt-3 block break-words text-3xl font-semibold tracking-tight tabular-nums text-slate-950"><asp:Literal ID="litSales" runat="server" /></strong><p class="mt-2 text-xs text-slate-500">Payments received in this period</p></div>
+                <div class="min-w-0 rounded-xl border border-slate-200 bg-white p-5 sm:p-6"><p class="text-sm font-medium text-slate-600">Paid orders</p><strong class="mt-3 block text-3xl font-semibold tracking-tight tabular-nums text-slate-950"><asp:Literal ID="litPaidOrders" runat="server" /></strong><p class="mt-2 text-xs text-slate-500">Orders paid in this period</p></div>
+                <div class="min-w-0 rounded-xl border border-slate-200 bg-white p-5 sm:p-6"><p class="text-sm font-medium text-slate-600">Average order</p><strong class="mt-3 block break-words text-3xl font-semibold tracking-tight tabular-nums text-slate-950"><asp:Literal ID="litAverage" runat="server" /></strong><p class="mt-2 text-xs text-slate-500">Revenue per paid order</p></div>
             </section>
 
             <section class="mb-5 rounded-xl border border-slate-200 bg-white p-5 sm:p-6" aria-labelledby="trendHeading">
@@ -44,11 +44,28 @@
                 <section class="rounded-xl border border-slate-200 bg-white p-5 sm:p-6" aria-labelledby="paymentHeading"><div class="mb-5"><h2 id="paymentHeading" class="text-lg font-semibold text-slate-950">Payment methods</h2><p class="mt-1 text-sm text-slate-500">Share of paid sales by amount</p></div><div class="flex flex-col items-center gap-6 sm:flex-row sm:justify-center"><div class="relative size-44 shrink-0 rounded-full" style='<%= PaymentDonutStyle() %>' role="img" aria-label='<%= PaymentDonutLabel() %>'><div class="absolute inset-7 flex flex-col items-center justify-center rounded-full bg-white"><strong class="text-2xl font-semibold tabular-nums text-slate-950"><asp:Literal ID="litCashlessPercent" runat="server" /></strong><span class="text-xs text-slate-500">cashless</span></div></div><div class="w-full max-w-60 space-y-4"><asp:Repeater ID="rptPayments" runat="server"><ItemTemplate><div><div class="flex items-center gap-2 text-sm font-medium text-slate-900"><span class='<%# PaymentDotClass(Eval("Method")) %>' aria-hidden="true"></span><%# PaymentName(Eval("Method")) %></div><div class="mt-1 pl-4 text-sm tabular-nums text-slate-600"><%# Money(Eval("Sales")) %> · <%# Eval("Orders") %> orders</div></div></ItemTemplate></asp:Repeater><asp:Panel ID="pnlNoPayments" runat="server" Visible="false" CssClass="text-sm text-slate-500">No paid orders in this period.</asp:Panel></div></div></section>
             </div>
 
-            <section class="rounded-xl border border-slate-200 bg-white p-5 sm:p-6" aria-labelledby="outcomesHeading">
-                <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-3"><div><h2 id="outcomesHeading" class="text-lg font-semibold text-slate-950">Order outcomes</h2><p class="mt-1 text-sm text-slate-600"><asp:Literal ID="litPlacedOrders" runat="server" /> orders placed</p></div><div class="text-right"><strong class="text-2xl font-semibold tabular-nums text-slate-950"><asp:Literal ID="litConversion" runat="server" /></strong><span class="ml-2 text-sm text-slate-600">paid</span></div></div>
-                <div class="mt-5 flex h-2.5 overflow-hidden rounded-full bg-slate-200" role="img" aria-label='<%= OutcomeBarLabel() %>'><div class="h-full bg-emerald-600" style='<%= ConversionWidth() %>'></div><div class="h-full bg-amber-500" style='<%= ExpiredWidth() %>'></div></div>
-                <div class="mt-5 flex flex-wrap gap-x-10 gap-y-4 text-sm"><div class="flex items-start gap-2"><span class="mt-1.5 size-2 shrink-0 rounded-sm bg-emerald-600" aria-hidden="true"></span><div><strong class="block text-lg font-semibold leading-5 tabular-nums text-slate-950"><asp:Literal ID="litConversionDetail" runat="server" /></strong><span class="mt-1 block text-slate-600">Paid · <asp:Literal ID="litConvertedValue" runat="server" /></span></div></div><div class="flex items-start gap-2"><span class="mt-1.5 size-2 shrink-0 rounded-sm bg-amber-500" aria-hidden="true"></span><div><strong class="block text-lg font-semibold leading-5 tabular-nums text-slate-950"><asp:Literal ID="litExpired" runat="server" /></strong><span class="mt-1 block text-slate-600">Expired · <asp:Literal ID="litExpiredValue" runat="server" /></span></div></div><asp:Panel ID="pnlOtherOrders" runat="server" CssClass="flex items-start gap-2"><span class="mt-1.5 size-2 shrink-0 rounded-sm bg-slate-300" aria-hidden="true"></span><div><strong class="block text-lg font-semibold leading-5 tabular-nums text-slate-950"><asp:Literal ID="litOtherOrders" runat="server" /></strong><span class="mt-1 block text-slate-600">Awaiting payment</span></div></asp:Panel></div>
-            </section>
+            <div class="grid gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                <section class="min-w-0 rounded-xl border border-slate-200 bg-white p-5 sm:p-6" aria-labelledby="outcomesHeading">
+                    <h2 id="outcomesHeading" class="text-lg font-semibold text-slate-950">Order outcomes</h2>
+                    <p class="mt-1 text-sm text-slate-500"><asp:Literal ID="litPlacedOrders" runat="server" /> orders placed in this period</p>
+                    <asp:Panel ID="pnlNoOutcomes" runat="server" Visible="false" CssClass="flex h-52 items-center justify-center text-sm text-slate-500">No orders placed in this period.</asp:Panel>
+                    <asp:Literal ID="litOutcomeChart" runat="server" />
+                    <p class="mt-5 text-xs leading-5 text-slate-500">Current payment status of orders created in this period.</p>
+                    <asp:Panel ID="pnlOtherOrders" runat="server" CssClass="mt-1 text-xs leading-5 text-slate-500"><asp:Literal ID="litOtherOrders" runat="server" /> orders still awaiting payment.</asp:Panel>
+                </section>
+                <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-1">
+                    <section class="min-w-0 rounded-xl border border-slate-200 bg-white p-5 sm:p-6" aria-labelledby="paidOutcomeHeading">
+                        <h3 id="paidOutcomeHeading" class="flex items-center gap-2 text-sm font-medium text-slate-700"><span class="size-2 rounded-full bg-emerald-600" aria-hidden="true"></span>Paid orders</h3>
+                        <div class="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1"><strong class="text-3xl font-semibold tabular-nums text-slate-950"><asp:Literal ID="litConversionDetail" runat="server" /></strong><span class="text-sm tabular-nums text-emerald-700"><asp:Literal ID="litConversion" runat="server" /> of placed orders</span></div>
+                        <p class="mt-3 break-words text-sm tabular-nums text-slate-600"><asp:Literal ID="litConvertedValue" runat="server" /> paid value</p>
+                    </section>
+                    <section class="min-w-0 rounded-xl border border-slate-200 bg-white p-5 sm:p-6" aria-labelledby="expiredOutcomeHeading">
+                        <h3 id="expiredOutcomeHeading" class="flex items-center gap-2 text-sm font-medium text-slate-700"><span class="size-2 rounded-full bg-amber-500" aria-hidden="true"></span>Expired orders</h3>
+                        <div class="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1"><strong class="text-3xl font-semibold tabular-nums text-slate-950"><asp:Literal ID="litExpired" runat="server" /></strong><span class="text-sm tabular-nums text-amber-700"><asp:Literal ID="litExpiredPercent" runat="server" /> of placed orders</span></div>
+                        <p class="mt-3 break-words text-sm tabular-nums text-slate-600"><asp:Literal ID="litExpiredValue" runat="server" /> unpaid value</p>
+                    </section>
+                </div>
+            </div>
         </asp:Panel>
     </main>
     <div id="analyticsExportModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 p-4" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="analyticsExportTitle" aria-hidden="true">

@@ -4,17 +4,35 @@
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
     <style>
-        .receipt-preview { width: min(100%, 370px); margin: 0 auto; padding-top: 2rem; }
-        .receipt-printer { position: relative; height: 74px; margin: 0 9px -40px; border: 2px solid #8d9299; border-radius: 19px; background: linear-gradient(#d8d9dc, #a5a8ad 72%, #8e9298); box-shadow: inset 0 3px 5px #fff9, inset 0 -5px 7px #5558, 0 8px 18px #18233326; }
-        .receipt-printer::before { content: ""; position: absolute; inset: 28px 20px 18px; border-radius: 7px; background: #5c6067; box-shadow: inset 0 2px 4px #20232988; }
-        .receipt-paper { position: relative; margin: 0 35px; padding: 14pt 16pt 18pt; background: #fff; color: #222; box-shadow: 0 9px 20px #18233326; }
-        .receipt-paper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: radial-gradient(circle at 4px 0, #e2e8f0 4px, transparent 4.5px) repeat-x; background-size: 8px 5px; }
+        .receipt-preview { width: min(100%, 500px); margin: 0 auto; padding-top: 2rem; }
+        .receipt-printer { position: relative; height: 74px; margin: 0 0 -40px; border: 2px solid #8d9299; border-radius: 19px; background: linear-gradient(#d8d9dc, #a5a8ad 72%, #8e9298); box-shadow: inset 0 3px 5px #fff9, inset 0 -5px 7px #5558, 0 8px 18px #18233326; }
+        .receipt-printer::before { content: ""; position: absolute; inset: 28px 14px 18px; border-radius: 7px; background: #42464d; box-shadow: inset 0 2px 4px #20232988; }
+        .receipt-paper { position: relative; margin: 0 18px; padding: 24px; background: #fff; color: #222; box-shadow: 0 9px 20px #18233326; }
+        .receipt-paper::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(#20232926, transparent); }
         .receipt-paper::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 5px; background: radial-gradient(circle at 4px 5px, #e2e8f0 4px, transparent 4.5px) repeat-x; background-size: 8px 5px; }
-        .receipt-paper pre { margin: 0; font-family: Courier, "Courier New", monospace; font-size: 10pt; line-height: 12pt; font-weight: 400; letter-spacing: 0; white-space: pre; overflow-x: auto; }
-        .receipt-actions { display: flex; gap: 12px; width: min(100%, 370px); margin: 32px auto 0; }
+        .receipt-paper pre { width: max-content; max-width: 100%; margin: 0 auto; font-family: Courier, "Courier New", monospace; font-size: 16px; line-height: 22px; font-weight: 400; letter-spacing: 0; white-space: pre; overflow-x: auto; }
+        .receipt-actions { display: flex; gap: 12px; width: min(100%, 500px); margin: 32px auto 0; }
         .receipt-actions > input { flex: 1; min-width: 0; }
-        @media (max-width: 440px) { .receipt-actions { flex-direction: column; } }
-        @media (max-width: 400px) { .receipt-paper { margin: 0 22px; padding-inline: 10pt; } }
+        .cash-receipt-preview { padding-top: 1rem; }
+        @media (min-width: 1024px) {
+            .receipt-paper pre { font-size: 18px; line-height: 24px; }
+            .pos-cash-layout { align-items: stretch; align-content: center; }
+            .pos-cash-receipt { position: relative; min-height: 0; }
+            .cash-receipt-preview { position: absolute; inset: 0; display: flex; flex-direction: column; height: 100%; padding-top: 0; }
+            .cash-receipt-preview .receipt-printer { flex-shrink: 0; }
+            .cash-receipt-preview .receipt-paper { flex: 1; min-height: 0; overflow-y: auto; }
+        }
+        .pos-keypad { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+        .pos-keypad button { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 60px; border: 1px solid #cbd5e1; border-radius: 12px; background: #f8fafc; color: #0f172a; font-size: 24px; font-weight: 600; transition: background-color 120ms; }
+        .pos-keypad button:hover { background: #e2e8f0; }
+        .pos-keypad button:active { background: #cbd5e1; }
+        .pos-keypad .pos-keypad-action { background: #e2e8f0; font-size: 14px; }
+        .pos-keypad .pos-keypad-action:hover { background: #cbd5e1; }
+        .pos-keypad button:focus-visible, .pos-quick-cash button:focus-visible { outline: 2px solid #1d4ed8; outline-offset: 2px; }
+        .pos-quick-cash button { min-height: 44px; border: 1px solid #bfdbfe; border-radius: 8px; background: #eff6ff; color: #1e3a8a; font-size: 13px; font-weight: 600; }
+        .pos-quick-cash button:hover { background: #dbeafe; }
+        .pos-quick-cash button:active { background: #bfdbfe; }
+        @media (max-width: 440px) { .receipt-actions { flex-direction: column; } .receipt-printer::before { left: 6px; right: 6px; } .receipt-paper { margin-inline: 10px; padding: 20px 14px; } .receipt-paper pre { font-size: 14px; line-height: 20px; } }
     </style>
 </asp:Content>
 
@@ -68,12 +86,12 @@
                         <h1 id="kioskOrderHeading" class="text-xl font-semibold tracking-tight text-slate-950">Enter kiosk order number</h1>
                     </div>
                     <asp:TextBox ID="txtOrderSearch" runat="server" ClientIDMode="Static" MaxLength="21" inputmode="none" autocomplete="off" placeholder="# Order number" aria-label="Kiosk order number"
-                        CssClass="h-16 w-full rounded-md border border-slate-300 bg-white px-4 text-center text-3xl font-semibold tabular-nums tracking-widest text-slate-950 placeholder:text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
-                    <div class="mt-5 grid grid-cols-3 gap-3 [&_button]:min-h-14 [&_button]:rounded-md [&_button]:border [&_button]:border-slate-200 [&_button]:bg-white [&_button]:text-xl [&_button]:font-semibold [&_button]:text-slate-800 [&_button:hover]:bg-slate-100 [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-blue-700">
+                        CssClass="h-16 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 text-center text-2xl font-semibold tabular-nums text-slate-950 placeholder:text-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                    <div class="pos-keypad mt-4" role="group" aria-label="Order number keypad">
                         <button type="button" data-pos-order-key="1">1</button><button type="button" data-pos-order-key="2">2</button><button type="button" data-pos-order-key="3">3</button>
                         <button type="button" data-pos-order-key="4">4</button><button type="button" data-pos-order-key="5">5</button><button type="button" data-pos-order-key="6">6</button>
                         <button type="button" data-pos-order-key="7">7</button><button type="button" data-pos-order-key="8">8</button><button type="button" data-pos-order-key="9">9</button>
-                        <button type="button" data-pos-order-key="clear" class="text-base">Clear</button><button type="button" data-pos-order-key="0">0</button><button type="button" data-pos-order-key="back" class="text-base">Delete</button>
+                        <button type="button" data-pos-order-key="clear" class="pos-keypad-action">Clear</button><button type="button" data-pos-order-key="0">0</button><button type="button" data-pos-order-key="back" class="pos-keypad-action" aria-label="Delete last digit"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h11v14H9l-7-7 7-7Z"/><path d="m12 9 6 6m0-6-6 6"/></svg></button>
                     </div>
                     <div class="mt-5 grid grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-3">
                         <asp:Button ID="btnQueueBack" runat="server" OnClick="btnBackToIdle_Click" Text="Back"
@@ -203,8 +221,14 @@
             <main class="mx-auto flex min-h-dvh max-w-3xl flex-col justify-center px-5 py-10">
                 <h1 class="text-center text-3xl font-semibold tracking-tight text-slate-950">Choose a payment method</h1>
                 <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                    <asp:Button ID="btnChooseCash" runat="server" OnClick="btnChooseCash_Click" Text="Cash" CssClass="min-h-32 cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-xl font-semibold text-slate-950 shadow-sm hover:border-blue-400 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
-                    <asp:Button ID="btnChooseCashless" runat="server" OnClick="btnChooseCashless_Click" Text="Cashless (mock QR)" CssClass="min-h-32 cursor-pointer rounded-xl border border-slate-200 bg-white p-6 text-xl font-semibold text-slate-950 shadow-sm hover:border-blue-400 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
+                    <asp:LinkButton ID="btnChooseCash" runat="server" OnClick="btnChooseCash_Click" CssClass="group flex min-h-60 flex-col items-center justify-between gap-6 rounded-2xl border border-slate-200 bg-white px-6 py-6 text-center text-slate-950 no-underline shadow-sm transition-[border-color,background-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
+                        <span class="text-xl font-semibold">Cash</span>
+                        <span class="flex size-32 items-center justify-center rounded-3xl bg-blue-50 text-blue-800 transition-colors group-hover:bg-blue-100" aria-hidden="true"><svg class="size-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9H5v6h1m12-6h1v6h-1"/></svg></span>
+                    </asp:LinkButton>
+                    <asp:LinkButton ID="btnChooseCashless" runat="server" OnClick="btnChooseCashless_Click" CssClass="group flex min-h-60 flex-col items-center justify-between gap-6 rounded-2xl border border-slate-200 bg-white px-6 py-6 text-center text-slate-950 no-underline shadow-sm transition-[border-color,background-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:shadow-md focus-visible:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
+                        <span class="text-xl font-semibold">Cashless <span class="block text-sm font-normal text-slate-600">Mock QR payment</span></span>
+                        <span class="flex size-32 items-center justify-center rounded-3xl bg-blue-50 text-blue-800 transition-colors group-hover:bg-blue-100" aria-hidden="true"><svg class="size-24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="15" y="3" width="6" height="6" rx="1"/><rect x="3" y="15" width="6" height="6" rx="1"/><path d="M15 15h3v3h3m-6 0v3h3m3-8v2M12 3v3m0 5v2M3 12h3m5 8v1"/></svg></span>
+                    </asp:LinkButton>
                 </div>
                 <asp:Button ID="btnChoiceBackToSale" runat="server" OnClick="btnChoiceBackToSale_Click" Text="Back to sale" CssClass="mt-6 min-h-12 cursor-pointer self-start rounded-lg border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
             </main>
@@ -248,53 +272,47 @@
         </asp:Panel>
 
         <asp:Panel ID="pnlPayment" runat="server" Visible="false" DefaultButton="btnCompletePayment">
-            <main class="grid min-h-dvh w-full gap-4 px-3 py-4 sm:px-5 sm:py-5 lg:h-dvh lg:min-h-0 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:overflow-hidden">
-                    <section aria-labelledby="paymentSummaryHeading" class="rounded-xl border border-slate-200 bg-white p-5 sm:p-6 lg:grid lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)_auto] lg:overflow-hidden">
-                        <div class="border-b border-slate-200 pb-4">
-                            <h2 id="paymentSummaryHeading" class="text-lg font-semibold text-slate-950">Order summary</h2>
-                            <p class="mt-1 text-sm text-slate-600"><asp:Literal ID="litPaymentContext" runat="server" /></p>
-                        </div>
-                        <div class="mt-5 divide-y divide-slate-100 lg:mt-0 lg:min-h-0 lg:overflow-y-auto lg:pt-4">
-                            <asp:Repeater ID="rptPaymentItems" runat="server"><ItemTemplate>
-                                <div class="flex items-start justify-between gap-4 py-3 text-sm">
-                                    <span class="text-slate-700"><strong class="font-medium text-slate-950"><%# Eval("Quantity") %> × <%#: Eval("ProductName") %></strong><br /><span class="text-xs"><%#: Eval("DisplaySize") %></span></span>
-                                    <strong class="shrink-0 font-semibold tabular-nums text-slate-950"><%# FormatMoney(Eval("LineTotal")) %></strong>
-                                </div>
-                            </ItemTemplate></asp:Repeater>
-                        </div>
-                        <div class="mt-4 flex items-baseline justify-between border-t border-slate-200 pt-5 lg:mt-0">
-                            <span class="font-medium text-slate-700">Total due</span>
-                            <strong class="text-2xl font-semibold tabular-nums text-slate-950"><asp:Literal ID="litPaymentTotal" runat="server" /></strong>
-                        </div>
+            <main class="pos-cash-layout mx-auto grid min-h-dvh w-full max-w-6xl items-start gap-6 px-4 py-6 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-10">
+                    <section aria-label="Receipt preview" class="pos-cash-receipt min-w-0">
+                            <div class="receipt-preview cash-receipt-preview"><div class="receipt-printer" aria-hidden="true"></div>
+                                <div class="receipt-paper"><pre aria-label="Unpaid order receipt preview"><asp:Literal ID="litPaymentReceiptPreview" runat="server" /><span id="posReceiptTendered">Cash received           PHP 0.00</span>&#10;<span id="posReceiptChange">Change                  PHP 0.00</span>&#10;--------------------------------&#10;Awaiting payment.</pre></div>
+                            </div>
                     </section>
-                    <section aria-labelledby="cashKeypadHeading" class="rounded-xl border border-slate-200 bg-white p-5 sm:p-6 lg:min-h-0 lg:overflow-y-auto">
-                        <h2 id="cashKeypadHeading" class="text-lg font-semibold text-slate-950">Cash received</h2>
-                        <p id="posTenderedHint" class="mt-1 text-xs text-slate-600" aria-live="polite">Enter the amount handed to you.</p>
-                        <label for="txtTendered" class="mt-4 block text-sm font-medium text-slate-700">Amount tendered</label>
-                        <asp:TextBox ID="txtTendered" runat="server" ClientIDMode="Static" inputmode="decimal" autocomplete="off"
-                            placeholder="0.00" MaxLength="11"
-                            CssClass="mt-2 h-14 w-full rounded-md border border-slate-300 bg-white px-4 text-right text-2xl font-semibold tabular-nums text-slate-950 placeholder:text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700" />
-                        <div class="mt-4 grid grid-cols-[minmax(76px,0.9fr)_repeat(3,minmax(0,1fr))] gap-2">
-                            <div role="group" aria-label="Quick cash amounts" class="grid content-start gap-2 [&_button]:min-h-9 [&_button]:rounded-md [&_button]:border [&_button]:border-blue-200 [&_button]:bg-blue-50 [&_button]:px-1 [&_button]:text-xs [&_button]:font-semibold [&_button]:text-blue-900 [&_button:hover]:bg-blue-100 [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-blue-700">
+                    <section aria-labelledby="cashKeypadHeading" class="pos-cash-input min-w-0 rounded-xl border border-slate-200 bg-white p-5 sm:p-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4">
+                            <h1 id="cashKeypadHeading" class="text-xl font-semibold text-slate-950">Cash payment</h1>
+                            <div class="text-right"><p class="text-xs font-medium text-slate-500">Total due</p><strong class="mt-1 block text-xl font-semibold tabular-nums text-slate-950"><asp:Literal ID="litPaymentTotal" runat="server" /></strong></div>
+                        </div>
+                        <label for="txtTendered" class="mt-5 block text-sm font-medium text-slate-700">Cash received</label>
+                        <div class="relative mt-2">
+                            <span class="pointer-events-none absolute inset-y-0 left-4 flex items-center text-xl font-medium text-slate-500" aria-hidden="true">₱</span>
+                            <asp:TextBox ID="txtTendered" runat="server" ClientIDMode="Static" inputmode="decimal" autocomplete="off" aria-describedby="posTenderedHint"
+                                placeholder="0.00" MaxLength="11"
+                                CssClass="h-16 w-full rounded-xl border border-slate-300 bg-slate-50 pl-10 pr-16 text-right text-2xl font-semibold tabular-nums text-slate-950 placeholder:text-slate-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 sm:text-3xl" />
+                            <button type="button" data-pos-cash-key="back" class="absolute right-1 top-1 flex size-14 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-200 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-blue-700" aria-label="Delete last cash digit"><svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h11v14H9l-7-7 7-7Z"/><path d="m12 9 6 6m0-6-6 6"/></svg></button>
+                        </div>
+                        <p id="posTenderedHint" class="mt-2 min-h-5 text-xs text-slate-600" aria-live="polite">Enter the amount handed to you.</p>
+                        <div class="mt-4 space-y-4">
+                            <div role="group" aria-label="Quick cash amounts" class="pos-quick-cash grid grid-cols-4 gap-2">
                                 <button type="button" data-pos-cash-quick="10">₱10</button>
                                 <button type="button" data-pos-cash-quick="20">₱20</button>
                                 <button type="button" data-pos-cash-quick="50">₱50</button>
                                 <button type="button" data-pos-cash-quick="100">₱100</button>
                                 <button type="button" data-pos-cash-quick="500">₱500</button>
                                 <button type="button" data-pos-cash-quick="1000">₱1,000</button>
-                                <button type="button" data-pos-cash-quick="exact" aria-label="Set exact amount due" class="text-[11px]">Exact amount</button>
+                                <button type="button" data-pos-cash-quick="exact" aria-label="Set exact amount due" class="col-span-2">Exact amount</button>
                             </div>
-                            <div class="col-span-3 grid grid-cols-3 content-start gap-x-2 gap-y-1 [&_button]:min-h-[72px] [&_button]:rounded-md [&_button]:border [&_button]:border-slate-200 [&_button]:bg-white [&_button]:text-lg [&_button]:font-semibold [&_button]:text-slate-800 [&_button:hover]:bg-slate-100 [&_button:focus-visible]:outline-2 [&_button:focus-visible]:outline-blue-700">
+                            <div class="pos-keypad" role="group" aria-label="Cash amount keypad">
                                 <button type="button" data-pos-cash-key="1">1</button><button type="button" data-pos-cash-key="2">2</button><button type="button" data-pos-cash-key="3">3</button>
                                 <button type="button" data-pos-cash-key="4">4</button><button type="button" data-pos-cash-key="5">5</button><button type="button" data-pos-cash-key="6">6</button>
                                 <button type="button" data-pos-cash-key="7">7</button><button type="button" data-pos-cash-key="8">8</button><button type="button" data-pos-cash-key="9">9</button>
-                                <button type="button" data-pos-cash-key="clear">Clear</button><button type="button" data-pos-cash-key="0">0</button><button type="button" data-pos-cash-key=".">.</button>
+                                <button type="button" data-pos-cash-key="clear" class="pos-keypad-action">Clear</button><button type="button" data-pos-cash-key="0">0</button><button type="button" data-pos-cash-key="." aria-label="Decimal point">.</button>
                             </div>
                         </div>
-                        <div class="mt-5 flex items-baseline justify-between border-t border-slate-200 pt-4 text-sm">
-                            <span class="font-medium text-slate-700">Change</span>
+                        <div class="mt-5 flex items-baseline justify-between gap-3 rounded-lg bg-slate-50 px-4 py-3 text-sm">
+                            <span class="font-medium text-slate-700">Change to return</span>
                             <strong id="posChangePreview" data-total="<%= PaymentTotalValue %>"
-                                class="text-lg font-semibold tabular-nums text-slate-950">₱0.00</strong>
+                                class="text-2xl font-semibold tabular-nums text-slate-950">₱0.00</strong>
                         </div>
                         <div class="mt-5 grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-3">
                             <asp:Button ID="btnBackToSale" runat="server" OnClick="btnBackToChoice_Click" Text="Back"
@@ -329,5 +347,5 @@
 </asp:Content>
 
 <asp:Content ID="ScriptsContent" ContentPlaceHolderID="ScriptsContent" runat="server">
-    <script src="<%= ResolveUrl("~/Scripts/app/pos/register.js?v=3") %>"></script>
+    <script src="<%= ResolveUrl("~/Scripts/app/pos/register.js?v=5") %>"></script>
 </asp:Content>

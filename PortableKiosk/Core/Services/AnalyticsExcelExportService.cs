@@ -19,14 +19,16 @@ namespace PortableKiosk.Core.Services
         public byte[] CreateWorkbook(AnalyticsReport report, string periodName, DateTime start, DateTime end)
         {
             if (report == null) throw new ArgumentNullException("report");
+            string subtitle = periodName + " | " + start.ToString("MMM d, yyyy", Invariant) + " – " +
+                end.AddDays(-1).ToString("MMM d, yyyy", Invariant) + " | Philippine time";
 
             List<Sheet> sheets = new List<Sheet>
             {
-                BuildOverview(report, periodName, start, end),
-                BuildTrend(report, start, end),
-                BuildProducts(report),
-                BuildCategories(report),
-                BuildPayments(report)
+                BuildOverview(report, subtitle),
+                BuildTrend(report, subtitle, start, end),
+                BuildProducts(report, subtitle),
+                BuildCategories(report, subtitle),
+                BuildPayments(report, subtitle)
             };
 
             using (MemoryStream buffer = new MemoryStream())
@@ -45,84 +47,91 @@ namespace PortableKiosk.Core.Services
             }
         }
 
-        private static Sheet BuildOverview(AnalyticsReport report, string periodName, DateTime start, DateTime end)
+        private static Sheet BuildOverview(AnalyticsReport report, string subtitle)
         {
-            Sheet sheet = new Sheet("Overview", new[] { 36, 20, 20 });
-            sheet.Add(S("Analytics report", 1));
-            sheet.Add(S("Period"), S(periodName));
-            sheet.Add(S("From (Philippine time)"), S(start.ToString("yyyy-MM-dd", Invariant)));
-            sheet.Add(S("Through (Philippine time)"), S(end.AddDays(-1).ToString("yyyy-MM-dd", Invariant)));
+            Sheet sheet = new Sheet("Overview", "Portable Kiosk · Analytics", subtitle, new[] { 36, 20, 22 });
+            sheet.Add(S("Sales summary", 2), S("Value", 2));
+            sheet.AddData(S("Total revenue"), N(report.TotalSales, 3));
+            sheet.AddData(S("Paid orders"), N(report.PaidOrders, 4));
+            sheet.AddData(S("Average order"), N(report.AverageOrderValue, 3));
+            sheet.AddData(S("Paid share of placed orders"), N(report.ConversionRate / 100m, 5));
             sheet.Add();
-            sheet.Add(S("Metric", 2), S("Value", 2));
-            sheet.Add(S("Total paid sales"), N(report.TotalSales, 3));
-            sheet.Add(S("Paid orders"), N(report.PaidOrders, 4));
-            sheet.Add(S("Average order value"), N(report.AverageOrderValue, 3));
-            sheet.Add(S("Placed orders"), N(report.PlacedOrders, 4));
-            sheet.Add(S("Converted orders"), N(report.ConvertedOrders, 4));
-            sheet.Add(S("Order conversion rate"), N(report.ConversionRate / 100m, 5));
-            sheet.Add(S("Expired unpaid orders"), N(report.ExpiredOrders, 4));
-            sheet.Add(S("Expired potential value"), N(report.ExpiredValue, 3));
+            sheet.Add(S("Order outcomes", 2), S("Orders", 2), S("Order value (PHP)", 2));
+            sheet.AddData(S("Paid"), N(report.ConvertedOrders, 4), N(report.ConvertedValue, 3));
+            sheet.AddData(S("Expired (unpaid)"), N(report.ExpiredOrders, 4), N(report.ExpiredValue, 3));
+            sheet.AddData(S("Awaiting payment"), N(Math.Max(0, report.PlacedOrders - report.ConvertedOrders - report.ExpiredOrders), 4), S("—", 3));
+            sheet.Add(S("Total orders placed", 7), N(report.PlacedOrders, 9), S("—", 8));
             sheet.Add();
-            sheet.Add(S("Sales, products and payment methods use paid date."));
-            sheet.Add(S("Conversion and expiry use order creation date and current payment outcome."));
-            sheet.Add(S("Expired orders exclude carts left before checkout."));
-            sheet.Add();
-            sheet.Add(S("Popular products", 2), S("Units sold", 2), S("Revenue (PHP)", 2));
+            sheet.Add(S("Popular products · Top 5", 2), S("Units sold", 2), S("Revenue (PHP)", 2));
             foreach (AnalyticsProductRow product in report.PopularProducts)
-                sheet.Add(S(product.Name), N(product.Units, 4), N(product.Revenue, 3));
+                sheet.AddData(S(product.Name), N(product.Units, 4), N(product.Revenue, 3));
+            if (report.PopularProducts.Count == 0) sheet.AddMerged("No products sold in this period.", 6);
             sheet.Add();
-            sheet.Add(S("Least-selling products (on menu)", 2), S("Units sold", 2), S("Revenue (PHP)", 2));
+            sheet.Add(S("Least-selling · Bottom 5 on menu", 2), S("Units sold", 2), S("Revenue (PHP)", 2));
             foreach (AnalyticsProductRow product in report.LeastProducts)
-                sheet.Add(S(product.Name), N(product.Units, 4), N(product.Revenue, 3));
+                sheet.AddData(S(product.Name), N(product.Units, 4), N(product.Revenue, 3));
+            if (report.LeastProducts.Count == 0) sheet.AddMerged("No available products to show.", 6);
+            sheet.Add();
+            sheet.AddMerged("Sales use payment date; outcomes use order creation date. Expired value is unpaid. Currency: PHP.", 6);
             return sheet;
         }
 
-        private static Sheet BuildTrend(AnalyticsReport report, DateTime start, DateTime end)
+        private static Sheet BuildTrend(AnalyticsReport report, string subtitle, DateTime start, DateTime end)
         {
             bool monthly = (end - start).TotalDays > 90;
-            Sheet sheet = new Sheet("Sales trend", new[] { 22, 20 }) { Filter = true };
-            sheet.Add(S(monthly ? "Month (PH)" : "Date (PH)", 2), S("Paid sales (PHP)", 2));
+            Sheet sheet = new Sheet("Sales trend", monthly ? "Monthly sales" : "Daily sales", subtitle, new[] { 26, 26 }) { Filter = true };
+            sheet.Add(S(monthly ? "Month" : "Date", 2), S("Revenue (PHP)", 2));
             Dictionary<DateTime, decimal> sales = report.Trend.ToDictionary(point => point.Date, point => point.Sales);
             for (DateTime date = start; date < end; date = monthly ? date.AddMonths(1) : date.AddDays(1))
             {
                 decimal amount;
                 sales.TryGetValue(date, out amount);
-                sheet.Add(S(date.ToString(monthly ? "yyyy-MM" : "yyyy-MM-dd", Invariant)), N(amount, 3));
+                sheet.AddData(N((decimal)date.ToOADate(), monthly ? 17 : 15), N(amount, 3));
             }
+            sheet.FilterLastRow = sheet.Rows.Count;
+            sheet.Add(S("Total revenue", 7), N(report.Trend.Sum(point => point.Sales), 8));
             return sheet;
         }
 
-        private static Sheet BuildProducts(AnalyticsReport report)
+        private static Sheet BuildProducts(AnalyticsReport report, string subtitle)
         {
-            Sheet sheet = new Sheet("Products", new[] { 36, 16, 18, 20 }) { Filter = true };
+            Sheet sheet = new Sheet("Products", "Product sales", subtitle, new[] { 40, 14, 14, 22 }) { Filter = true };
             sheet.Add(S("Product", 2), S("On menu", 2), S("Units sold", 2), S("Revenue (PHP)", 2));
             foreach (AnalyticsProductRow product in report.AllProducts
                 .OrderByDescending(item => item.Units).ThenBy(item => item.Name, StringComparer.OrdinalIgnoreCase))
-                sheet.Add(S(product.Name), S(product.IsOnMenu ? "Yes" : "No"), N(product.Units, 4), N(product.Revenue, 3));
+                sheet.AddData(S(product.Name), S(product.IsOnMenu ? "Yes" : "No"), N(product.Units, 4), N(product.Revenue, 3));
+            sheet.FilterLastRow = sheet.Rows.Count;
+            sheet.Add(S("Total", 7), S("", 7), N(report.AllProducts.Sum(product => product.Units), 9), N(report.AllProducts.Sum(product => product.Revenue), 8));
+            if (report.AllProducts.Count == 0) sheet.AddMerged("No products to show.", 6);
             return sheet;
         }
 
-        private static Sheet BuildCategories(AnalyticsReport report)
+        private static Sheet BuildCategories(AnalyticsReport report, string subtitle)
         {
-            Sheet sheet = new Sheet("Categories", new[] { 36, 18, 20 }) { Filter = true };
+            Sheet sheet = new Sheet("Categories", "Sales by category", subtitle, new[] { 36, 16, 22 }) { Filter = true };
             sheet.Add(S("Category", 2), S("Units sold", 2), S("Revenue (PHP)", 2));
             foreach (AnalyticsCategoryRow category in report.Categories)
-                sheet.Add(S(category.Name), N(category.Units, 4), N(category.Revenue, 3));
+                sheet.AddData(S(category.Name), N(category.Units, 4), N(category.Revenue, 3));
+            sheet.FilterLastRow = sheet.Rows.Count;
+            sheet.Add(S("Total", 7), N(report.Categories.Sum(category => category.Units), 9), N(report.Categories.Sum(category => category.Revenue), 8));
+            if (report.Categories.Count == 0) sheet.AddMerged("No categories to show.", 6);
             return sheet;
         }
 
-        private static Sheet BuildPayments(AnalyticsReport report)
+        private static Sheet BuildPayments(AnalyticsReport report, string subtitle)
         {
-            Sheet sheet = new Sheet("Payment methods", new[] { 28, 20, 20, 18 }) { Filter = true };
+            Sheet sheet = new Sheet("Payment methods", "Payment methods", subtitle, new[] { 26, 16, 22, 16 }) { Filter = true };
             sheet.Add(S("Payment method", 2), S("Paid orders", 2), S("Sales (PHP)", 2), S("Sales share", 2));
             foreach (string method in new[] { "CASHLESS", "CASH_COUNTER" })
             {
                 AnalyticsPaymentRow payment = report.PaymentMethods.FirstOrDefault(item => item.Method == method);
                 decimal sales = payment == null ? 0 : payment.Sales;
-                sheet.Add(S(method == "CASHLESS" ? "Cashless" : "Cash counter"),
+                sheet.AddData(S(method == "CASHLESS" ? "Cashless" : "Cash counter"),
                     N(payment == null ? 0 : payment.Orders, 4), N(sales, 3),
                     N(report.TotalSales == 0 ? 0 : sales / report.TotalSales, 5));
             }
+            sheet.FilterLastRow = sheet.Rows.Count;
+            sheet.Add(S("Total", 7), N(report.PaidOrders, 9), N(report.TotalSales, 8), N(report.TotalSales == 0 ? 0 : 1, 10));
             return sheet;
         }
 
@@ -132,18 +141,20 @@ namespace PortableKiosk.Core.Services
         private static string Worksheet(Sheet sheet)
         {
             StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?><worksheet xmlns=\"");
-            xml.Append(SheetNamespace).Append("\"><dimension ref=\"A1:")
+            xml.Append(SheetNamespace).Append("\"><sheetPr><pageSetUpPr fitToPage=\"1\"/></sheetPr><dimension ref=\"A1:")
                 .Append((char)('A' + sheet.Widths.Length - 1)).Append(Math.Max(1, sheet.Rows.Count))
-                .Append("\"/><sheetViews><sheetView workbookViewId=\"0\">");
-            if (sheet.Filter) xml.Append("<pane ySplit=\"1\" topLeftCell=\"A2\" activePane=\"bottomLeft\" state=\"frozen\"/>");
-            xml.Append("</sheetView></sheetViews><sheetFormatPr defaultRowHeight=\"17\"/><cols>");
+                .Append("\"/><sheetViews><sheetView showGridLines=\"0\" workbookViewId=\"0\">")
+                .Append("<pane ySplit=\"4\" topLeftCell=\"A5\" activePane=\"bottomLeft\" state=\"frozen\"/>")
+                .Append("<selection pane=\"bottomLeft\" activeCell=\"A5\" sqref=\"A5\"/>");
+            xml.Append("</sheetView></sheetViews><sheetFormatPr defaultRowHeight=\"20\"/><cols>");
             for (int i = 0; i < sheet.Widths.Length; i++)
                 xml.Append("<col min=\"").Append(i + 1).Append("\" max=\"").Append(i + 1)
                     .Append("\" width=\"").Append(sheet.Widths[i]).Append("\" customWidth=\"1\"/>");
             xml.Append("</cols><sheetData>");
             for (int row = 0; row < sheet.Rows.Count; row++)
             {
-                xml.Append("<row r=\"").Append(row + 1).Append("\">");
+                xml.Append("<row r=\"").Append(row + 1).Append("\" ht=\"")
+                    .Append(sheet.RowHeight(row).ToString(Invariant)).Append("\" customHeight=\"1\">");
                 for (int column = 0; column < sheet.Rows[row].Length; column++)
                 {
                     Cell cell = sheet.Rows[row][column];
@@ -152,15 +163,26 @@ namespace PortableKiosk.Core.Services
                     if (cell.Number.HasValue)
                         xml.Append("><v>").Append(cell.Number.Value.ToString(Invariant)).Append("</v></c>");
                     else
-                        xml.Append(" t=\"inlineStr\"><is><t>").Append(Escape(cell.Text)).Append("</t></is></c>");
+                        xml.Append(" t=\"inlineStr\"><is><t xml:space=\"preserve\">").Append(Escape(cell.Text)).Append("</t></is></c>");
                 }
                 xml.Append("</row>");
             }
             xml.Append("</sheetData>");
-            if (sheet.Filter && sheet.Rows.Count > 1)
-                xml.Append("<autoFilter ref=\"A1:").Append((char)('A' + sheet.Widths.Length - 1))
-                    .Append(sheet.Rows.Count).Append("\"/>");
-            xml.Append("</worksheet>");
+            if (sheet.Filter && sheet.FilterLastRow > 4)
+                xml.Append("<autoFilter ref=\"A4:").Append((char)('A' + sheet.Widths.Length - 1))
+                    .Append(sheet.FilterLastRow).Append("\"/>");
+            if (sheet.MergedRows.Count > 0)
+            {
+                xml.Append("<mergeCells count=\"").Append(sheet.MergedRows.Count).Append("\">");
+                foreach (int row in sheet.MergedRows)
+                    xml.Append("<mergeCell ref=\"A").Append(row).Append(':')
+                        .Append((char)('A' + sheet.Widths.Length - 1)).Append(row).Append("\"/>");
+                xml.Append("</mergeCells>");
+            }
+            xml.Append("<printOptions horizontalCentered=\"1\"/><pageMargins left=\"0.3\" right=\"0.3\" top=\"0.4\" bottom=\"0.4\" header=\"0.2\" footer=\"0.2\"/>")
+                .Append("<pageSetup paperSize=\"9\" orientation=\"").Append(sheet.Widths.Sum() > 80 ? "landscape" : "portrait")
+                .Append("\" fitToWidth=\"1\" fitToHeight=\"0\"/>")
+                .Append("<headerFooter><oddFooter>&amp;LPortable Kiosk · Analytics&amp;RPage &amp;P of &amp;N</oddFooter></headerFooter></worksheet>");
             return xml.ToString();
         }
 
@@ -188,7 +210,17 @@ namespace PortableKiosk.Core.Services
             for (int i = 0; i < sheets.Count; i++)
                 xml.Append("<sheet name=\"").Append(Escape(sheets[i].Name)).Append("\" sheetId=\"")
                     .Append(i + 1).Append("\" r:id=\"rId").Append(i + 1).Append("\"/>");
-            return xml.Append("</sheets></workbook>").ToString();
+            xml.Append("</sheets><definedNames>");
+            for (int i = 0; i < sheets.Count; i++)
+            {
+                string name = Escape("'" + sheets[i].Name.Replace("'", "''") + "'");
+                xml.Append("<definedName name=\"_xlnm.Print_Area\" localSheetId=\"").Append(i).Append("\">")
+                    .Append(name).Append("!$A$1:$").Append((char)('A' + sheets[i].Widths.Length - 1))
+                    .Append('$').Append(sheets[i].Rows.Count).Append("</definedName>")
+                    .Append("<definedName name=\"_xlnm.Print_Titles\" localSheetId=\"").Append(i).Append("\">")
+                    .Append(name).Append("!$1:$4</definedName>");
+            }
+            return xml.Append("</definedNames></workbook>").ToString();
         }
 
         private static string WorkbookRelationships(int sheetCount)
@@ -201,18 +233,52 @@ namespace PortableKiosk.Core.Services
 
         private static string Styles()
         {
-            return "<?xml version=\"1.0\" encoding=\"UTF-8\"?><styleSheet xmlns=\"" + SheetNamespace + "\">" +
-                "<numFmts count=\"2\"><numFmt numFmtId=\"164\" formatCode=\"&quot;₱&quot;#,##0.00\"/><numFmt numFmtId=\"165\" formatCode=\"0.0%\"/></numFmts>" +
-                "<fonts count=\"3\"><font><sz val=\"11\"/><color rgb=\"FF0F172A\"/><name val=\"Aptos\"/></font><font><b/><sz val=\"15\"/><color rgb=\"FFFFFFFF\"/><name val=\"Aptos\"/></font><font><b/><sz val=\"11\"/><color rgb=\"FF0F172A\"/><name val=\"Aptos\"/></font></fonts>" +
-                "<fills count=\"4\"><fill><patternFill patternType=\"none\"/></fill><fill><patternFill patternType=\"gray125\"/></fill><fill><patternFill patternType=\"solid\"><fgColor rgb=\"FF0F172A\"/><bgColor indexed=\"64\"/></patternFill></fill><fill><patternFill patternType=\"solid\"><fgColor rgb=\"FFE2E8F0\"/><bgColor indexed=\"64\"/></patternFill></fill></fills>" +
-                "<borders count=\"1\"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count=\"1\"><xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\"/></cellStyleXfs>" +
-                "<cellXfs count=\"6\"><xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\"/>" +
-                "<xf numFmtId=\"0\" fontId=\"1\" fillId=\"2\" borderId=\"0\" xfId=\"0\" applyFont=\"1\" applyFill=\"1\"/>" +
-                "<xf numFmtId=\"0\" fontId=\"2\" fillId=\"3\" borderId=\"0\" xfId=\"0\" applyFont=\"1\" applyFill=\"1\"/>" +
-                "<xf numFmtId=\"164\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\" applyNumberFormat=\"1\"/>" +
-                "<xf numFmtId=\"3\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\" applyNumberFormat=\"1\"/>" +
-                "<xf numFmtId=\"165\" fontId=\"0\" fillId=\"0\" borderId=\"0\" xfId=\"0\" applyNumberFormat=\"1\"/></cellXfs>" +
-                "<cellStyles count=\"1\"><cellStyle name=\"Normal\" xfId=\"0\" builtinId=\"0\"/></cellStyles></styleSheet>";
+            StringBuilder xml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?><styleSheet xmlns=\"" + SheetNamespace + "\">");
+            xml.Append("<numFmts count=\"4\"><numFmt numFmtId=\"164\" formatCode=\"&quot;₱&quot;#,##0.00\"/><numFmt numFmtId=\"165\" formatCode=\"0.0%\"/><numFmt numFmtId=\"166\" formatCode=\"mmm d, yyyy\"/><numFmt numFmtId=\"167\" formatCode=\"mmm yyyy\"/></numFmts>")
+                .Append("<fonts count=\"4\"><font><sz val=\"11\"/><color rgb=\"FF0F172A\"/><name val=\"Calibri\"/></font><font><b/><sz val=\"14\"/><color rgb=\"FF0F172A\"/><name val=\"Calibri\"/></font><font><b/><sz val=\"11\"/><color rgb=\"FF0F172A\"/><name val=\"Calibri\"/></font><font><sz val=\"10\"/><color rgb=\"FF475569\"/><name val=\"Calibri\"/></font></fonts>")
+                .Append("<fills count=\"5\"><fill><patternFill patternType=\"none\"/></fill><fill><patternFill patternType=\"gray125\"/></fill>");
+            foreach (string color in new[] { "FFF1F5F9", "FFF8FAFC", "FFEFF6FF" })
+                xml.Append("<fill><patternFill patternType=\"solid\"><fgColor rgb=\"").Append(color).Append("\"/><bgColor indexed=\"64\"/></patternFill></fill>");
+            xml.Append("</fills><borders count=\"3\"><border><left/><right/><top/><bottom/><diagonal/></border>");
+            foreach (string color in new[] { "FFCBD5E1", "FF94A3B8" })
+            {
+                xml.Append("<border>");
+                foreach (string side in new[] { "left", "right", "top", "bottom" })
+                    xml.Append('<').Append(side).Append(" style=\"thin\"><color rgb=\"").Append(color).Append("\"/></").Append(side).Append('>');
+                xml.Append("<diagonal/></border>");
+            }
+            xml.Append("</borders>")
+                .Append("<cellStyleXfs count=\"1\"><xf numFmtId=\"0\" fontId=\"0\" fillId=\"0\" borderId=\"0\"/></cellStyleXfs><cellXfs count=\"19\">");
+            // Body, title, header, currency, count, percentage, note.
+            AppendStyle(xml, 0, 0, 0, 1, "left");
+            AppendStyle(xml, 0, 1, 0, 0, "left");
+            AppendStyle(xml, 0, 2, 2, 1, "left");
+            AppendStyle(xml, 164, 0, 0, 1, "right");
+            AppendStyle(xml, 3, 0, 0, 1, "right");
+            AppendStyle(xml, 165, 0, 0, 1, "right");
+            AppendStyle(xml, 0, 3, 0, 0, "left");
+            // Total row: text, currency, count, percentage.
+            AppendStyle(xml, 0, 2, 4, 2, "left");
+            AppendStyle(xml, 164, 2, 4, 2, "right");
+            AppendStyle(xml, 3, 2, 4, 2, "right");
+            AppendStyle(xml, 165, 2, 4, 2, "right");
+            // Alternating data rows and real Excel dates.
+            AppendStyle(xml, 0, 0, 3, 1, "left");
+            AppendStyle(xml, 164, 0, 3, 1, "right");
+            AppendStyle(xml, 3, 0, 3, 1, "right");
+            AppendStyle(xml, 165, 0, 3, 1, "right");
+            AppendStyle(xml, 166, 0, 0, 1, "left");
+            AppendStyle(xml, 166, 0, 3, 1, "left");
+            AppendStyle(xml, 167, 0, 0, 1, "left");
+            AppendStyle(xml, 167, 0, 3, 1, "left");
+            return xml.Append("</cellXfs><cellStyles count=\"1\"><cellStyle name=\"Normal\" xfId=\"0\" builtinId=\"0\"/></cellStyles></styleSheet>").ToString();
+        }
+
+        private static void AppendStyle(StringBuilder xml, int format, int font, int fill, int border, string alignment)
+        {
+            xml.Append("<xf numFmtId=\"").Append(format).Append("\" fontId=\"").Append(font).Append("\" fillId=\"").Append(fill)
+                .Append("\" borderId=\"").Append(border).Append("\" xfId=\"0\" applyFont=\"1\" applyFill=\"1\" applyBorder=\"1\" applyNumberFormat=\"1\" applyAlignment=\"1\">")
+                .Append("<alignment horizontal=\"").Append(alignment).Append("\" vertical=\"center\" wrapText=\"1\"/></xf>");
         }
 
         private static void WriteEntry(ZipArchive archive, string name, string content)
@@ -231,12 +297,46 @@ namespace PortableKiosk.Core.Services
 
         private sealed class Sheet
         {
-            public Sheet(string name, int[] widths) { Name = name; Widths = widths; }
+            public Sheet(string name, string title, string subtitle, int[] widths)
+            {
+                Name = name;
+                Widths = widths;
+                AddMerged(title, 1);
+                AddMerged(subtitle, 6);
+                Add();
+            }
             public string Name { get; private set; }
             public int[] Widths { get; private set; }
             public bool Filter { get; set; }
+            public int FilterLastRow { get; set; }
             public List<Cell[]> Rows { get; private set; } = new List<Cell[]>();
+            public List<int> MergedRows { get; private set; } = new List<int>();
             public void Add(params Cell[] cells) { Rows.Add(cells); }
+            public void AddMerged(string text, int style)
+            {
+                Add(S(text, style));
+                MergedRows.Add(Rows.Count);
+            }
+            public void AddData(params Cell[] cells)
+            {
+                if (Rows.Count % 2 == 0)
+                    foreach (Cell cell in cells)
+                        cell.Style = cell.Style == 0 ? 11 : cell.Style == 3 ? 12 : cell.Style == 4 ? 13 :
+                            cell.Style == 5 ? 14 : cell.Style == 15 ? 16 : cell.Style == 17 ? 18 : cell.Style;
+                Add(cells);
+            }
+            public int RowHeight(int index)
+            {
+                Cell[] cells = Rows[index];
+                if (cells.Length == 0) return 6;
+                if (cells[0].Style == 1) return 26;
+                if (MergedRows.Contains(index + 1))
+                    return 6 + 14 * Math.Max(1, (int)Math.Ceiling((cells[0].Text ?? "").Length / (double)(Widths.Sum() - 4)));
+                int lines = 1;
+                for (int i = 0; i < cells.Length; i++)
+                    lines = Math.Max(lines, (int)Math.Ceiling((cells[i].Text ?? "").Length / (double)(Widths[i] - 3)));
+                return Math.Max(20, 4 + 16 * lines);
+            }
         }
     }
 }

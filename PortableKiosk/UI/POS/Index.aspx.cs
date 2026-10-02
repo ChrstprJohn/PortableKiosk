@@ -655,15 +655,33 @@ namespace PortableKiosk.UI.POS
 
         private void BindPayment(PosSale sale)
         {
-            litPaymentContext.Text = Server.HtmlEncode(
-                sale.SourceOrderID.HasValue
-                    ? "Kiosk order #" + sale.SourceOrderNumber
-                    : DescribeOrder(sale));
-            rptPaymentItems.DataSource = sale.Cart.Items;
-            rptPaymentItems.DataBind();
+            litPaymentReceiptPreview.Text = Server.HtmlEncode(
+                string.Join("\n", BuildPaymentReceiptLines(sale)) + "\n");
             litPaymentTotal.Text = FormatMoney(sale.Cart.TotalAmount);
             PaymentTotalValue = sale.Cart.TotalAmount.ToString(
                 "0.00", CultureInfo.InvariantCulture);
+        }
+
+        private static List<string> BuildPaymentReceiptLines(PosSale sale)
+        {
+            var lines = new List<string> { "PORTABLE KIOSK", "ORDER PREVIEW", "--------------------------------" };
+            lines.AddRange(WrapReceiptText(sale.SourceOrderID.HasValue
+                ? "Kiosk order: #" + sale.SourceOrderNumber
+                : "New counter order"));
+            lines.AddRange(WrapReceiptText(DescribeOrder(sale).Replace(" · ", " / ")));
+            lines.Add("--------------------------------");
+            int itemAreaStart = lines.Count;
+            foreach (CartItem item in sale.Cart.Items)
+            {
+                lines.AddRange(WrapReceiptText(item.Quantity + " x " + item.ProductName));
+                lines.Add(ReceiptAmountLine(item.DisplaySize, item.LineTotal));
+            }
+            while (lines.Count - itemAreaStart < 10) lines.Add(string.Empty);
+            lines.Add("--------------------------------");
+            lines.Add(ReceiptAmountLine("TOTAL DUE", sale.Cart.TotalAmount));
+            lines.Add("--------------------------------");
+            lines.Add("Payment: Cash at counter");
+            return lines;
         }
 
         private void BindReceipt(PosReceipt receipt)

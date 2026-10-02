@@ -28,8 +28,8 @@ namespace PortableKiosk.UI.POS
         protected global::System.Web.UI.WebControls.Repeater rptCategories;
         protected global::System.Web.UI.WebControls.Repeater rptProducts;
         protected global::System.Web.UI.WebControls.Panel pnlPaymentChoice;
-        protected global::System.Web.UI.WebControls.Button btnChooseCash;
-        protected global::System.Web.UI.WebControls.Button btnChooseCashless;
+        protected global::System.Web.UI.WebControls.LinkButton btnChooseCash;
+        protected global::System.Web.UI.WebControls.LinkButton btnChooseCashless;
         protected global::System.Web.UI.WebControls.Button btnChoiceBackToSale;
         protected global::System.Web.UI.WebControls.Panel pnlCashless;
         protected global::System.Web.UI.WebControls.Literal litCashlessTotal;
@@ -37,8 +37,7 @@ namespace PortableKiosk.UI.POS
         protected global::System.Web.UI.WebControls.Button btnSimulatePayment;
         protected global::System.Web.UI.WebControls.Panel pnlPayment;
         protected global::System.Web.UI.WebControls.Button btnBackToSale;
-        protected global::System.Web.UI.WebControls.Literal litPaymentContext;
-        protected global::System.Web.UI.WebControls.Repeater rptPaymentItems;
+        protected global::System.Web.UI.WebControls.Literal litPaymentReceiptPreview;
         protected global::System.Web.UI.WebControls.Literal litPaymentTotal;
         protected global::System.Web.UI.WebControls.TextBox txtTendered;
         protected global::System.Web.UI.WebControls.Button btnCompletePayment;

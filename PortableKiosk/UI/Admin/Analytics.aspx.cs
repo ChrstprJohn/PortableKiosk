@@ -96,7 +96,7 @@ namespace PortableKiosk.UI.Admin
         private void Highlight(string period)
         {
             var link = period == "today" ? lnkToday : period == "week" ? lnkWeek : period == "year" ? lnkYear : lnkMonth;
-            link.CssClass = "rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white no-underline";
+            link.CssClass = "inline-flex min-h-10 items-center rounded-md border border-slate-900 bg-slate-900 px-3 py-2 text-sm font-medium text-white no-underline hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400";
             link.Attributes["aria-current"] = "page";
         }
 
@@ -114,6 +114,9 @@ namespace PortableKiosk.UI.Admin
             pnlOtherOrders.Visible = otherOrders > 0;
             litExpired.Text = report.ExpiredOrders.ToString("N0", PhilippineCulture);
             litExpiredValue.Text = Money(report.ExpiredValue);
+            litExpiredPercent.Text = (report.PlacedOrders == 0 ? 0 : 100m * report.ExpiredOrders / report.PlacedOrders).ToString("N1", PhilippineCulture) + "%";
+            pnlNoOutcomes.Visible = report.PlacedOrders == 0;
+            litOutcomeChart.Text = pnlNoOutcomes.Visible ? string.Empty : BuildOutcomeChart();
 
             bool monthly = (end - start).TotalDays > 90;
             litTrendGranularity.Text = monthly ? "Monthly" : "Daily";
@@ -208,23 +211,25 @@ namespace PortableKiosk.UI.Admin
             return "width:" + (max == 0 ? 0 : 100 * Convert.ToInt32(value) / max).ToString(CultureInfo.InvariantCulture) + "%";
         }
 
-        protected string ConversionWidth()
+        private string BuildOutcomeChart()
         {
-            return "width:" + (report == null ? 0 : report.ConversionRate).ToString("0.##", CultureInfo.InvariantCulture) + "%";
-        }
-
-        protected string ExpiredWidth()
-        {
-            decimal percent = report == null || report.PlacedOrders == 0 ? 0 : 100m * report.ExpiredOrders / report.PlacedOrders;
-            return "width:" + percent.ToString("0.##", CultureInfo.InvariantCulture) + "%";
-        }
-
-        protected string OutcomeBarLabel()
-        {
-            if (report == null) return "Order outcomes unavailable";
-            return System.Web.HttpUtility.HtmlAttributeEncode(report.ConvertedOrders.ToString("N0", PhilippineCulture) + " paid, " +
-                report.ExpiredOrders.ToString("N0", PhilippineCulture) + " expired, " +
-                Math.Max(0, report.PlacedOrders - report.ConvertedOrders - report.ExpiredOrders).ToString("N0", PhilippineCulture) + " other orders");
+            string[] labels = { "Paid", "Expired", "Awaiting payment" };
+            string[] colors = { "bg-emerald-600", "bg-amber-500", "bg-slate-400" };
+            int[] counts = { report.ConvertedOrders, report.ExpiredOrders,
+                Math.Max(0, report.PlacedOrders - report.ConvertedOrders - report.ExpiredOrders) };
+            StringBuilder chart = new StringBuilder("<div class=\"mt-6 space-y-5\" role=\"figure\" aria-label=\"Order outcomes as a percentage of placed orders\">");
+            for (int i = 0; i < labels.Length; i++)
+            {
+                decimal percentage = report.PlacedOrders == 0 ? 0 : 100m * counts[i] / report.PlacedOrders;
+                string detail = counts[i].ToString("N0", PhilippineCulture) + " orders · " + percentage.ToString("N1", PhilippineCulture) + "%";
+                chart.Append("<div><div class=\"mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm\"><span class=\"font-medium text-slate-700\">")
+                    .Append(labels[i]).Append("</span><span class=\"tabular-nums text-slate-600\">").Append(System.Web.HttpUtility.HtmlEncode(detail))
+                    .Append("</span></div><div class=\"h-7 overflow-hidden rounded-md bg-slate-100\" role=\"img\" aria-label=\"")
+                    .Append(System.Web.HttpUtility.HtmlAttributeEncode(labels[i] + ": " + detail))
+                    .Append("\"><div class=\"h-full ").Append(colors[i]).Append("\" style=\"width:")
+                    .Append(Math.Min(100m, Math.Max(0m, percentage)).ToString("0.##", CultureInfo.InvariantCulture)).Append("%\"></div></div></div>");
+            }
+            return chart.Append("<div class=\"flex justify-between text-xs tabular-nums text-slate-500\" aria-hidden=\"true\"><span>0%</span><span>50%</span><span>100%</span></div></div>").ToString();
         }
 
         protected string CategoryWidth(object value)
