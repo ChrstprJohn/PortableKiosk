@@ -63,7 +63,7 @@ BEGIN
                 AND imageVariant.ImagePath IS NOT NULL
                 AND LTRIM(RTRIM(imageVariant.ImagePath)) <> N''
             ORDER BY imageVariant.IsAvailable DESC,
-                imageVariant.ProductVariantID) AS ImagePath
+                imageVariant.ProductVariantID) AS ImagePath, p.ProductID
     FROM Products p
     INNER JOIN Categories c ON c.CategoryID = p.CategoryID
     LEFT JOIN ProductVariants pv ON pv.ProductID = p.ProductID
@@ -81,13 +81,60 @@ AS
 BEGIN
     SET NOCOUNT OFF;
     SELECT c.CategoryName, COALESCE(SUM(oi.Quantity), 0),
-        COALESCE(SUM(oi.UnitPrice * oi.Quantity), 0)
+        COALESCE(SUM(oi.UnitPrice * oi.Quantity), 0), c.CategoryID
     FROM Categories c LEFT JOIN Products p ON p.CategoryID = c.CategoryID
     LEFT JOIN ProductVariants pv ON pv.ProductID = p.ProductID
     LEFT JOIN OrderItems oi ON oi.ProductVariantID = pv.ProductVariantID
         AND EXISTS (SELECT 1 FROM Payments pay WHERE pay.OrderID = oi.OrderID
             AND pay.PaymentStatus = N'PAID' AND pay.PaidAt >= @Start AND pay.PaidAt < @End)
     GROUP BY c.CategoryID, c.CategoryName ORDER BY 3 DESC, c.CategoryName;
+END;
+GO
+
+-- Source rows follow exactly the same payment-date and created-order cohorts as the summary.
+CREATE OR ALTER PROCEDURE dbo.Analytics_ReadDetails
+    @Start DATETIME2(7), @End DATETIME2(7),
+    @Items BIT, @Cohort BIT, @Status NVARCHAR(20) = NULL,
+    @ProductID INT = 0, @CategoryID INT = 0, @Method NVARCHAR(20) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT o.OrderID, o.OrderNumber, o.CreatedAt, p.PaidAt,
+        COALESCE(p.PaymentMethod, N'') AS Method,
+        CASE WHEN p.PaymentStatus = N'EXPIRED' OR
+            (p.PaymentStatus = N'PENDING' AND o.ExpiresAt IS NOT NULL AND o.ExpiresAt <= SYSUTCDATETIME())
+            THEN N'EXPIRED' ELSE COALESCE(p.PaymentStatus, N'NO_PAYMENT') END AS Status,
+        COALESCE(p.Amount, 0) AS Amount,
+        COALESCE(STUFF((SELECT N'; ' + pr.ProductName +
+            COALESCE(N' (' + sz.SizeName + N')', N'') + N' × ' + CONVERT(NVARCHAR(12), line.Quantity)
+            FROM dbo.OrderItems line
+            INNER JOIN dbo.ProductVariants variant ON variant.ProductVariantID = line.ProductVariantID
+            INNER JOIN dbo.Products pr ON pr.ProductID = variant.ProductID
+            LEFT JOIN dbo.Sizes sz ON sz.SizeID = variant.SizeID
+            WHERE line.OrderID = o.OrderID ORDER BY line.OrderItemID
+            FOR XML PATH(''), TYPE).value('.', 'NVARCHAR(MAX)'), 1, 2, N''), N'') AS Items
+    INTO #Sources
+    FROM dbo.Orders o LEFT JOIN dbo.Payments p ON p.OrderID = o.OrderID
+    WHERE (@Cohort = 1 AND o.CreatedAt >= @Start AND o.CreatedAt < @End)
+        OR (@Cohort = 0 AND p.PaymentStatus = N'PAID' AND p.PaidAt >= @Start AND p.PaidAt < @End);
+
+    IF @Items = 1
+        SELECT s.*, pr.ProductID, pr.ProductName, c.CategoryName,
+            COALESCE(sz.SizeName, N'Regular') AS Size, oi.Quantity, oi.UnitPrice
+        FROM #Sources s INNER JOIN dbo.OrderItems oi ON oi.OrderID = s.OrderID
+        INNER JOIN dbo.ProductVariants pv ON pv.ProductVariantID = oi.ProductVariantID
+        INNER JOIN dbo.Products pr ON pr.ProductID = pv.ProductID
+        INNER JOIN dbo.Categories c ON c.CategoryID = pr.CategoryID
+        LEFT JOIN dbo.Sizes sz ON sz.SizeID = pv.SizeID
+        WHERE (@ProductID = 0 OR pr.ProductID = @ProductID)
+            AND (@CategoryID = 0 OR c.CategoryID = @CategoryID)
+        ORDER BY s.PaidAt DESC, s.OrderID DESC, oi.OrderItemID;
+    ELSE
+        SELECT * FROM #Sources
+        WHERE (@Status IS NULL OR Status = @Status
+            OR (@Status = N'AWAITING' AND Status NOT IN (N'PAID', N'EXPIRED')))
+            AND (@Method IS NULL OR Method = @Method)
+        ORDER BY COALESCE(PaidAt, CreatedAt) DESC, OrderID DESC;
 END;
 GO
 

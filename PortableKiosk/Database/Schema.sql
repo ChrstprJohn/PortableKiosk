@@ -1,6 +1,6 @@
 -- Portable Kiosk database schema
 -- Microsoft SQL Server
--- Fresh database setup: run this entire file once; migrations 001-007 are included.
+-- Fresh database setup: run this entire file once; migrations 001-008 are included.
 -- Includes product descriptions, takeout table service, AWAITING_PAYMENT,
 -- EXPIRED payments, kiosk settings, SERVING (formerly READY), and website QR links.
 -- For an existing installation, use the migration scripts instead.
@@ -12,6 +12,10 @@ END;
 GO
 
 USE portable_kiosk_db;
+GO
+
+-- Customer-facing order numbers currently follow OrderID, so avoid cached identity jumps.
+ALTER DATABASE SCOPED CONFIGURATION SET IDENTITY_CACHE = OFF;
 GO
 
 SET XACT_ABORT ON;

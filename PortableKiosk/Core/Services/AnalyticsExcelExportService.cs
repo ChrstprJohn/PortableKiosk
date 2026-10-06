@@ -31,6 +31,29 @@ namespace PortableKiosk.Core.Services
                 BuildPayments(report, subtitle)
             };
 
+            return Package(sheets);
+        }
+
+        public byte[] CreateDetailWorkbook(AnalyticsDetailReport detail)
+        {
+            if (detail == null) throw new ArgumentNullException("detail");
+            var sheet = new Sheet(detail.RowTargets.Count > 0 ? "Breakdown" : "Source records", detail.Title, detail.Period,
+                detail.Columns.Select((label, index) => detail.Formats[index] == "money" ? 22 : label == "Items" ? 60 : 28).ToArray()) { Filter = true };
+            sheet.Add(detail.Columns.Select(label => S(label, 2)).ToArray());
+            foreach (object[] row in detail.Rows)
+                sheet.AddData(row.Select((value, index) => detail.Formats[index] == "money" ? N(Convert.ToDecimal(value), 3) :
+                    detail.Formats[index] == "count" ? N(Convert.ToDecimal(value), 4) :
+                    detail.Formats[index] == "percent" ? N(Convert.ToDecimal(value), 5) : S(Convert.ToString(value, Invariant))).ToArray());
+            sheet.FilterLastRow = sheet.Rows.Count;
+            if (detail.Rows.Count == 0) sheet.AddMerged("No matching source records in this period.", 6);
+            sheet.Add();
+            sheet.AddMerged(detail.Summary, 6);
+            sheet.AddMerged(detail.Description, 6);
+            return Package(new List<Sheet> { sheet });
+        }
+
+        private static byte[] Package(List<Sheet> sheets)
+        {
             using (MemoryStream buffer = new MemoryStream())
             {
                 using (ZipArchive archive = new ZipArchive(buffer, ZipArchiveMode.Create, true))

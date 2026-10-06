@@ -8,6 +8,26 @@ namespace PortableKiosk.Core.Services
     {
         private readonly AnalyticsRepository repository = new AnalyticsRepository();
 
+        public static string NormalizePeriod(string value)
+        {
+            string period = (value ?? string.Empty).ToLowerInvariant();
+            return period == "today" || period == "week" || period == "year" ? period : "month";
+        }
+
+        public static void GetDateRange(string period, out DateTime start, out DateTime end)
+        {
+            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("Singapore Standard Time");
+            DateTime today = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zone).Date;
+            end = today.AddDays(1);
+            switch (period)
+            {
+                case "today": start = today; break;
+                case "week": start = today.AddDays(-6); break;
+                case "year": start = new DateTime(today.Year, 1, 1); break;
+                default: start = new DateTime(today.Year, today.Month, 1); break;
+            }
+        }
+
         public AnalyticsReport GetReport(DateTime localStart, DateTime localEnd)
         {
             if (localEnd <= localStart || (localEnd - localStart).TotalDays > 370)

@@ -21,10 +21,10 @@ namespace PortableKiosk.UI.Admin
 
             if (IsPostBack) return;
 
-            string period = NormalizePeriod(Request.QueryString["period"]);
+            string period = AnalyticsService.NormalizePeriod(Request.QueryString["period"]);
             DateTime start;
             DateTime end;
-            GetDateRange(period, out start, out end);
+            AnalyticsService.GetDateRange(period, out start, out end);
             ddlExportPeriod.SelectedValue = period;
             Highlight(period);
             litPeriod.Text = Server.HtmlEncode(start.ToString("MMM d, yyyy", PhilippineCulture) + " – " + end.AddDays(-1).ToString("MMM d, yyyy", PhilippineCulture));
@@ -41,25 +41,7 @@ namespace PortableKiosk.UI.Admin
             }
         }
 
-        private static string NormalizePeriod(string value)
-        {
-            string period = (value ?? string.Empty).ToLowerInvariant();
-            return period == "today" || period == "week" || period == "year" ? period : "month";
-        }
-
-        private static void GetDateRange(string period, out DateTime start, out DateTime end)
-        {
-            TimeZoneInfo zone = TimeZoneInfo.FindSystemTimeZoneById("Singapore Standard Time");
-            DateTime today = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zone).Date;
-            end = today.AddDays(1);
-            switch (period)
-            {
-                case "today": start = today; break;
-                case "week": start = today.AddDays(-6); break;
-                case "year": start = new DateTime(today.Year, 1, 1); break;
-                default: start = new DateTime(today.Year, today.Month, 1); break;
-            }
-        }
+        protected string AnalyticsPeriod { get { return AnalyticsService.NormalizePeriod(Request.QueryString["period"]); } }
 
         protected void btnExportAnalytics_Click(object sender, EventArgs e)
         {
@@ -68,10 +50,10 @@ namespace PortableKiosk.UI.Admin
 
             try
             {
-                string period = NormalizePeriod(ddlExportPeriod.SelectedValue);
+                string period = AnalyticsService.NormalizePeriod(ddlExportPeriod.SelectedValue);
                 DateTime start;
                 DateTime end;
-                GetDateRange(period, out start, out end);
+                AnalyticsService.GetDateRange(period, out start, out end);
                 AnalyticsReport exportReport = new AnalyticsService().GetReport(start, end);
                 string periodName = period == "today" ? "Today" : period == "week" ? "Last 7 days" : period == "year" ? "This year" : "This month";
                 byte[] workbook = new AnalyticsExcelExportService().CreateWorkbook(exportReport, periodName, start, end);
@@ -157,7 +139,7 @@ namespace PortableKiosk.UI.Admin
             for (int i = 0; i < points.Count; i++)
                 line.Append(i == 0 ? "M " : " L ").Append(number(x(i))).Append(' ').Append(number(y(points[i].Sales)));
             string area = line + " L " + number(x(points.Count - 1)) + " 190 L " + number(x(0)) + " 190 Z";
-            StringBuilder svg = new StringBuilder("<svg viewBox=\"0 0 800 240\" class=\"block w-full\" style=\"min-width:560px\" role=\"img\" aria-label=\"Paid sales trend\" xmlns=\"http://www.w3.org/2000/svg\">");
+            StringBuilder svg = new StringBuilder("<svg viewBox=\"0 0 800 240\" class=\"block w-full\" style=\"min-width:560px\" role=\"group\" aria-label=\"Paid sales trend; select a point for source records\" xmlns=\"http://www.w3.org/2000/svg\">");
             svg.Append("<title>Paid sales trend</title>");
             foreach (int level in new[] { 0, 1, 2 })
             {
@@ -170,8 +152,13 @@ namespace PortableKiosk.UI.Admin
             svg.Append("<path d=\"").Append(line).Append("\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>");
             for (int i = 0; i < points.Count; i++)
             {
-                svg.Append("<circle cx=\"").Append(number(x(i))).Append("\" cy=\"").Append(number(y(points[i].Sales))).Append("\" r=\"3.5\" fill=\"#2563eb\"><title>")
-                    .Append(Server.HtmlEncode(points[i].Date.ToString(monthly ? "MMMM yyyy" : "MMM d, yyyy", PhilippineCulture) + ": " + Money(points[i].Sales))).Append("</title></circle>");
+                string label = points[i].Date.ToString(monthly ? "MMMM yyyy" : "MMM d, yyyy", PhilippineCulture) + ": " + Money(points[i].Sales) + "; view records";
+                svg.Append("<g class=\"analytics-point\" tabindex=\"0\" role=\"button\" aria-haspopup=\"dialog\" data-analytics-kind=\"trend\" data-analytics-key=\"")
+                    .Append(points[i].Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)).Append("\" aria-label=\"")
+                    .Append(System.Web.HttpUtility.HtmlAttributeEncode(label)).Append("\"><title>").Append(Server.HtmlEncode(label)).Append("</title>")
+                    .Append("<circle cx=\"").Append(number(x(i))).Append("\" cy=\"").Append(number(y(points[i].Sales))).Append("\" r=\"3.5\" fill=\"#2563eb\"/>")
+                    .Append("<rect x=\"").Append(number(x(i) - 10)).Append("\" y=\"").Append(number(y(points[i].Sales) - 22))
+                    .Append("\" width=\"20\" height=\"44\" fill=\"transparent\"/></g>");
             }
             foreach (int i in new[] { 0, points.Count / 2, points.Count - 1 }.Distinct())
                 svg.Append("<text x=\"").Append(number(x(i))).Append("\" y=\"220\" text-anchor=\"middle\" fill=\"#64748b\" font-size=\"11\">")
@@ -222,12 +209,13 @@ namespace PortableKiosk.UI.Admin
             {
                 decimal percentage = report.PlacedOrders == 0 ? 0 : 100m * counts[i] / report.PlacedOrders;
                 string detail = counts[i].ToString("N0", PhilippineCulture) + " orders · " + percentage.ToString("N1", PhilippineCulture) + "%";
-                chart.Append("<div><div class=\"mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm\"><span class=\"font-medium text-slate-700\">")
+                string kind = i == 0 ? "converted" : i == 1 ? "expired" : "awaiting";
+                chart.Append("<button type=\"button\" class=\"analytics-row\" data-analytics-kind=\"").Append(kind).Append("\" aria-haspopup=\"dialog\"><span class=\"mb-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm\"><span class=\"font-medium text-slate-700\">")
                     .Append(labels[i]).Append("</span><span class=\"tabular-nums text-slate-600\">").Append(System.Web.HttpUtility.HtmlEncode(detail))
-                    .Append("</span></div><div class=\"h-7 overflow-hidden rounded-md bg-slate-100\" role=\"img\" aria-label=\"")
+                    .Append("</span></span><span class=\"block h-7 overflow-hidden rounded-md bg-slate-100\" role=\"img\" aria-label=\"")
                     .Append(System.Web.HttpUtility.HtmlAttributeEncode(labels[i] + ": " + detail))
-                    .Append("\"><div class=\"h-full ").Append(colors[i]).Append("\" style=\"width:")
-                    .Append(Math.Min(100m, Math.Max(0m, percentage)).ToString("0.##", CultureInfo.InvariantCulture)).Append("%\"></div></div></div>");
+                    .Append("\"><span class=\"block h-full ").Append(colors[i]).Append("\" style=\"width:")
+                    .Append(Math.Min(100m, Math.Max(0m, percentage)).ToString("0.##", CultureInfo.InvariantCulture)).Append("%\"></span></span></button>");
             }
             return chart.Append("<div class=\"flex justify-between text-xs tabular-nums text-slate-500\" aria-hidden=\"true\"><span>0%</span><span>50%</span><span>100%</span></div></div>").ToString();
         }
@@ -244,12 +232,38 @@ namespace PortableKiosk.UI.Admin
             return System.Web.HttpUtility.HtmlAttributeEncode(Convert.ToString(name) + ": " + Money(revenue) + ", " + Convert.ToString(units) + " units");
         }
 
-        protected string PaymentDonutStyle()
+        protected string PaymentDonutSegments()
         {
-            decimal cashless = report == null ? 0 : report.PaymentMethods
-                .Where(payment => payment.Method == "CASHLESS").Sum(payment => payment.Sales);
-            decimal percentage = report == null || report.TotalSales == 0 ? 0 : 100m * cashless / report.TotalSales;
-            return "background:conic-gradient(#2563eb 0 " + percentage.ToString("0.##", CultureInfo.InvariantCulture) + "%,#94a3b8 " + percentage.ToString("0.##", CultureInfo.InvariantCulture) + "% 100%)";
+            var svg = new StringBuilder("<svg viewBox=\"0 0 176 176\" class=\"absolute inset-0 size-44\" role=\"group\" aria-label=\"Payment method segments\">");
+            double angle = -Math.PI / 2;
+            Func<double, double, string> point = (radius, radians) =>
+                (88 + radius * Math.Cos(radians)).ToString("0.###", CultureInfo.InvariantCulture) + " " +
+                (88 + radius * Math.Sin(radians)).ToString("0.###", CultureInfo.InvariantCulture);
+            if (report == null || report.TotalSales == 0)
+                return svg.Append("<circle cx=\"88\" cy=\"88\" r=\"74\" fill=\"none\" stroke=\"#e2e8f0\" stroke-width=\"28\"/></svg>").ToString();
+            foreach (string method in new[] { "CASHLESS", "CASH_COUNTER" })
+            {
+                decimal amount = report.PaymentMethods.Where(row => row.Method == method).Sum(row => row.Sales);
+                if (amount == 0) continue;
+                double sweep = 2 * Math.PI * (double)(amount / report.TotalSales);
+                string color = method == "CASHLESS" ? "#2563eb" : "#94a3b8";
+                string label = PaymentName(method) + ": " + Money(amount) + "; view records";
+                svg.Append("<g class=\"analytics-point\" tabindex=\"0\" role=\"button\" aria-haspopup=\"dialog\" data-analytics-kind=\"payment\" data-analytics-key=\"")
+                    .Append(method).Append("\" aria-label=\"").Append(System.Web.HttpUtility.HtmlAttributeEncode(label)).Append("\"><title>")
+                    .Append(Server.HtmlEncode(label)).Append("</title>");
+                if (amount == report.TotalSales)
+                    svg.Append("<circle cx=\"88\" cy=\"88\" r=\"74\" fill=\"none\" stroke=\"").Append(color).Append("\" stroke-width=\"28\"/>");
+                else
+                {
+                    string large = sweep > Math.PI ? "1" : "0";
+                    svg.Append("<path fill=\"").Append(color).Append("\" d=\"M ").Append(point(88, angle)).Append(" A 88 88 0 ").Append(large)
+                        .Append(" 1 ").Append(point(88, angle + sweep)).Append(" L ").Append(point(60, angle + sweep))
+                        .Append(" A 60 60 0 ").Append(large).Append(" 0 ").Append(point(60, angle)).Append(" Z\"/>");
+                }
+                svg.Append("</g>");
+                angle += sweep;
+            }
+            return svg.Append("</svg>").ToString();
         }
 
         protected string PaymentDonutLabel()

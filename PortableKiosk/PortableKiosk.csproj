@@ -159,6 +159,9 @@
     <Content Include="UI\Admin\CatalogConfig.aspx" />
     <Content Include="UI\Admin\Orders.aspx" />
     <Content Include="UI\Admin\Analytics.aspx" />
+    <Content Include="UI\Admin\AnalyticsDetails.ashx" />
+    <Content Include="Scripts\app\admin\analytics.js" />
+    <Content Include="Content\css\analytics.css" />
     <Content Include="UI\Admin\Products.aspx" />
     <Content Include="UI\Admin\StaffAccounts.aspx" />
     <Content Include="UI\Admin\Settings.aspx" />
@@ -212,6 +215,10 @@
     <Compile Include="Core\Models\KioskSettings.cs" />
     <Compile Include="Core\Services\CategoryService.cs" />
     <Compile Include="Core\Services\AnalyticsService.cs" />
+    <Compile Include="Core\Services\AnalyticsDetailService.cs" />
+    <Compile Include="UI\Admin\AnalyticsDetails.ashx.cs">
+      <DependentUpon>AnalyticsDetails.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Core\Services\AnalyticsExcelExportService.cs" />
     <Compile Include="Core\Services\CartService.cs" />
     <Compile Include="Core\Services\OrderItemService.cs" />
@@ -431,6 +438,8 @@
     <None Include="packages.config" />
     <None Include="Database\StoredProcedures\*.sql" />
     <None Include="Database\Migrations\007_ADD_WEBSITE_QR_CODE.sql" />
+    <None Include="Database\Migrations\008_DISABLE_IDENTITY_CACHE.sql" />
+    <None Include="Database\Commands\UPDATE ANALYTICS AND ORDER NUMBER CACHE.sql" />
     <None Include="Database\StoredProcedures\README.md" />
     <None Include="Database\InstallStoredProcedures.sql" />
     <None Include="Database\BuildStoredProcedures.ps1" />

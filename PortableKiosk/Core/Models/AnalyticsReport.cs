@@ -30,6 +30,7 @@ namespace PortableKiosk.Core.Models
 
     public class AnalyticsProductRow
     {
+        public int ProductId { get; set; }
         public string Name { get; set; }
         public string ImagePath { get; set; }
         public bool IsOnMenu { get; set; }
@@ -39,6 +40,7 @@ namespace PortableKiosk.Core.Models
 
     public class AnalyticsCategoryRow
     {
+        public int CategoryId { get; set; }
         public string Name { get; set; }
         public int Units { get; set; }
         public decimal Revenue { get; set; }
@@ -49,5 +51,41 @@ namespace PortableKiosk.Core.Models
         public string Method { get; set; }
         public int Orders { get; set; }
         public decimal Sales { get; set; }
+    }
+
+    public class AnalyticsDetailReport
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Period { get; set; }
+        public string Summary { get; set; }
+        public string[] Columns { get; set; }
+        public string[] Formats { get; set; }
+        public List<object[]> Rows { get; set; } = new List<object[]>();
+        public List<AnalyticsDetailTarget> RowTargets { get; set; } = new List<AnalyticsDetailTarget>();
+    }
+
+    public class AnalyticsDetailTarget
+    {
+        public string Kind { get; set; }
+        public string Key { get; set; }
+    }
+
+    public class AnalyticsSourceRow
+    {
+        public int OrderId { get; set; }
+        public string OrderNumber { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? PaidAt { get; set; }
+        public string Method { get; set; }
+        public string Status { get; set; }
+        public decimal Amount { get; set; }
+        public string Items { get; set; }
+        public int ProductId { get; set; }
+        public string Product { get; set; }
+        public string Category { get; set; }
+        public string Size { get; set; }
+        public int Quantity { get; set; }
+        public decimal UnitPrice { get; set; }
     }
 }
