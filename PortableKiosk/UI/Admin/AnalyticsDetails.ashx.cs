@@ -17,7 +17,7 @@ namespace PortableKiosk.UI.Admin
             context.Response.Cache.SetNoStore();
             if (context.Session["StaffAccountID"] == null || !string.Equals(Convert.ToString(context.Session["StaffRole"]), "ADMIN", StringComparison.OrdinalIgnoreCase))
             {
-                Error(context, 401, "Your admin session has ended. Sign in again to view analytics.");
+                Error(context, 401, "Session expired. Sign in again.");
                 return;
             }
             if (context.Request.HttpMethod != "GET") { Error(context, 405, "Use GET to read analytics."); return; }
@@ -40,8 +40,8 @@ namespace PortableKiosk.UI.Admin
                     context.Response.Write(new JavaScriptSerializer { MaxJsonLength = int.MaxValue }.Serialize(detail));
                 }
             }
-            catch (ArgumentException) { Error(context, 400, "That analytics selection is invalid. Refresh the page and try again."); }
-            catch (Exception) { Error(context, 500, "These records could not be loaded. Please try again."); }
+            catch (ArgumentException) { Error(context, 400, "Invalid selection. Refresh the page."); }
+            catch (Exception) { Error(context, 500, "Data failed to load. Try again."); }
         }
 
         private static void Error(HttpContext context, int status, string message)

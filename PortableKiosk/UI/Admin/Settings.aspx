@@ -14,7 +14,7 @@
             <section class="grid gap-4 p-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-8 sm:p-6" aria-labelledby="availabilityHeading">
                 <div class="max-w-xl">
                     <h2 id="availabilityHeading" class="text-base font-semibold text-slate-950">Kiosk ordering</h2>
-                    <p class="mt-1 text-sm leading-6 text-slate-600">Turn this off when the kiosk is closed. Customers with an existing order can still pay at the counter.</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">Turn off when closed. Existing orders can still be paid at the counter.</p>
                 </div>
                 <label class="inline-flex shrink-0 cursor-pointer items-center gap-3 text-sm font-medium text-slate-800 sm:w-44 sm:justify-self-end">
                     <asp:CheckBox ID="chkAvailable" runat="server" CssClass="inline-flex items-center [&_input]:m-0 [&_input]:size-5 [&_input]:accent-slate-900" />
@@ -25,7 +25,7 @@
             <section class="grid gap-4 p-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-8 sm:p-6" aria-labelledby="expiryHeading">
                 <div class="max-w-xl">
                     <h2 id="expiryHeading" class="text-base font-semibold text-slate-950">Time to pay at the counter</h2>
-                    <p class="mt-1 text-sm leading-6 text-slate-600">How long customers have to pay for a cash order. Orders already placed keep their current deadline.</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">Cash payment time limit. Existing orders keep their deadline.</p>
                 </div>
                 <div class="flex items-center gap-3 sm:w-44 sm:justify-self-end">
                     <asp:TextBox ID="txtExpiryMinutes" runat="server" TextMode="Number" min="1" max="1440" step="1" aria-label="Time to pay at the counter in minutes" CssClass="w-24 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" />

@@ -30,7 +30,7 @@ namespace PortableKiosk.Core.Services
                 Title = kind == "revenue" ? "Total revenue" : kind == "paid-orders" ? "Paid orders" : kind == "average" ? "Average order" :
                     kind == "trend" ? "Sales trend" : kind == "popular" ? "Popular products" : kind == "least" ? "Least-selling products" :
                     kind == "categories" ? "Sales by category" : kind == "converted" ? "Paid order outcomes" : kind == "expired" ? "Expired orders" :
-                    kind == "awaiting" ? "Awaiting payment" : kind == "conversion" ? "Paid share of placed orders" : kind == "placed" ? "Order outcomes" : "Payment methods"
+                    kind == "awaiting" ? "Remaining unpaid" : kind == "conversion" ? "Paid share of placed orders" : kind == "placed" ? "Order outcomes" : "Payment methods"
             };
             int productId = 0, categoryId = 0;
             AnalyticsReport report = null;
@@ -72,12 +72,14 @@ namespace PortableKiosk.Core.Services
             }
             string status = kind == "converted" ? "PAID" : kind == "expired" ? "EXPIRED" : kind == "awaiting" ? "AWAITING" : null;
             var sources = new AnalyticsRepository().GetSources(ToUtc(start), ToUtc(end), items, cohort, status, productId, categoryId, method);
-            detail.Description = items ? "Source: OrderItems joined to paid Payments. Includes payments received in this period. Line revenue = quantity × the price recorded at sale; category and product names use the current catalog." :
-                cohort ? "Source: Orders created in this period and their current Payments status. Pending orders past their expiry are counted as expired. Failed, cancelled, and orders without a payment are included in the remaining unpaid group." :
-                "Source: Payments with PAID status and a payment date in this period, joined to Orders. Each row contributes one payment amount to revenue.";
-            if (kind == "average") detail.Description += " Average order = total paid revenue ÷ number of paid orders.";
-            if (kind == "conversion") detail.Description += " Conversion = paid orders ÷ all placed orders × 100.";
-            if (kind == "expired") detail.Description += " These amounts are unpaid, not revenue.";
+            detail.Description = items ? "Items paid for in this period. Revenue = quantity × sale price. Names and categories reflect the current catalog." :
+                cohort ? "Orders placed in this period, by current payment status." :
+                "Payments received in this period with paid status. Each amount contributes to revenue.";
+            if (kind == "converted") detail.Description += " Includes paid orders only.";
+            if (kind == "awaiting") detail.Description += " Includes pending, failed, cancelled, and orders without a payment; excludes expired orders.";
+            if (kind == "average") detail.Description += " Average = revenue ÷ paid orders.";
+            if (kind == "conversion") detail.Description += " Paid share = paid orders ÷ placed orders × 100.";
+            if (kind == "expired") detail.Description += " Includes overdue pending orders. Amounts are unpaid.";
 
             if (items)
             {
@@ -107,7 +109,7 @@ namespace PortableKiosk.Core.Services
                     var paymentsReport = new AnalyticsService().GetReport(start, end);
                     detail.Summary += " / " + Money(paymentsReport.TotalSales) + " total paid revenue = " +
                         (paymentsReport.TotalSales == 0 ? 0 : 100m * paid / paymentsReport.TotalSales).ToString("N1", Culture) + "% of paid sales";
-                    detail.Description += " Sales share = this method's paid amount ÷ all paid revenue × 100.";
+                    detail.Description += " Share = method revenue ÷ total revenue × 100.";
                 }
                 if (kind == "converted" || kind == "expired" || kind == "awaiting")
                 {
@@ -130,8 +132,8 @@ namespace PortableKiosk.Core.Services
             {
                 var products = kind == "popular" ? report.PopularProducts : report.LeastProducts;
                 detail.Title = kind == "popular" ? "Popular products" : "Least-selling products";
-                detail.Description = (kind == "popular" ? "Top 5 by units sold. " : "Bottom 5 currently available products, including zero sales. ") +
-                    "Source: paid order items, grouped by product. Select a product to see its individual sales.";
+                detail.Description = kind == "popular" ? "Top 5 products by paid units sold." :
+                    "Bottom 5 menu products by paid units sold, including zero sales.";
                 detail.Columns = new[] { "Product", "Units sold", "Revenue (PHP)" };
                 detail.Formats = new[] { "text", "count", "money" };
                 foreach (var product in products)
@@ -139,12 +141,12 @@ namespace PortableKiosk.Core.Services
                     detail.Rows.Add(new object[] { product.Name, product.Units, product.Revenue });
                     detail.RowTargets.Add(new AnalyticsDetailTarget { Kind = "product", Key = product.ProductId.ToString(CultureInfo.InvariantCulture) });
                 }
-                detail.Summary = products.Count + " products · " + products.Sum(row => row.Units).ToString("N0", Culture) + " units · " + Money(products.Sum(row => row.Revenue)) + " revenue for this ranking";
+                detail.Summary = products.Count + " products · " + products.Sum(row => row.Units).ToString("N0", Culture) + " units · " + Money(products.Sum(row => row.Revenue)) + " revenue";
             }
             else if (kind == "categories")
             {
                 detail.Title = "Sales by category";
-                detail.Description = "Source: paid order items, grouped by category. Share = category line revenue ÷ all category line revenue. Select a category to see only its sold items.";
+                detail.Description = "Paid item sales by category. Share = category revenue ÷ total item revenue.";
                 detail.Columns = new[] { "Category", "Units sold", "Revenue (PHP)", "Revenue share" };
                 detail.Formats = new[] { "text", "count", "money", "percent" };
                 decimal total = report.Categories.Sum(row => row.Revenue);
@@ -158,7 +160,7 @@ namespace PortableKiosk.Core.Services
             else if (kind == "payments")
             {
                 detail.Title = "Payment methods";
-                detail.Description = "Source: paid Payments received in this period, grouped by payment method. Share = method revenue ÷ total paid revenue. Select a method to see only its payments.";
+                detail.Description = "Payments received in this period, by method. Share = method revenue ÷ total revenue.";
                 detail.Columns = new[] { "Payment method", "Paid orders", "Revenue (PHP)", "Sales share" };
                 detail.Formats = new[] { "text", "count", "money", "percent" };
                 foreach (string method in new[] { "CASHLESS", "CASH_COUNTER" })
@@ -175,7 +177,7 @@ namespace PortableKiosk.Core.Services
             {
                 bool monthly = (end - start).TotalDays > 90;
                 detail.Title = monthly ? "Monthly sales trend" : "Daily sales trend";
-                detail.Description = "Source: paid Payments grouped by payment date in Philippine time, including dates with zero revenue. Select a date to see only its payments.";
+                detail.Description = "Paid revenue by payment date (Philippine time). Includes dates with no sales.";
                 detail.Columns = new[] { monthly ? "Month" : "Date", "Revenue (PHP)" };
                 detail.Formats = new[] { "text", "money" };
                 for (DateTime date = start; date < end; date = monthly ? date.AddMonths(1) : date.AddDays(1))
@@ -189,7 +191,7 @@ namespace PortableKiosk.Core.Services
             else
             {
                 detail.Title = kind == "conversion" ? "Paid share of placed orders" : "Order outcomes";
-                detail.Description = "Source: Orders created in this period and their current payment status. Conversion = paid orders ÷ placed orders × 100. Select an outcome to see its orders. Expired and remaining unpaid values are not revenue.";
+                detail.Description = "Orders placed in this period, by current payment status. Paid share = paid orders ÷ placed orders × 100. Unpaid amounts are not revenue.";
                 detail.Columns = new[] { "Outcome", "Orders", "Share of placed orders", "Paid value (PHP)", "Unpaid value (PHP)" };
                 detail.Formats = new[] { "text", "count", "percent", "money", "money" };
                 int remaining = Math.Max(0, report.PlacedOrders - report.ConvertedOrders - report.ExpiredOrders);

@@ -15,7 +15,7 @@
         <header class="mb-7 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
             <div>
                 <h1 id="staffHeading" class="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Staff accounts</h1>
-                <p class="mt-1 text-sm text-slate-500">Manage staff members, roles, and access.</p>
+                <p class="mt-1 text-sm text-slate-500">Manage staff roles and access.</p>
             </div>
             <button type="button" class="inline-flex min-h-9 items-center justify-center gap-2 rounded-md bg-slate-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" data-modal-toggle="true" data-modal-target="#addStaffModal">
                 <svg class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
@@ -38,7 +38,7 @@
                 runat="server"
                 ValidationGroup="StaffForm"
                 CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"
-                HeaderText="Please correct the following:"
+                HeaderText="Check these fields:"
                 DisplayMode="BulletList" />
 
             <section aria-labelledby="staffDetailsHeading">
@@ -120,7 +120,7 @@
                 <div class="w-full">
                     <asp:Label ID="lblRole" runat="server"
                         AssociatedControlID="ddlRole"
-                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Workspace role *" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Role *" />
                     <asp:DropDownList ID="ddlRole" runat="server"
                         CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
                           <asp:ListItem Text="Crew — POS and kitchen access" Value="CREW" />
@@ -150,7 +150,7 @@
                         runat="server" ControlToValidate="txtPassword"
                         ValidationGroup="StaffForm"
                         ValidationExpression="^.{8,100}$"
-                        ErrorMessage="Password must contain at least 8 characters."
+                        ErrorMessage="Use at least 8 characters."
                         CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                 </div>
 
@@ -239,7 +239,7 @@
                         </button>
                     </div>
                     <div class="space-y-4 overflow-y-auto p-5">
-                        <asp:ValidationSummary ID="editStaffValidationSummary" runat="server" ValidationGroup="EditStaffForm" CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800" HeaderText="Please correct the following:" DisplayMode="BulletList" />
+                        <asp:ValidationSummary ID="editStaffValidationSummary" runat="server" ValidationGroup="EditStaffForm" CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800" HeaderText="Check these fields:" DisplayMode="BulletList" />
                         <asp:HiddenField ID="hfEditStaffAccountID" runat="server" />
                         <div>
                             <asp:Label ID="lblEditStaffFirstName" runat="server" AssociatedControlID="txtEditStaffFirstName" CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="First name *" />
@@ -266,7 +266,7 @@
                             <asp:RegularExpressionValidator ID="validEditStaffEmail" runat="server" ControlToValidate="txtEditStaffEmail" ValidationGroup="EditStaffForm" ValidationExpression="^[^@\s]+@[^@\s]+\.[^@\s]+$" ErrorMessage="Enter a valid email address." CssClass="mt-1 block text-sm text-red-700" Display="Dynamic" />
                         </div>
                         <div>
-                            <asp:Label ID="lblEditStaffRole" runat="server" AssociatedControlID="ddlEditStaffRole" CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Workspace role *" />
+                            <asp:Label ID="lblEditStaffRole" runat="server" AssociatedControlID="ddlEditStaffRole" CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Role *" />
                             <asp:DropDownList ID="ddlEditStaffRole" runat="server" CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
                                   <asp:ListItem Text="Crew — POS and kitchen access" Value="CREW" />
                                 <asp:ListItem Text="Admin — all workspaces" Value="ADMIN" />
@@ -294,7 +294,7 @@
                     AutoGenerateColumns="false" GridLines="None"
                     OnRowCommand="gridStaff_RowCommand"
                     CssClass="w-full min-w-[600px] border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
-                    EmptyDataText="No staff accounts have been created.">
+                    EmptyDataText="No staff accounts yet.">
                     <Columns>
                         <asp:BoundField DataField="DisplayName" HeaderText="Staff member" />
                         <asp:BoundField DataField="Email" HeaderText="Email" />

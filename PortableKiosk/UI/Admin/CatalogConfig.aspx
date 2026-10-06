@@ -16,7 +16,7 @@
         <header class="mb-7 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
             <div>
                 <h1 class="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Catalog setup</h1>
-                <p class="mt-1 text-sm text-slate-500">Manage product categories and serving sizes in one place.</p>
+                <p class="mt-1 text-sm text-slate-500">Manage categories and serving sizes.</p>
             </div>
         </header>
 
@@ -35,7 +35,7 @@
                             AutoGenerateColumns="false"
                             GridLines="None"
                             CssClass="w-full table-fixed border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:break-words [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
-                            EmptyDataText="No categories have been created yet.">
+                            EmptyDataText="No categories yet.">
 
                             <Columns>
                                 <asp:BoundField DataField="CategoryName" HeaderText="Category Name" />
@@ -102,7 +102,7 @@
                             AutoGenerateColumns="false"
                             GridLines="None"
                             CssClass="w-full table-fixed border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:break-words [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
-                            EmptyDataText="No sizes have been created yet.">
+                            EmptyDataText="No sizes yet.">
 
                             <Columns>
                                 <asp:BoundField DataField="SizeName" HeaderText="Size Name" />
@@ -163,7 +163,7 @@
                 </div>
 
                 <div class="space-y-4 overflow-y-auto p-5">
-                    <asp:ValidationSummary ID="validationSummaryCategory" runat="server" ValidationGroup="CategoryForm" CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800" HeaderText="Please correct the following:" DisplayMode="BulletList" />
+                    <asp:ValidationSummary ID="validationSummaryCategory" runat="server" ValidationGroup="CategoryForm" CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800" HeaderText="Check these fields:" DisplayMode="BulletList" />
                     <div>
                         <asp:Label ID="lblCategoryName" runat="server" AssociatedControlID="txtCategoryName" CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Category name"></asp:Label>
                         <asp:TextBox ID="txtCategoryName" runat="server" CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" MaxLength="100" placeholder="e.g. Espresso Drinks" autofocus="autofocus"></asp:TextBox>
@@ -195,7 +195,7 @@
                 </div>
 
                 <div class="space-y-4 overflow-y-auto p-5">
-                    <asp:ValidationSummary ID="validationSummarySize" runat="server" ValidationGroup="SizeForm" CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800" HeaderText="Please correct the following:" DisplayMode="BulletList" />
+                    <asp:ValidationSummary ID="validationSummarySize" runat="server" ValidationGroup="SizeForm" CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800" HeaderText="Check these fields:" DisplayMode="BulletList" />
                     <div>
                         <asp:Label ID="lblSizeName" runat="server" AssociatedControlID="txtSizeName" CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Size name"></asp:Label>
                         <asp:TextBox ID="txtSizeName" runat="server" CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" MaxLength="50" placeholder="e.g. Regular, Large, 16oz" autofocus="autofocus"></asp:TextBox>
@@ -226,7 +226,7 @@
                         runat="server"
                         ValidationGroup="EditCategoryForm"
                         CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"
-                        HeaderText="Please correct the following:"
+                        HeaderText="Check these fields:"
                         DisplayMode="BulletList" />
 
                     <asp:HiddenField ID="hfEditCategoryID" runat="server" />
@@ -291,10 +291,10 @@
                 <div class="overflow-y-auto p-5">
                     <asp:HiddenField ID="hfDeleteCategoryID" runat="server" />
                     <p class="mb-2">
-                        You are about to delete <strong id="deleteCategoryName"></strong>.
+                        Delete <strong id="deleteCategoryName"></strong>?
                     </p>
                     <p class="text-slate-500 text-sm mb-0">
-                        This cannot be undone. Categories that still contain products cannot be deleted.
+                        This cannot be undone. Remove products from this category first.
                     </p>
                 </div>
                 <div class="flex flex-wrap justify-end gap-2 border-t border-slate-200 px-5 py-4">
@@ -326,7 +326,7 @@
                         runat="server"
                         ValidationGroup="EditSizeForm"
                         CssClass="rounded-md border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-800"
-                        HeaderText="Please correct the following:"
+                        HeaderText="Check these fields:"
                         DisplayMode="BulletList" />
 
                     <asp:HiddenField ID="hfEditSizeID" runat="server" />
@@ -382,10 +382,10 @@
                 <div class="overflow-y-auto p-5">
                     <asp:HiddenField ID="hfDeleteSizeID" runat="server" />
                     <p class="mb-2">
-                        You are about to delete <strong id="deleteSizeName"></strong>.
+                        Delete <strong id="deleteSizeName"></strong>?
                     </p>
                     <p class="text-slate-500 text-sm mb-0">
-                        This cannot be undone. Sizes currently assigned to product variants cannot be deleted.
+                        This cannot be undone. Remove this size from product variants first.
                     </p>
                 </div>
                 <div class="flex flex-wrap justify-end gap-2 border-t border-slate-200 px-5 py-4">

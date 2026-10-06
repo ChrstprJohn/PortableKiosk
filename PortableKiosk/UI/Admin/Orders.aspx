@@ -14,7 +14,7 @@
     <main class="mx-auto w-full max-w-7xl" aria-labelledby="ordersHeading">
         <header class="mb-7">
             <h1 id="ordersHeading" class="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Orders</h1>
-            <p class="mt-1 text-sm text-slate-500">Review kiosk orders and payment information.</p>
+            <p class="mt-1 text-sm text-slate-500">View orders and payments.</p>
         </header>
 
         <div class="mb-5 grid items-end gap-x-4 gap-y-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -147,7 +147,7 @@
                     <EmptyDataTemplate>
                         <div class="px-5 py-12 text-center">
                             <p class="text-sm font-medium text-slate-800">No orders found</p>
-                            <p class="mt-1 text-sm text-slate-500">Try another order number or choose different filters.</p>
+                            <p class="mt-1 text-sm text-slate-500">Try another order number or filter.</p>
                         </div>
                     </EmptyDataTemplate>
                 </asp:GridView>

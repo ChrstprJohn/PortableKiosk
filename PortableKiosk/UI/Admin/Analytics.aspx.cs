@@ -37,7 +37,7 @@ namespace PortableKiosk.UI.Admin
             {
                 pnlReport.Visible = false;
                 pnlError.Visible = true;
-                litError.Text = "Analytics could not be loaded. Please try again.";
+                litError.Text = "Analytics failed to load. Try again.";
             }
         }
 
@@ -71,7 +71,7 @@ namespace PortableKiosk.UI.Admin
             {
                 pnlReport.Visible = false;
                 pnlError.Visible = true;
-                litError.Text = "The Excel file could not be generated. Please try again.";
+                litError.Text = "Excel export failed. Try again.";
             }
         }
 

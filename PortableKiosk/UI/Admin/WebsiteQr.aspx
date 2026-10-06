@@ -5,7 +5,7 @@
     <main id="websiteQrPage" class="mx-auto w-full max-w-4xl" aria-labelledby="qrHeading">
         <header class="mb-7">
             <h1 id="qrHeading" class="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">Website QR code</h1>
-            <p class="mt-2 text-sm leading-6 text-slate-600">Save your website link, then print a QR code people can scan to open it.</p>
+            <p class="mt-2 text-sm leading-6 text-slate-600">Save a website link and print its QR code.</p>
         </header>
 
         <asp:Panel ID="pnlMessage" runat="server" Visible="false" role="status" CssClass="mb-6 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800">
@@ -16,7 +16,7 @@
             <h2 id="linkHeading" class="mb-3 text-base font-semibold text-slate-950"><asp:Literal ID="litFormHeading" runat="server" Text="Add website link" /></h2>
             <asp:Label runat="server" AssociatedControlID="txtWebsiteUrl" Text="Website link" CssClass="mb-2 block text-sm font-medium text-slate-800" />
             <asp:TextBox ID="txtWebsiteUrl" runat="server" ClientIDMode="Static" MaxLength="2048" aria-describedby="qrLinkHelp" CssClass="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" />
-            <p id="qrLinkHelp" class="mt-2 text-sm leading-6 text-slate-600">Use a full http:// or https:// link. Save changes to update the QR code below.</p>
+            <p id="qrLinkHelp" class="mt-2 text-sm leading-6 text-slate-600">Use an http:// or https:// link. Save to update the QR code.</p>
             <div class="mt-4 flex justify-end">
                 <asp:Button ID="btnSave" runat="server" Text="Save and generate QR code" OnClick="btnSave_Click" CssClass="min-h-10 cursor-pointer rounded-md bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400" />
             </div>
@@ -30,12 +30,12 @@
             <h2 class="text-xl font-semibold text-slate-950">Portable Kiosk</h2>
             <p class="mt-2 text-base text-slate-700">Scan to open our website</p>
             <div id="websiteQrImage" class="website-qr-image" role="img" aria-label="QR code linking to the saved website"></div>
-            <p id="websiteQrError" role="alert" hidden class="my-6 text-sm text-red-800">The QR code could not be generated. Reload this page and try again.</p>
+            <p id="websiteQrError" role="alert" hidden class="my-6 text-sm text-red-800">QR code failed to load. Reload the page.</p>
             <asp:HyperLink ID="lnkWebsite" runat="server" ClientIDMode="Static" Target="_blank" rel="noopener noreferrer" CssClass="website-qr-url text-sm text-slate-700 underline underline-offset-4" />
         </asp:Panel>
 
         <div id="qrActions" class="mt-5 text-center" hidden>
-            <p id="qrLocalNotice" hidden class="mb-4 text-sm leading-6 text-slate-600">This localhost link only opens on the computer running the website. For phone scans, save a reachable network or deployed website link.</p>
+            <p id="qrLocalNotice" hidden class="mb-4 text-sm leading-6 text-slate-600">Localhost works only on this computer. For phone scans, use a link reachable from your phone.</p>
             <button id="btnPrintQr" type="button" class="min-h-10 rounded-md bg-slate-900 px-5 py-2 text-sm font-medium text-white hover:bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">Print QR code</button>
         </div>
         <noscript><p class="mt-4 text-sm text-slate-700">Enable JavaScript to display and print the QR code.</p></noscript>

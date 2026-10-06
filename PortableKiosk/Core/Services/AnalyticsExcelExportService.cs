@@ -37,7 +37,7 @@ namespace PortableKiosk.Core.Services
         public byte[] CreateDetailWorkbook(AnalyticsDetailReport detail)
         {
             if (detail == null) throw new ArgumentNullException("detail");
-            var sheet = new Sheet(detail.RowTargets.Count > 0 ? "Breakdown" : "Source records", detail.Title, detail.Period,
+            var sheet = new Sheet(detail.RowTargets.Count > 0 ? "Breakdown" : "Records", detail.Title, detail.Period,
                 detail.Columns.Select((label, index) => detail.Formats[index] == "money" ? 22 : label == "Items" ? 60 : 28).ToArray()) { Filter = true };
             sheet.Add(detail.Columns.Select(label => S(label, 2)).ToArray());
             foreach (object[] row in detail.Rows)
@@ -45,7 +45,7 @@ namespace PortableKiosk.Core.Services
                     detail.Formats[index] == "count" ? N(Convert.ToDecimal(value), 4) :
                     detail.Formats[index] == "percent" ? N(Convert.ToDecimal(value), 5) : S(Convert.ToString(value, Invariant))).ToArray());
             sheet.FilterLastRow = sheet.Rows.Count;
-            if (detail.Rows.Count == 0) sheet.AddMerged("No matching source records in this period.", 6);
+            if (detail.Rows.Count == 0) sheet.AddMerged("No records for this period.", 6);
             sheet.Add();
             sheet.AddMerged(detail.Summary, 6);
             sheet.AddMerged(detail.Description, 6);
@@ -82,7 +82,7 @@ namespace PortableKiosk.Core.Services
             sheet.Add(S("Order outcomes", 2), S("Orders", 2), S("Order value (PHP)", 2));
             sheet.AddData(S("Paid"), N(report.ConvertedOrders, 4), N(report.ConvertedValue, 3));
             sheet.AddData(S("Expired (unpaid)"), N(report.ExpiredOrders, 4), N(report.ExpiredValue, 3));
-            sheet.AddData(S("Awaiting payment"), N(Math.Max(0, report.PlacedOrders - report.ConvertedOrders - report.ExpiredOrders), 4), S("—", 3));
+            sheet.AddData(S("Remaining unpaid"), N(Math.Max(0, report.PlacedOrders - report.ConvertedOrders - report.ExpiredOrders), 4), S("—", 3));
             sheet.Add(S("Total orders placed", 7), N(report.PlacedOrders, 9), S("—", 8));
             sheet.Add();
             sheet.Add(S("Popular products · Top 5", 2), S("Units sold", 2), S("Revenue (PHP)", 2));
@@ -95,7 +95,7 @@ namespace PortableKiosk.Core.Services
                 sheet.AddData(S(product.Name), N(product.Units, 4), N(product.Revenue, 3));
             if (report.LeastProducts.Count == 0) sheet.AddMerged("No available products to show.", 6);
             sheet.Add();
-            sheet.AddMerged("Sales use payment date; outcomes use order creation date. Expired value is unpaid. Currency: PHP.", 6);
+            sheet.AddMerged("Sales: payment date. Outcomes: order date. Unpaid amounts are not revenue. Currency: PHP.", 6);
             return sheet;
         }
 

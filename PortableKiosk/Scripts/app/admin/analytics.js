@@ -74,7 +74,7 @@
         table.replaceChildren();
         table.className = 'analytics-detail-table ' + (data.RowTargets.length ? 'breakdown' : 'source-records');
         var caption = document.createElement('caption');
-        caption.textContent = data.Title + (data.RowTargets.length ? ' · Breakdown' : ' · Source records');
+        caption.textContent = data.Title + (data.RowTargets.length ? ' · Breakdown' : ' · Records');
         table.appendChild(caption);
         var head = table.createTHead().insertRow();
         data.Columns.forEach(function (label, i) { cell('th', label, head, data.Formats[i] === 'text' ? null : data.Formats[i]); });
@@ -94,7 +94,7 @@
                     if (target.Key) button.dataset.analyticsKey = target.Key;
                     button.dataset.analyticsTitle = String(value);
                     button.setAttribute('aria-haspopup', 'dialog');
-                    button.setAttribute('aria-label', String(value) + ': view underlying records');
+                    button.setAttribute('aria-label', String(value) + ': view records');
                     td.appendChild(button);
                     tr.dataset.analyticsKind = target.Kind;
                     if (target.Key) tr.dataset.analyticsKey = target.Key;
@@ -103,7 +103,7 @@
             });
         });
         if (!rows.length) {
-            var empty = cell('td', term ? 'No records match your search.' : 'No matching source records in this period.', body.insertRow());
+            var empty = cell('td', term ? 'No records match your search.' : 'No records for this period.', body.insertRow());
             empty.colSpan = data.Columns.length;
         }
         var unit = data.RowTargets.length ? ' rows' : ' records';
@@ -122,17 +122,17 @@
         content.hidden = true;
         retry.hidden = true;
         exportButton.disabled = true;
-        exportButton.textContent = 'Export this data';
+        exportButton.textContent = 'Export Excel';
         backButton.hidden = history.length === 0;
         status.hidden = false;
-        status.textContent = 'Loading source records…';
+        status.textContent = 'Loading data…';
         description.textContent = '';
         summary.textContent = '';
         modal.setAttribute('aria-busy', 'true');
         try {
             var response = await fetch(url(false), { signal: controller.signal, credentials: 'same-origin' });
             var result = await response.json();
-            if (!response.ok) throw new Error(result.Error || 'These records could not be loaded. Please try again.');
+            if (!response.ok) throw new Error(result.Error || 'Data failed to load. Try again.');
             if (version !== requestVersion) return;
             data = result;
             selection.title = data.Title;
@@ -148,7 +148,7 @@
             if (history.length) title.focus();
         } catch (error) {
             if (version !== requestVersion || error.name === 'AbortError') return;
-            status.textContent = error.message || 'These records could not be loaded. Please try again.';
+            status.textContent = error.message || 'Data failed to load. Try again.';
             retry.hidden = false;
         } finally {
             if (version === requestVersion) modal.setAttribute('aria-busy', 'false');
@@ -211,7 +211,7 @@
             link.remove();
             setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 1000);
         } catch (error) {
-            if (version === requestVersion) { status.hidden = false; status.textContent = error.message || 'Export failed. Please try again.'; }
+            if (version === requestVersion) { status.hidden = false; status.textContent = error.message || 'Export failed. Try again.'; }
         } finally {
             if (version === requestVersion) {
                 exportButton.textContent = data && data.RowTargets.length ? 'Export breakdown' : 'Export all records';

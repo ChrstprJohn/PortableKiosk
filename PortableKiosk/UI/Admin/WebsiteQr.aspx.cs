@@ -42,7 +42,7 @@ namespace PortableKiosk.UI.Admin
                 WebsiteQrCode code = service.Get();
                 txtWebsiteUrl.Text = code.WebsiteUrl;
                 BindCode(code);
-                ShowMessage("Website link saved. The QR code is ready to print.");
+                ShowMessage("Link saved. QR code ready to print.");
             }
             catch (ArgumentException exception)
             {
