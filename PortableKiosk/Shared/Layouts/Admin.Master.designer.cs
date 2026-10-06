@@ -58,6 +58,7 @@ namespace PortableKiosk.Shared.Layouts
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkStaff;
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkSettings;
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkWebsiteQr;
 
         /// <summary>
         /// litAdminName control.

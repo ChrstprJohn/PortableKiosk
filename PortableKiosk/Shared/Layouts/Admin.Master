@@ -57,6 +57,12 @@
                     <svg class="size-4 shrink-0 text-slate-500 group-aria-[current=page]/nav:text-amber-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 18.5V20" /><circle cx="10" cy="7.5" r="3.5" /><path d="M16 4.2a3.5 3.5 0 0 1 0 6.6M20 20v-1.5a3.5 3.5 0 0 0-2.7-3.4" /></svg>
                     Staff accounts
                 </a>
+                <a ID="lnkWebsiteQr" runat="server"
+                    href="~/UI/Admin/WebsiteQr.aspx"
+                    class="group/nav flex min-h-11 min-w-max items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-amber-100 aria-[current=page]:font-semibold aria-[current=page]:text-amber-900 aria-[current=page]:hover:bg-amber-100 lg:min-w-0">
+                    <svg class="size-4 shrink-0 text-slate-500 group-aria-[current=page]/nav:text-amber-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1" /><rect x="15" y="3" width="6" height="6" rx="1" /><rect x="3" y="15" width="6" height="6" rx="1" /><path d="M15 15h3v3h3v3h-6v-3M21 15v-3M12 3v3M3 12h6M12 9v6" /></svg>
+                    Website QR code
+                </a>
                 <a ID="lnkSettings" runat="server"
                     href="~/UI/Admin/Settings.aspx"
                     class="group/nav flex min-h-11 min-w-max items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 aria-[current=page]:bg-amber-100 aria-[current=page]:font-semibold aria-[current=page]:text-amber-900 aria-[current=page]:hover:bg-amber-100 lg:min-w-0">

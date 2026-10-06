@@ -162,6 +162,10 @@
     <Content Include="UI\Admin\Products.aspx" />
     <Content Include="UI\Admin\StaffAccounts.aspx" />
     <Content Include="UI\Admin\Settings.aspx" />
+    <Content Include="UI\Admin\WebsiteQr.aspx" />
+    <Content Include="Content\css\website-qr.css" />
+    <Content Include="Scripts\vendor\qrcodegen.js" />
+    <Content Include="Scripts\app\admin\website-qr.js" />
     <Content Include="UI\POS\Index.aspx" />
     <Content Include="UI\User\Cart.aspx" />
     <Content Include="UI\User\Complete.aspx" />
@@ -220,6 +224,9 @@
     <Compile Include="Core\Services\SizeService.cs" />
     <Compile Include="Core\Services\StaffAccountService.cs" />
     <Compile Include="Core\Services\KioskSettingsService.cs" />
+    <Compile Include="Core\Models\WebsiteQrCode.cs" />
+    <Compile Include="Core\Data\Repositories\WebsiteQrCodeRepository.cs" />
+    <Compile Include="Core\Services\WebsiteQrCodeService.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -339,6 +346,13 @@
     <Compile Include="UI\POS\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Admin\WebsiteQr.aspx.cs">
+      <DependentUpon>WebsiteQr.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UI\Admin\WebsiteQr.aspx.designer.cs">
+      <DependentUpon>WebsiteQr.aspx</DependentUpon>
+    </Compile>
     <Compile Include="UI\User\Cart.aspx.cs">
       <DependentUpon>Cart.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -416,6 +430,7 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Database\StoredProcedures\*.sql" />
+    <None Include="Database\Migrations\007_ADD_WEBSITE_QR_CODE.sql" />
     <None Include="Database\StoredProcedures\README.md" />
     <None Include="Database\InstallStoredProcedures.sql" />
     <None Include="Database\BuildStoredProcedures.ps1" />

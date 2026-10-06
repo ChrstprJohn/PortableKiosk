@@ -1,8 +1,8 @@
 -- Portable Kiosk database schema
 -- Microsoft SQL Server
--- Fresh database setup: run this entire file once; migrations 001-006 are included.
+-- Fresh database setup: run this entire file once; migrations 001-007 are included.
 -- Includes product descriptions, takeout table service, AWAITING_PAYMENT,
--- EXPIRED payments, kiosk settings, and SERVING (formerly READY).
+-- EXPIRED payments, kiosk settings, SERVING (formerly READY), and website QR links.
 -- For an existing installation, use the migration scripts instead.
 
 IF DB_ID(N'portable_kiosk_db') IS NULL
@@ -30,6 +30,18 @@ CREATE TABLE dbo.KioskSettings
 );
 INSERT INTO dbo.KioskSettings (SettingsID, IsAvailable, PendingPaymentExpiryMinutes)
 VALUES (1, 1, 30);
+
+CREATE TABLE dbo.WebsiteQrCode
+(
+    QrCodeID INT NOT NULL CONSTRAINT PK_WebsiteQrCode PRIMARY KEY,
+    WebsiteUrl NVARCHAR(2048) NOT NULL,
+    UpdatedAt DATETIME2 NOT NULL
+        CONSTRAINT DF_WebsiteQrCode_UpdatedAt DEFAULT SYSUTCDATETIME(),
+    CONSTRAINT CK_WebsiteQrCode_SingleRow CHECK (QrCodeID = 1),
+    CONSTRAINT CK_WebsiteQrCode_Url CHECK (
+        LEN(LTRIM(RTRIM(WebsiteUrl))) > 0 AND
+        (WebsiteUrl LIKE N'http://%' OR WebsiteUrl LIKE N'https://%'))
+);
 
 /* =========================================================
    STAFF ACCOUNTS
