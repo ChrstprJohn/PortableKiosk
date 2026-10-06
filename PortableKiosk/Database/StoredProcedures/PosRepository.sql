@@ -23,7 +23,7 @@ BEGIN
     SET NOCOUNT OFF;
     SELECT o.OrderID, o.OrderNumber, o.OrderType,
         o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
-        o.CreatedAt, p.PaymentID, p.Amount, p.PaidAt
+        o.CreatedAt, o.ExpiresAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName, p.PaymentID, p.Amount, p.PaidAt
     FROM Payments p
     INNER JOIN Orders o ON o.OrderID = p.OrderID
     WHERE p.TransactionReference = @Reference
@@ -72,6 +72,10 @@ BEGIN
         o.TableNumber,
         o.KitchenStatus,
         o.CreatedAt,
+        o.ExpiresAt,
+        o.OrderSource,
+        o.PlacedByStaffAccountID,
+        o.PlacedByName,
         COALESCE(
             o.ExpiresAt,
             DATEADD(MINUTE, @ExpiryMinutes, o.CreatedAt)
@@ -130,12 +134,26 @@ GO
 
 CREATE OR ALTER PROCEDURE dbo.Pos_CompleteKioskCashOrder_Queue
     @OrderID INT,
-    @ExpiryMinutes INT
+    @ExpiryMinutes INT,
+    @PlacedByStaffAccountID INT
 AS
 BEGIN
     SET NOCOUNT OFF;
+    DECLARE @PlacedByName NVARCHAR(200);
+    -- Save the crew who accepts payment, including orders started on the kiosk.
+    SELECT @PlacedByName = CONCAT(FirstName, N' ',
+        CASE WHEN NULLIF(LTRIM(RTRIM(MiddleName)), N'') IS NULL THEN N'' ELSE MiddleName + N' ' END,
+        LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END)
+    FROM dbo.StaffAccounts
+    WHERE StaffAccountID = @PlacedByStaffAccountID
+        AND IsActive = 1 AND StaffRole IN (N'ADMIN', N'CREW');
+    IF @PlacedByName IS NULL
+        THROW 50002, 'An active staff account is required to process an order.', 1;
     UPDATE Orders
-    SET KitchenStatus = N'QUEUED', ExpiresAt = NULL
+    SET KitchenStatus = N'QUEUED', ExpiresAt = NULL,
+        PlacedByStaffAccountID = @PlacedByStaffAccountID,
+        PlacedByName = @PlacedByName
+    OUTPUT INSERTED.PlacedByStaffAccountID, INSERTED.PlacedByName
     WHERE OrderID = @OrderID
         AND KitchenStatus = N'AWAITING_PAYMENT'
         AND COALESCE(

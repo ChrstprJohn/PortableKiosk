@@ -373,7 +373,10 @@ BEGIN
         TableNumber,
         KitchenStatus,
         ExpiresAt,
-        CreatedAt
+        CreatedAt,
+        OrderSource,
+        PlacedByStaffAccountID,
+        PlacedByName
     FROM Orders
     WHERE OrderID = @Value;
 END;
@@ -392,7 +395,10 @@ BEGIN
         TableNumber,
         KitchenStatus,
         ExpiresAt,
-        CreatedAt
+        CreatedAt,
+        OrderSource,
+        PlacedByStaffAccountID,
+        PlacedByName
     FROM Orders
     WHERE OrderNumber = @Value;
 END;
@@ -410,7 +416,10 @@ BEGIN
         TableNumber,
         KitchenStatus,
         ExpiresAt,
-        CreatedAt
+        CreatedAt,
+        OrderSource,
+        PlacedByStaffAccountID,
+        PlacedByName
     FROM Orders
     ORDER BY CreatedAt DESC, OrderID DESC;
 END;
@@ -423,7 +432,7 @@ BEGIN
     SET NOCOUNT OFF;
     SELECT o.OrderID, o.OrderNumber, o.OrderType,
         o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
-        o.ExpiresAt, o.CreatedAt
+        o.ExpiresAt, o.CreatedAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName
     FROM Orders o
     WHERE (o.KitchenStatus IN (N'QUEUED', N'PREPARING', N'SERVING')
         OR (@IncludeCompleted = 1 AND o.KitchenStatus = N'COMPLETED'))
@@ -539,23 +548,48 @@ CREATE OR ALTER PROCEDURE dbo.Order_Add_Insert
     @FulfillmentMethod NVARCHAR(20),
     @TableNumber NVARCHAR(20),
     @KitchenStatus NVARCHAR(20),
-    @ExpiresAt DATETIME2(7)
+    @ExpiresAt DATETIME2(7),
+    @OrderSource NVARCHAR(10) = N'KIOSK',
+    @PlacedByStaffAccountID INT = NULL
 AS
 BEGIN
     SET NOCOUNT OFF;
+    DECLARE @PlacedByName NVARCHAR(200);
+    IF @OrderSource IS NULL OR @OrderSource NOT IN (N'KIOSK', N'POS')
+        THROW 50001, 'Invalid order source.', 1;
+    IF @OrderSource = N'POS'
+    BEGIN
+        -- Store the name at placement so later account changes retain order history.
+        SELECT @PlacedByName = CONCAT(FirstName, N' ',
+            CASE WHEN NULLIF(LTRIM(RTRIM(MiddleName)), N'') IS NULL THEN N'' ELSE MiddleName + N' ' END,
+            LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END)
+        FROM dbo.StaffAccounts
+        WHERE StaffAccountID = @PlacedByStaffAccountID
+            AND IsActive = 1 AND StaffRole IN (N'ADMIN', N'CREW');
+        IF @PlacedByName IS NULL
+            THROW 50002, 'An active staff account is required for a POS order.', 1;
+    END
+    ELSE IF @PlacedByStaffAccountID IS NOT NULL
+        THROW 50003, 'Kiosk orders cannot have a staff creator.', 1;
     INSERT INTO Orders
         (
             OrderNumber,
+            OrderSource,
+            PlacedByStaffAccountID,
+            PlacedByName,
             OrderType,
             FulfillmentMethod,
             TableNumber,
             KitchenStatus,
             ExpiresAt
         )
-    OUTPUT INSERTED.OrderID, INSERTED.CreatedAt
+    OUTPUT INSERTED.OrderID, INSERTED.CreatedAt, INSERTED.PlacedByName
     VALUES
         (
             @OrderNumber,
+            @OrderSource,
+            @PlacedByStaffAccountID,
+            @PlacedByName,
             @OrderType,
             @FulfillmentMethod,
             @TableNumber,
@@ -756,7 +790,7 @@ BEGIN
     SET NOCOUNT OFF;
     SELECT o.OrderID, o.OrderNumber, o.OrderType,
         o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
-        o.CreatedAt, p.PaymentID, p.Amount, p.PaidAt
+        o.CreatedAt, o.ExpiresAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName, p.PaymentID, p.Amount, p.PaidAt
     FROM Payments p
     INNER JOIN Orders o ON o.OrderID = p.OrderID
     WHERE p.TransactionReference = @Reference
@@ -805,6 +839,10 @@ BEGIN
         o.TableNumber,
         o.KitchenStatus,
         o.CreatedAt,
+        o.ExpiresAt,
+        o.OrderSource,
+        o.PlacedByStaffAccountID,
+        o.PlacedByName,
         COALESCE(
             o.ExpiresAt,
             DATEADD(MINUTE, @ExpiryMinutes, o.CreatedAt)
@@ -863,12 +901,26 @@ GO
 
 CREATE OR ALTER PROCEDURE dbo.Pos_CompleteKioskCashOrder_Queue
     @OrderID INT,
-    @ExpiryMinutes INT
+    @ExpiryMinutes INT,
+    @PlacedByStaffAccountID INT
 AS
 BEGIN
     SET NOCOUNT OFF;
+    DECLARE @PlacedByName NVARCHAR(200);
+    -- Save the crew who accepts payment, including orders started on the kiosk.
+    SELECT @PlacedByName = CONCAT(FirstName, N' ',
+        CASE WHEN NULLIF(LTRIM(RTRIM(MiddleName)), N'') IS NULL THEN N'' ELSE MiddleName + N' ' END,
+        LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END)
+    FROM dbo.StaffAccounts
+    WHERE StaffAccountID = @PlacedByStaffAccountID
+        AND IsActive = 1 AND StaffRole IN (N'ADMIN', N'CREW');
+    IF @PlacedByName IS NULL
+        THROW 50002, 'An active staff account is required to process an order.', 1;
     UPDATE Orders
-    SET KitchenStatus = N'QUEUED', ExpiresAt = NULL
+    SET KitchenStatus = N'QUEUED', ExpiresAt = NULL,
+        PlacedByStaffAccountID = @PlacedByStaffAccountID,
+        PlacedByName = @PlacedByName
+    OUTPUT INSERTED.PlacedByStaffAccountID, INSERTED.PlacedByName
     WHERE OrderID = @OrderID
         AND KitchenStatus = N'AWAITING_PAYMENT'
         AND COALESCE(

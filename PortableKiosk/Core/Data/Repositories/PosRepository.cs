@@ -61,18 +61,7 @@ namespace PortableKiosk.Core.Data.Repositories
                             {
                                 if (reader.Read())
                                 {
-                                    int tableNumber = reader.GetOrdinal("TableNumber");
-                                    existingOrder = new Order
-                                    {
-                                        OrderID = reader.GetInt32(reader.GetOrdinal("OrderID")),
-                                        OrderNumber = reader.GetString(reader.GetOrdinal("OrderNumber")),
-                                        OrderType = reader.GetString(reader.GetOrdinal("OrderType")),
-                                        FulfillmentMethod = reader.GetString(reader.GetOrdinal("FulfillmentMethod")),
-                                        TableNumber = reader.IsDBNull(tableNumber)
-                                            ? null : reader.GetString(tableNumber),
-                                        KitchenStatus = reader.GetString(reader.GetOrdinal("KitchenStatus")),
-                                        CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"))
-                                    };
+                                    existingOrder = OrderRepository.Map(reader);
                                     payment.PaymentID = reader.GetInt32(reader.GetOrdinal("PaymentID"));
                                     payment.OrderID = existingOrder.OrderID;
                                     payment.Amount = reader.GetDecimal(reader.GetOrdinal("Amount"));
@@ -165,9 +154,10 @@ namespace PortableKiosk.Core.Data.Repositories
             int orderID,
             string originalItemsSignature,
             IList<OrderItem> items,
-            Payment payment)
+            Payment payment,
+            int staffAccountID)
         {
-            if (orderID <= 0 || items == null || items.Count == 0 ||
+            if (orderID <= 0 || staffAccountID <= 0 || items == null || items.Count == 0 ||
                 payment == null || payment.OrderID != orderID ||
                 string.IsNullOrEmpty(originalItemsSignature))
             {
@@ -212,21 +202,7 @@ namespace PortableKiosk.Core.Data.Repositories
                                         "This kiosk order is no longer available.");
                                 }
 
-                                int tableNumber = reader.GetOrdinal("TableNumber");
-                                order = new Order
-                                {
-                                    OrderID = reader.GetInt32(reader.GetOrdinal("OrderID")),
-                                    OrderNumber = reader.GetString(reader.GetOrdinal("OrderNumber")),
-                                    OrderType = reader.GetString(reader.GetOrdinal("OrderType")),
-                                    FulfillmentMethod = reader.GetString(
-                                        reader.GetOrdinal("FulfillmentMethod")),
-                                    TableNumber = reader.IsDBNull(tableNumber)
-                                        ? null
-                                        : reader.GetString(tableNumber),
-                                    KitchenStatus = reader.GetString(
-                                        reader.GetOrdinal("KitchenStatus")),
-                                    CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt"))
-                                };
+                                order = OrderRepository.Map(reader);
                                 expiresAt = reader.GetDateTime(
                                     reader.GetOrdinal("EffectiveExpiresAt"));
                                 payment.PaymentID = reader.GetInt32(
@@ -312,10 +288,16 @@ namespace PortableKiosk.Core.Data.Repositories
                             command.Parameters.Add("@ExpiryMinutes", SqlDbType.Int).Value =
                                 OrderSettings.LegacyPendingPaymentExpiryMinutes;
 
-                            if (command.ExecuteNonQuery() != 1)
+                            command.Parameters.Add("@PlacedByStaffAccountID", SqlDbType.Int).Value = staffAccountID;
+                            using (SqlDataReader reader = command.ExecuteReader())
                             {
-                                throw new InvalidOperationException(
-                                    "This kiosk order expired before payment. Choose another order.");
+                                if (!reader.Read())
+                                {
+                                    throw new InvalidOperationException(
+                                        "This kiosk order expired before payment. Choose another order.");
+                                }
+                                order.PlacedByStaffAccountID = reader.GetInt32(0);
+                                order.PlacedByName = reader.GetString(1);
                             }
                         }
 

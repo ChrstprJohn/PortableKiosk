@@ -306,12 +306,16 @@ namespace PortableKiosk.Core.Data.Repositories
                     command,
                     order,
                     insertedOrderNumber);
+                command.Parameters.Add("@OrderSource", SqlDbType.NVarChar, 10).Value = order.OrderSource;
+                command.Parameters.Add("@PlacedByStaffAccountID", SqlDbType.Int).Value =
+                    (object)order.PlacedByStaffAccountID ?? DBNull.Value;
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
                     reader.Read();
                     order.OrderID = reader.GetInt32(0);
                     order.CreatedAt = reader.GetDateTime(1);
+                    order.PlacedByName = reader.IsDBNull(2) ? null : reader.GetString(2);
                 }
             }
 
@@ -414,7 +418,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     : DBNull.Value;
         }
 
-        private static Order Map(SqlDataReader reader)
+        internal static Order Map(SqlDataReader reader)
         {
             int tableNumberOrdinal = reader.GetOrdinal("TableNumber");
             int expiresAtOrdinal = reader.GetOrdinal("ExpiresAt");
@@ -438,7 +442,12 @@ namespace PortableKiosk.Core.Data.Repositories
                     ? (DateTime?)null
                     : reader.GetDateTime(expiresAtOrdinal),
                 CreatedAt = reader.GetDateTime(
-                    reader.GetOrdinal("CreatedAt"))
+                    reader.GetOrdinal("CreatedAt")),
+                OrderSource = reader.GetString(reader.GetOrdinal("OrderSource")),
+                PlacedByStaffAccountID = reader.IsDBNull(reader.GetOrdinal("PlacedByStaffAccountID"))
+                    ? (int?)null : reader.GetInt32(reader.GetOrdinal("PlacedByStaffAccountID")),
+                PlacedByName = reader.IsDBNull(reader.GetOrdinal("PlacedByName"))
+                    ? null : reader.GetString(reader.GetOrdinal("PlacedByName"))
             };
         }
 

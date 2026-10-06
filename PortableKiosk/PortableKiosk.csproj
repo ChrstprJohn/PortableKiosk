@@ -439,7 +439,12 @@
     <None Include="Database\StoredProcedures\*.sql" />
     <None Include="Database\Migrations\007_ADD_WEBSITE_QR_CODE.sql" />
     <None Include="Database\Migrations\008_DISABLE_IDENTITY_CACHE.sql" />
-    <None Include="Database\Commands\UPDATE ANALYTICS AND ORDER NUMBER CACHE.sql" />
+    <None Include="Database\Migrations\009_ADD_ORDER_PLACED_BY.sql" />
+    <None Include="Database\Migrations\Upgrades\UPDATE ORDER PLACED BY.sql" />
+    <None Include="Database\Migrations\Upgrades\UPDATE ANALYTICS AND ORDER NUMBER CACHE.sql" />
+    <None Include="Database\Commands\RESET DATA KEEP USERS.sql" />
+    <None Include="Database\Commands\README.md" />
+    <None Include="Database\Migrations\Upgrades\README.md" />
     <None Include="Database\StoredProcedures\README.md" />
     <None Include="Database\InstallStoredProcedures.sql" />
     <None Include="Database\BuildStoredProcedures.ps1" />

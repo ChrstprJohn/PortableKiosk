@@ -1,5 +1,7 @@
 # Portable Kiosk
 
+To clear non-user data before repopulating the catalog, run `PortableKiosk/Database/Commands/RESET DATA KEEP USERS.sql`, then `PortableKiosk/Database/Commands/POPULATE CATALOG.sql`. The reset preserves all admin/crew accounts, clears orders/payments/catalog and the saved QR link, restores default kiosk settings, and restarts catalog/order IDs at 1. See `Database/Commands/README.md` for details. Combined schema/procedure upgrades are in `PortableKiosk/Database/Migrations/Upgrades/`.
+
 For an existing `portable_kiosk_db`, apply any migrations not yet run in numeric order. If migration 005 was the last one applied, run `PortableKiosk/Database/Migrations/006_RENAME_READY_TO_SERVING.sql` once before deploying this version. It converts existing kitchen orders from `READY` to `SERVING` and updates the status constraint. If 005 has not been applied, run it before 006.
 
 For the admin website QR page, apply `PortableKiosk/Database/Migrations/007_ADD_WEBSITE_QR_CODE.sql` to an existing database, then run `PortableKiosk/Database/InstallStoredProcedures.sql` (or just `StoredProcedures/WebsiteQrCodeRepository.sql` if the other procedures are already installed). Migration 007 is safe to rerun and keeps any saved link.

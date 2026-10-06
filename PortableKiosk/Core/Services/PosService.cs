@@ -233,20 +233,21 @@ namespace PortableKiosk.Core.Services
             }
         }
 
-        public PosReceipt CompleteCashSale(PosSale sale, decimal tendered)
+        public PosReceipt CompleteCashSale(PosSale sale, decimal tendered, int staffAccountID)
         {
-            return CompleteSale(sale, "CASH_COUNTER", tendered);
+            return CompleteSale(sale, "CASH_COUNTER", tendered, staffAccountID);
         }
 
-        public PosReceipt CompleteMockCashlessSale(PosSale sale)
+        public PosReceipt CompleteMockCashlessSale(PosSale sale, int staffAccountID)
         {
             ValidateSale(sale);
-            return CompleteSale(sale, "CASHLESS", sale.Cart.TotalAmount);
+            return CompleteSale(sale, "CASHLESS", sale.Cart.TotalAmount, staffAccountID);
         }
 
-        private PosReceipt CompleteSale(PosSale sale, string paymentMethod, decimal tendered)
+        private PosReceipt CompleteSale(PosSale sale, string paymentMethod, decimal tendered, int staffAccountID)
         {
             ValidateSale(sale);
+            if (staffAccountID <= 0) throw new ArgumentException("Sign in before placing a POS order.");
 
             if (sale.Cart.IsEmpty)
             {
@@ -310,7 +311,7 @@ namespace PortableKiosk.Core.Services
 
                 order = posRepository.CompleteKioskCashOrder(
                     sale.SourceOrderID.Value, sale.OriginalItemsSignature,
-                    items, payment);
+                    items, payment, staffAccountID);
             }
             else
             {
@@ -322,6 +323,8 @@ namespace PortableKiosk.Core.Services
 
                 order = new Order
                 {
+                    OrderSource = "POS",
+                    PlacedByStaffAccountID = staffAccountID,
                     OrderType = sale.OrderType,
                     FulfillmentMethod = "COUNTER_PICKUP",
                     KitchenStatus = "QUEUED"

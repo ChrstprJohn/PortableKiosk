@@ -10,11 +10,28 @@ namespace PortableKiosk.Core.Models
             OrderType = "DINE_IN";
             FulfillmentMethod = "COUNTER_PICKUP";
             KitchenStatus = "QUEUED";
+            OrderSource = "KIOSK";
         }
 
         public int OrderID { get; set; }
 
         public string OrderNumber { get; set; }
+
+        public string OrderSource { get; set; }
+
+        public int? PlacedByStaffAccountID { get; set; }
+
+        public string PlacedByName { get; set; }
+
+        public string PlacedByDisplay
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(PlacedByName)) return PlacedByName;
+                if (PlacedByStaffAccountID.HasValue) return "Staff #" + PlacedByStaffAccountID.Value;
+                return "Not recorded";
+            }
+        }
 
         public string OrderType { get; set; }
 

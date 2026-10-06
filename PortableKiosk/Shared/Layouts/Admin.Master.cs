@@ -169,8 +169,7 @@ namespace PortableKiosk.Shared.Layouts
                     ? "Admin"
                     : Convert.ToString(Session["StaffRole"]));
 
-            string pagePath =
-                Request.AppRelativeCurrentExecutionFilePath;
+            string pagePath = Page.AppRelativeVirtualPath;
 
             SetCurrentPage(lnkCatalogConfig, pagePath.EndsWith(
                 "CatalogConfig.aspx",
@@ -187,7 +186,7 @@ namespace PortableKiosk.Shared.Layouts
             SetCurrentPage(lnkStaff, pagePath.EndsWith(
                 "StaffAccounts.aspx",
                 StringComparison.OrdinalIgnoreCase));
-            SetCurrentPage(lnkWebsiteQr, Page.AppRelativeVirtualPath.EndsWith(
+            SetCurrentPage(lnkWebsiteQr, pagePath.EndsWith(
                 "WebsiteQr.aspx",
                 StringComparison.OrdinalIgnoreCase));
             SetCurrentPage(lnkSettings, pagePath.EndsWith(

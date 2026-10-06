@@ -265,7 +265,8 @@ namespace PortableKiosk.UI.POS
             if (!CanAct(CashlessStage)) return;
             try
             {
-                Current.Receipt = posService.CompleteMockCashlessSale(Current.Sale);
+                Current.Receipt = posService.CompleteMockCashlessSale(
+                    Current.Sale, Convert.ToInt32(Session["StaffAccountID"]));
                 CaptureReceiptIssuer(Current.Receipt);
                 Current.Sale = null;
                 Current.Stage = ReceiptStage;
@@ -302,7 +303,7 @@ namespace PortableKiosk.UI.POS
             try
             {
                 PosReceipt receipt = posService.CompleteCashSale(
-                    Current.Sale, tendered);
+                    Current.Sale, tendered, Convert.ToInt32(Session["StaffAccountID"]));
                 CaptureReceiptIssuer(receipt);
                 Current.Receipt = receipt;
                 Current.Sale = null;
