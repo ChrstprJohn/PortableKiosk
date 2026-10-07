@@ -20,3 +20,5 @@ npm run build:css
 ```
 
 For local styling work, run `npm run watch:css` in the foreground and stop it when finished. Tailwind scans the ASPX pages, master pages, controls, C# class strings, and app scripts. The existing kiosk-specific and Web Forms rules in `Content/Site.css` and `Content/css/user-kiosk.css` are source files imported by `Content/tailwind.input.css`; pages load only the compiled stylesheet.
+
+The welcome hero also loads `Content/css/welcome-hero.css` directly from `Default.aspx`, keeping its styling separate from the shared kiosk rules. `npm run build:css` validates required app utilities before replacing the compiled stylesheet. If source scanning fails in a restricted environment, the build reports an error and preserves the existing CSS. Run `npm run build:css -- --check` to validate without replacing it.

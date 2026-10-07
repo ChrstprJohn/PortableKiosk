@@ -104,11 +104,13 @@
     <None Include="Content\Site.css" />
     <Content Include="Content\tailwind.css" />
     <Content Include="Content\images\kiosk-attract.jpg" />
+    <Content Include="Content\images\hero\*.webp" />
     <Content Include="Content\images\portable-kiosk-logo.png" />
     <Content Include="Content\images\order-status-mascot.png" />
     <Content Include="Content\images\products\**\*.jpg" />
     <None Include="Content\tailwind.input.css" />
     <None Include="Content\css\user-kiosk.css" />
+    <Content Include="Content\css\welcome-hero.css" />
     <Content Include="Content\css\kitchen-board.css" />
     <Content Include="Content\css\order-status.css" />
     <Content Include="Default.aspx" />

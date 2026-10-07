@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Tailwind CSS build for the ASP.NET Web Forms kiosk",
   "scripts": {
-    "build:css": "tailwindcss -i ./PortableKiosk/Content/tailwind.input.css -o ./PortableKiosk/Content/tailwind.css --minify",
+    "build:css": "node scripts/build-css.cjs",
     "watch:css": "tailwindcss -i ./PortableKiosk/Content/tailwind.input.css -o ./PortableKiosk/Content/tailwind.css --watch"
   },
   "repository": {

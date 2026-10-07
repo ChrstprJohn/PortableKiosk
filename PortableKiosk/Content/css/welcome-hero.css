@@ -1,0 +1,196 @@
+/* Welcome hero: portrait artwork on phones and kiosks, wide artwork on the web. */
+body:has(.kiosk-attract-page),
+body:has(.kiosk-attract-page) .body-content {
+    background: #faf7f1;
+    overflow: auto;
+}
+
+.kiosk-attract-page {
+    --attract-canvas: #faf7f1;
+    --attract-ink: #29251f;
+    --attract-muted: #62594d;
+    --attract-accent: #f5ae24;
+    --attract-accent-hover: #e99b0e;
+    --attract-gutter: clamp(1.5rem, 6vw, 6rem);
+    background: var(--attract-canvas);
+    color: var(--attract-ink);
+    display: flex;
+    flex-direction: column;
+    isolation: isolate;
+    min-height: max(34rem, 100vh);
+    min-height: max(34rem, 100svh);
+    overflow: hidden;
+    padding: max(1.25rem, env(safe-area-inset-top)) max(var(--attract-gutter), env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)) max(var(--attract-gutter), env(safe-area-inset-left));
+    position: relative;
+}
+
+.kiosk-attract-page ::selection {
+    background: var(--attract-accent);
+    color: var(--attract-ink);
+}
+
+.kiosk-attract-art {
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: -1;
+}
+
+.kiosk-attract-art img {
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    width: 100%;
+}
+
+.kiosk-attract-brand {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    font-size: clamp(0.95rem, 1.6vw, 1.25rem);
+    font-weight: 700;
+    gap: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.kiosk-attract-brand img {
+    height: clamp(2.25rem, 4.5vw, 3rem);
+    object-fit: contain;
+    width: clamp(2.25rem, 4.5vw, 3rem);
+}
+
+.kiosk-attract-content {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    padding-top: clamp(1.5rem, 5vh, 5rem);
+    text-align: center;
+}
+
+.kiosk-attract-copy {
+    flex: 1 1 auto;
+}
+
+.kiosk-attract-copy h1 {
+    font-size: clamp(2rem, 6vw, 5.5rem);
+    font-weight: 750;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+    margin: 0;
+    text-wrap: balance;
+}
+
+.kiosk-attract-copy p {
+    color: var(--attract-muted);
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    line-height: 1.5;
+    margin: 1rem 0 0;
+}
+
+.kiosk-attract-page .kiosk-attract-actions {
+    min-height: 0;
+    flex: 0 0 auto;
+    padding: 1.5rem 0 0;
+}
+
+.kiosk-attract-page .kiosk-start-order {
+    appearance: none;
+    background: var(--attract-accent);
+    border: 0;
+    border-radius: 12px;
+    color: var(--attract-ink);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: clamp(1.125rem, 2.2vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.25;
+    max-width: 32rem;
+    min-height: clamp(3.5rem, 7vh, 6rem);
+    padding: 1rem 2rem;
+    touch-action: manipulation;
+    transition: background-color 180ms ease-out, transform 180ms ease-out;
+    width: 100%;
+}
+
+.kiosk-attract-page .kiosk-start-order:focus-visible {
+    outline: 3px solid var(--attract-ink);
+    outline-offset: 5px;
+}
+
+.kiosk-attract-page .kiosk-start-order:active {
+    background: var(--attract-accent-hover);
+    transform: scale(0.98);
+}
+
+.kiosk-attract-unavailable {
+    background: var(--attract-canvas);
+    border-radius: 12px;
+    margin-inline: auto;
+    max-width: 32rem;
+    padding: 1rem;
+}
+
+.kiosk-attract-unavailable h2 {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.kiosk-attract-unavailable p {
+    color: var(--attract-muted);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0.5rem 0 0;
+}
+
+@media (min-aspect-ratio: 6/5) {
+    .kiosk-attract-page {
+        min-height: max(22rem, 100vh);
+        min-height: max(22rem, 100svh);
+        padding-block: clamp(1.25rem, 4vh, 3rem);
+    }
+
+    .kiosk-attract-art img {
+        object-position: right center;
+    }
+
+    .kiosk-attract-content {
+        justify-content: center;
+        max-width: 46%;
+        padding-block: 2rem;
+        text-align: left;
+    }
+
+    .kiosk-attract-copy {
+        flex: 0 0 auto;
+    }
+
+    .kiosk-attract-copy h1 {
+        font-size: clamp(2rem, min(5vw, 8vh), 5.5rem);
+    }
+
+    .kiosk-attract-page .kiosk-attract-actions {
+        padding-top: clamp(1.5rem, 4vh, 3rem);
+    }
+
+    .kiosk-attract-page .kiosk-start-order {
+        max-width: 22rem;
+    }
+
+    .kiosk-attract-unavailable {
+        margin-inline: 0;
+    }
+}
+
+@media (hover: hover) {
+    .kiosk-attract-page .kiosk-start-order:hover {
+        background: var(--attract-accent-hover);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kiosk-attract-page .kiosk-start-order {
+        transition: none;
+    }
+}
