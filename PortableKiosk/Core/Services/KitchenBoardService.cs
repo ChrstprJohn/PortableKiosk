@@ -13,9 +13,11 @@ namespace PortableKiosk.Core.Services
         private readonly OrderItemRepository itemRepository = new OrderItemRepository();
         private readonly PaymentRepository paymentRepository = new PaymentRepository();
 
-        public List<KitchenOrderCard> GetPaidOrders(bool includeCompleted = false)
+        public List<KitchenOrderCard> GetPaidOrders(bool includeCompleted = false,
+            KitchenCompletedFilter completedFilter = null)
         {
             return orderRepository.GetPaidKitchenOrders(includeCompleted)
+                .Where(order => completedFilter == null || completedFilter.Includes(order))
                 .Select(order => new KitchenOrderCard
                 {
                     OrderID = order.OrderID,

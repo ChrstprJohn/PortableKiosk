@@ -144,7 +144,8 @@ body:has(.kiosk-attract-page) .body-content {
     margin: 0.5rem 0 0;
 }
 
-@media (max-width: 699px) {
+/* Keep the mobile logo treatment on portrait tablets and kiosks too. */
+@media (max-width: 699px), (max-aspect-ratio: 6/5) {
     .kiosk-attract-brand {
         justify-content: center;
     }

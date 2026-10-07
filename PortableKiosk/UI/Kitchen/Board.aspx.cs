@@ -16,9 +16,12 @@ namespace PortableKiosk.UI.Kitchen
         private readonly KitchenBoardService boardService = new KitchenBoardService();
 
         protected string ProfileName { get; private set; }
+        protected KitchenCompletedFilter CompletedFilter { get; private set; }
 
         protected void Page_Init(object sender, EventArgs e)
         {
+            CompletedFilter = KitchenCompletedFilter.Create(Request.QueryString["completed"],
+                Request.QueryString["from"], Request.QueryString["to"], DateTime.UtcNow);
             if (IsAuthorized() && !IsPostBack)
             {
                 BindBoard();
@@ -101,7 +104,7 @@ namespace PortableKiosk.UI.Kitchen
                     BindBoard();
                     return;
                 }
-                Response.Redirect(Request.Url.AbsolutePath, false);
+                Response.Redirect(Request.RawUrl, false);
                 Context.ApplicationInstance.CompleteRequest();
             }
             catch (SqlException)
@@ -114,7 +117,7 @@ namespace PortableKiosk.UI.Kitchen
         {
             try
             {
-                List<KitchenOrderCard> cards = boardService.GetPaidOrders(true);
+                List<KitchenOrderCard> cards = boardService.GetPaidOrders(true, CompletedFilter);
 
                 BindColumn(rptQueued, litQueuedCount, emptyQueued, cards, "QUEUED");
                 BindColumn(rptPreparing, litPreparingCount, emptyPreparing, cards, "PREPARING");

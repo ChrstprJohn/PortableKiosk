@@ -1,14 +1,36 @@
 <%@ Page Title="Kitchen Board" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Board.aspx.cs" Inherits="PortableKiosk.UI.Kitchen.Board" %>
 
 <asp:Content ID="HeadContent" ContentPlaceHolderID="HeadContent" runat="server">
-    <meta http-equiv="refresh" content="20" />
-    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/kitchen-board.css") %>?v=5" />
+    <link rel="stylesheet" href="<%= ResolveUrl("~/Content/css/kitchen-board.css") %>?v=6" />
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <main class="kitchen-board">
         <div class="kitchen-toolbar">
             <h1>Kitchen</h1>
+            <div class="kitchen-toolbar-actions">
+            <details id="kitchenSettings" class="kitchen-settings" <%= CompletedFilter.Error != null ? "open" : string.Empty %>>
+                <summary class="kitchen-settings-trigger"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 3-.5 2-2 1-2-.5-2 3.5L4 10v3l-1.5 1L4.5 18l2-.5 2 1 .5 2h4l.5-2 2-1 2 .5 2-3.5-1.5-1v-3l1.5-1-2-3.5-2 .5-2-1-.5-2Z" /><circle cx="11" cy="11.5" r="3" /></svg>Settings</summary>
+                <div class="kitchen-settings-panel" role="region" aria-labelledby="kitchenSettingsHeading">
+                    <h2 id="kitchenSettingsHeading">Completed orders</h2>
+                    <p id="completedDateHint" class="kitchen-settings-hint">Filter by order date in Philippine time. Active orders always stay visible.</p>
+                    <label for="completedPeriod" class="kitchen-settings-label">Order date</label>
+                    <select id="completedPeriod" class="kitchen-settings-input" aria-describedby="completedDateHint">
+                        <option value="today" <%= CompletedFilter.Period == "today" ? "selected" : string.Empty %>>Today</option>
+                        <option value="yesterday" <%= CompletedFilter.Period == "yesterday" ? "selected" : string.Empty %>>Yesterday</option>
+                        <option value="custom" <%= CompletedFilter.Period == "custom" ? "selected" : string.Empty %>>Custom date range</option>
+                        <option value="all" <%= CompletedFilter.Period == "all" ? "selected" : string.Empty %>>All time</option>
+                    </select>
+                    <div id="completedDateRange" class="kitchen-settings-dates" <%= CompletedFilter.Period != "custom" ? "hidden" : string.Empty %>>
+                        <label for="completedFrom" class="kitchen-settings-label">From</label>
+                        <input id="completedFrom" class="kitchen-settings-input" type="date" min="1753-01-01" max="9999-12-30" value="<%: CompletedFilter.FromDate %>" aria-describedby="completedFilterError" />
+                        <label for="completedTo" class="kitchen-settings-label">To</label>
+                        <input id="completedTo" class="kitchen-settings-input" type="date" min="1753-01-01" max="9999-12-30" value="<%: CompletedFilter.ToDate %>" aria-describedby="completedFilterError" />
+                    </div>
+                    <p id="completedFilterError" class="kitchen-settings-error" role="alert" <%= CompletedFilter.Error == null ? "hidden" : string.Empty %>><%: CompletedFilter.Error %></p>
+                    <button id="applyKitchenSettings" class="kitchen-settings-apply" type="button">Apply</button>
+                </div>
+            </details>
             <details id="kitchenProfile" class="kitchen-profile">
                 <summary class="kitchen-profile-trigger" aria-label="Profile menu">
                     <span class="kitchen-avatar" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.25" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></svg></span>
@@ -20,6 +42,7 @@
                     <a runat="server" href="~/UI/Account/SignOut.aspx"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3" /><path d="M12 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" /></svg>Sign out</a>
                 </div>
             </details>
+            </div>
         </div>
         <asp:Label ID="lblError" runat="server" EnableViewState="false" Visible="false" CssClass="kitchen-error" role="alert" />
         <div class="kitchen-columns">
@@ -85,7 +108,7 @@
                     <div class="kitchen-status-row"><span class="kitchen-status-label">Status</span><asp:HiddenField ID="hidOrderID" runat="server" Value='<%# Eval("OrderID") %>' /><asp:HiddenField ID="hidCurrentStatus" runat="server" Value='<%# Eval("KitchenStatus") %>' /><asp:DropDownList ID="ddlStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="StatusChanged" CssClass="kitchen-status" aria-label='<%# "Status for order " + Eval("OrderNumberDisplay") %>'><asp:ListItem Text="Queued" Value="QUEUED" /><asp:ListItem Text="Preparing" Value="PREPARING" /><asp:ListItem Text="Serving" Value="SERVING" /></asp:DropDownList></div>
                     </div>
                 </details>
-                </ItemTemplate></asp:Repeater><asp:PlaceHolder ID="emptyCompleted" runat="server"><p class="kitchen-empty">No completed orders yet</p></asp:PlaceHolder></div>
+                </ItemTemplate></asp:Repeater><asp:PlaceHolder ID="emptyCompleted" runat="server"><p class="kitchen-empty"><%: CompletedFilter.EmptyMessage %></p></asp:PlaceHolder></div>
             </section>
         </div>
     </main>
@@ -93,5 +116,5 @@
 </asp:Content>
 
 <asp:Content ID="ScriptsContent" ContentPlaceHolderID="ScriptsContent" runat="server">
-    <script src="<%= ResolveUrl("~/Scripts/app/kitchen/board.js") %>?v=3"></script>
+    <script src="<%= ResolveUrl("~/Scripts/app/kitchen/board.js") %>?v=4"></script>
 </asp:Content>

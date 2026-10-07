@@ -12,6 +12,8 @@ For a fresh database, run `PortableKiosk/Database/Schema.sql` once, then `Portab
 
 Open **Website QR code** in the admin sidebar. The first visit suggests the current website's `Default.aspx` URL, including the local port and application path. Save it to create the single QR record; later saves edit that record. The QR contains only the saved URL and is generated locally using the bundled [Project Nayuki QR library](https://www.nayuki.io/page/qr-code-generator-library) (MIT). **Print QR code** prints the QR sign and link without the admin navigation or editor. Editing the URL requires reprinting existing signs. A localhost URL is only reachable on the hosting computer; phone scans need a reachable LAN or deployed URL and appropriate server bindings.
 
+On the Kitchen board, open **Settings** to filter Completed orders by **Today** (the default), **Yesterday**, **Custom date range**, or **All time**, then select **Apply**. Dates use the order's placement date in Philippine time; completion timestamps are not recorded. Both custom end dates and start dates are inclusive. The filter stays in the URL through refreshes and status updates, and never hides Queued, Preparing, or Serving orders. Automatic refresh pauses while Settings is open. No database migration is needed. Run `tests/VerifyKitchenCompletedFilter.ps1` to check the date boundaries and active-order behavior.
+
 The Web Forms app uses Tailwind CSS 4. Bootstrap is no longer required. The compiled stylesheet is `PortableKiosk/Content/tailwind.css` and is included in the ASP.NET project, so deployment does not require Node.js.
 
 After changing page classes or stylesheet sources, regenerate it from the repository root:

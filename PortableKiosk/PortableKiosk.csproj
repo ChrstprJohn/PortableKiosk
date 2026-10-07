@@ -227,6 +227,7 @@
     <Compile Include="Core\Services\CartService.cs" />
     <Compile Include="Core\Services\OrderItemService.cs" />
     <Compile Include="Core\Services\KitchenBoardService.cs" />
+    <Compile Include="Core\Services\KitchenCompletedFilter.cs" />
     <Compile Include="Core\Services\OrderService.cs" />
     <Compile Include="Core\Services\PaymentService.cs" />
     <Compile Include="Core\Services\PosService.cs" />

@@ -2,6 +2,22 @@
         .kitchen-board { box-sizing: border-box; display: grid; grid-template-rows: auto minmax(0, 1fr); width: 100%; height: 100dvh; overflow: hidden; background: #f3f5f8; color: #172033; font-family: system-ui, sans-serif; }
         .kitchen-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 72px; padding: .7rem clamp(1rem, 2vw, 2rem); }
         .kitchen-toolbar h1 { margin: 0; font-size: clamp(1.35rem, 2vw, 1.8rem); font-weight: 700; letter-spacing: -.02em; }
+        .kitchen-toolbar-actions { position: relative; display: flex; align-items: center; gap: .5rem; }
+        .kitchen-settings { z-index: 31; }
+        .kitchen-settings-trigger { display: inline-flex; align-items: center; gap: .45rem; min-height: 44px; padding: .5rem .75rem; border: 1px solid #dce1e8; border-radius: .5rem; background: #fff; color: #334155; font-size: .875rem; font-weight: 650; cursor: pointer; list-style: none; }
+        .kitchen-settings-trigger::-webkit-details-marker { display: none; }
+        .kitchen-settings-trigger:hover { background: #f8fafc; }
+        .kitchen-settings-trigger svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .kitchen-settings-panel { position: absolute; z-index: 31; right: 0; top: calc(100% + .5rem); width: min(340px, calc(100vw - 2rem)); max-height: calc(100dvh - 100px); overflow-y: auto; padding: 1rem; border: 1px solid #dce1e8; border-radius: .5rem; background: #fff; box-shadow: 0 8px 24px rgba(23,32,51,.14); }
+        .kitchen-settings-panel h2 { margin: 0; color: #172033; font-size: 1.125rem; font-weight: 700; }
+        .kitchen-settings-hint { margin: .5rem 0 1rem; color: #475569; font-size: .875rem; line-height: 1.5; }
+        .kitchen-settings-label { display: block; margin: .75rem 0 .35rem; color: #334155; font-size: .875rem; font-weight: 650; }
+        .kitchen-settings-input { box-sizing: border-box; display: block; width: 100%; min-width: 0; min-height: 44px; padding: .5rem .65rem; border: 1px solid #cbd5e1; border-radius: .35rem; background: #fff; color: #172033; font: inherit; font-size: 1rem; }
+        .kitchen-settings-apply { display: block; width: 100%; min-height: 44px; margin-top: 1rem; padding: .5rem .75rem; border: 0; border-radius: .35rem; background: #2458d3; color: #fff; font: inherit; font-weight: 650; cursor: pointer; }
+        .kitchen-settings-apply:hover { background: #1e48ad; }
+        .kitchen-settings-trigger:focus-visible, .kitchen-settings-input:focus-visible, .kitchen-settings-apply:focus-visible { outline: 3px solid #2458d3; outline-offset: 2px; }
+        .kitchen-settings-error { margin: .75rem 0 0; color: #991b1b; font-size: .875rem; line-height: 1.5; }
+        .kitchen-settings [hidden] { display: none; }
         .kitchen-profile { position: relative; z-index: 30; flex: none; }
         .kitchen-profile-trigger { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: .25rem .75rem .25rem .25rem; border: 1px solid #dce1e8; border-radius: 999px; background: #fff; color: #334155; font-size: .875rem; font-weight: 650; cursor: pointer; list-style: none; box-shadow: 0 2px 8px rgba(23,32,51,.06); }
         .kitchen-profile-trigger::-webkit-details-marker { display: none; }
