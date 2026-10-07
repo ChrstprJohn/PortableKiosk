@@ -805,6 +805,12 @@ body:has(.user-kiosk-shell) [id^="app-dynamic-"] {
     font-weight: 800;
 }
 
+@media (orientation: landscape) and (min-width: 1024px) {
+    .order-type-choice {
+        min-height: clamp(280px, 40vh, 520px);
+    }
+}
+
 @media (orientation: portrait) and (min-width: 700px) {
     .kiosk-cta-footer-product > .quantity-field > label {
         font-size: clamp(1.35rem, 2vw, 2.25rem);
@@ -1414,4 +1420,3 @@ body:has(.user-kiosk-shell) [id^="app-dynamic-"] {
         padding-bottom: 6rem;
     }
 }
-
