@@ -7,6 +7,7 @@ namespace PortableKiosk.Core.Models
         public int OrderID { get; set; }
         public string OrderNumberDisplay { get; set; }
         public string TimeDisplay { get; set; }
+        public string PaidTimeDisplay { get; set; }
         public string FulfillmentDisplay { get; set; }
         public string OrderTypeDisplay { get; set; }
         public string OrderTypeClass { get; set; }

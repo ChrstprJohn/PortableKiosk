@@ -11,6 +11,7 @@ namespace PortableKiosk.Core.Services
     {
         private readonly OrderRepository orderRepository = new OrderRepository();
         private readonly OrderItemRepository itemRepository = new OrderItemRepository();
+        private readonly PaymentRepository paymentRepository = new PaymentRepository();
 
         public List<KitchenOrderCard> GetPaidOrders(bool includeCompleted = false)
         {
@@ -21,6 +22,7 @@ namespace PortableKiosk.Core.Services
                     OrderNumberDisplay = FormatOrderNumber(order.OrderNumber),
                     KitchenStatus = order.KitchenStatus,
                     TimeDisplay = order.CreatedAt.AddHours(8).ToString("h:mm tt", CultureInfo.InvariantCulture),
+                    PaidTimeDisplay = FormatPaidTime(paymentRepository.GetByOrderID(order.OrderID)),
                     OrderTypeDisplay = order.OrderType == "TAKEOUT" ? "Takeout" : "Dine in",
                     OrderTypeClass = order.OrderType == "TAKEOUT"
                         ? "kitchen-type kitchen-type-takeout"
@@ -41,6 +43,13 @@ namespace PortableKiosk.Core.Services
                     OrderNumberDisplay = FormatOrderNumber(order.OrderNumber).TrimStart('#'),
                     KitchenStatus = order.KitchenStatus
                 }).ToList();
+        }
+
+        private static string FormatPaidTime(Payment payment)
+        {
+            return payment != null && payment.PaidAt.HasValue
+                ? payment.PaidAt.Value.AddHours(8).ToString("h:mm tt", CultureInfo.InvariantCulture)
+                : "Not recorded";
         }
 
         private static string FormatOrderNumber(string orderNumber)
