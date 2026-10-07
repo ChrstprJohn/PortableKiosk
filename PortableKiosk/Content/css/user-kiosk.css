@@ -483,6 +483,39 @@ body:has(.user-kiosk-shell) [id^="app-dynamic-"] {
     line-height: 1.6;
 }
 
+.complete-expiry {
+    margin: 1.5rem 10px 0;
+    color: #475569;
+    text-align: center;
+}
+
+.complete-expiry-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.complete-expiry-line svg {
+    flex-shrink: 0;
+}
+
+.complete-expiry-time {
+    color: #334155;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.complete-expiry-hint {
+    margin: 0.3rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
 @media screen and (max-width: 540px) {
     .payment-choice-page,
     .fulfillment-page {

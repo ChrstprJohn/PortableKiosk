@@ -12,6 +12,10 @@ namespace PortableKiosk.UI.User
         protected global::System.Web.UI.WebControls.Literal litOrderType;
         protected global::System.Web.UI.WebControls.Repeater rptOrderItems;
         protected global::System.Web.UI.WebControls.Literal litInstruction;
+        protected global::System.Web.UI.WebControls.Panel completeExpiry;
+        protected global::System.Web.UI.WebControls.Literal litExpiryLabel;
+        protected global::System.Web.UI.WebControls.Literal litExpiryTime;
+        protected global::System.Web.UI.WebControls.Literal litExpiryHint;
         protected global::System.Web.UI.WebControls.Button btnFinish;
     }
 }
