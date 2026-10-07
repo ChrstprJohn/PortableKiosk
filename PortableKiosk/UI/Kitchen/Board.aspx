@@ -15,7 +15,10 @@
                     <span class="kitchen-profile-name"><%: ProfileName %></span>
                     <svg class="kitchen-chevron" aria-hidden="true" viewBox="0 0 20 20"><path d="m5 7.5 5 5 5-5" /></svg>
                 </summary>
-                <div class="kitchen-profile-menu"><a runat="server" href="~/UI/Account/SignOut.aspx"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3" /><path d="M12 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" /></svg>Sign out</a></div>
+                <div class="kitchen-profile-menu">
+                    <a runat="server" href="~/UI/Account/AdminLogin.aspx"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 5-7 7 7 7M5 12h14" /></svg>Choose workspace</a>
+                    <a runat="server" href="~/UI/Account/SignOut.aspx"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 17l5-5-5-5m5 5H3" /><path d="M12 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" /></svg>Sign out</a>
+                </div>
             </details>
         </div>
         <asp:Label ID="lblError" runat="server" EnableViewState="false" Visible="false" CssClass="kitchen-error" role="alert" />

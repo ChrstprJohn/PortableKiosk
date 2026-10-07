@@ -52,6 +52,11 @@
                         <svg aria-hidden="true" viewBox="0 0 20 20" class="size-4 fill-none stroke-current transition-transform group-open:rotate-180" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m5 7.5 5 5 5-5" /></svg>
                     </summary>
                     <div class="absolute right-0 mt-2 w-48 overflow-hidden rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg">
+                        <a runat="server" href="~/UI/Account/AdminLogin.aspx"
+                            class="flex min-h-11 items-center gap-2.5 rounded-lg px-3 text-sm font-medium text-slate-700 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-700">
+                            <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 5-7 7 7 7M5 12h14" /></svg>
+                            <span>Choose workspace</span>
+                        </a>
                         <a runat="server" href="~/UI/Account/SignOut.aspx"
                             class="flex min-h-11 items-center gap-2.5 rounded-lg px-3 text-sm font-medium text-slate-700 no-underline transition-colors hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-blue-700">
                             <svg aria-hidden="true" viewBox="0 0 24 24" class="size-4 fill-none stroke-current" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5m5 5H3" /><path d="M12 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5" /></svg>
