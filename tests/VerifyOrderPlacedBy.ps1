@@ -34,11 +34,11 @@ try {
         Invoke-TestSql $testDb $schema
         # Simulate an existing installation and a historical order with no recorded creator.
         Invoke-TestSql $testDb @'
-ALTER TABLE dbo.Orders DROP CONSTRAINT FK_Orders_PlacedByStaffAccount, CK_Orders_OrderSource, DF_Orders_OrderSource;
-ALTER TABLE dbo.Orders DROP COLUMN OrderSource, PlacedByStaffAccountID, PlacedByName;
+ALTER TABLE dbo.Orders DROP CONSTRAINT FK_Orders_PlacedByStaffAccount, CK_Orders_OrderSource, DF_Orders_OrderSource, CK_Orders_ProcessedByRole;
+ALTER TABLE dbo.Orders DROP COLUMN OrderSource, PlacedByStaffAccountID, PlacedByName, ProcessedByRole;
 INSERT dbo.Orders (OrderNumber, OrderType, FulfillmentMethod) VALUES (N'LEGACY', N'TAKEOUT', N'COUNTER_PICKUP');
 '@
-        $upgrade = [IO.File]::ReadAllText((Join-Path $testApp 'Database/Migrations/Upgrades/UPDATE ORDER PLACED BY.sql')).Replace('portable_kiosk_db', $testDatabaseName)
+        $upgrade = [IO.File]::ReadAllText((Join-Path $testApp 'Database/Migrations/Upgrades/UPDATE ORDER PROCESSOR ROLE.sql')).Replace('portable_kiosk_db', $testDatabaseName)
         Invoke-TestSql $testDb $upgrade
         Invoke-TestSql $testDb $upgrade # Migration must be safe to rerun.
         $installer = [IO.File]::ReadAllText((Join-Path $testApp 'Database/InstallStoredProcedures.sql')).Replace('portable_kiosk_db', $testDatabaseName)
@@ -47,7 +47,7 @@ INSERT dbo.Orders (OrderNumber, OrderType, FulfillmentMethod) VALUES (N'LEGACY',
     $testConfig = [xml]'<configuration><connectionStrings><add name="PortableKioskDb" providerName="System.Data.SqlClient" /></connectionStrings></configuration>'
     $testConfig.configuration.connectionStrings.add.SetAttribute('connectionString', $testConnection.ConnectionString)
     $testConfig.Save($testConfigPath)
-    & $testExe
+    & $testExe (Join-Path $testApp 'Database/Migrations/010_ADD_ORDER_PROCESSOR_ROLE.sql')
     if ($LASTEXITCODE -ne 0) { throw 'Placed-by integration checks failed.' }
 } finally {
     Remove-Item -LiteralPath $testConfigPath -ErrorAction SilentlyContinue

@@ -23,7 +23,7 @@ BEGIN
     SET NOCOUNT OFF;
     SELECT o.OrderID, o.OrderNumber, o.OrderType,
         o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
-        o.CreatedAt, o.ExpiresAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName, p.PaymentID, p.Amount, p.PaidAt
+        o.CreatedAt, o.ExpiresAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName, o.ProcessedByRole, p.PaymentID, p.Amount, p.PaidAt
     FROM Payments p
     INNER JOIN Orders o ON o.OrderID = p.OrderID
     WHERE p.TransactionReference = @Reference
@@ -76,6 +76,7 @@ BEGIN
         o.OrderSource,
         o.PlacedByStaffAccountID,
         o.PlacedByName,
+        o.ProcessedByRole,
         COALESCE(
             o.ExpiresAt,
             DATEADD(MINUTE, @ExpiryMinutes, o.CreatedAt)
@@ -140,10 +141,12 @@ AS
 BEGIN
     SET NOCOUNT OFF;
     DECLARE @PlacedByName NVARCHAR(200);
+    DECLARE @ProcessedByRole NVARCHAR(10);
     -- Save the crew who accepts payment, including orders started on the kiosk.
     SELECT @PlacedByName = CONCAT(FirstName, N' ',
         CASE WHEN NULLIF(LTRIM(RTRIM(MiddleName)), N'') IS NULL THEN N'' ELSE MiddleName + N' ' END,
-        LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END)
+        LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END),
+        @ProcessedByRole = StaffRole
     FROM dbo.StaffAccounts
     WHERE StaffAccountID = @PlacedByStaffAccountID
         AND IsActive = 1 AND StaffRole IN (N'ADMIN', N'CREW');
@@ -152,8 +155,9 @@ BEGIN
     UPDATE Orders
     SET KitchenStatus = N'QUEUED', ExpiresAt = NULL,
         PlacedByStaffAccountID = @PlacedByStaffAccountID,
-        PlacedByName = @PlacedByName
-    OUTPUT INSERTED.PlacedByStaffAccountID, INSERTED.PlacedByName
+        PlacedByName = @PlacedByName,
+        ProcessedByRole = @ProcessedByRole
+    OUTPUT INSERTED.PlacedByStaffAccountID, INSERTED.PlacedByName, INSERTED.ProcessedByRole
     WHERE OrderID = @OrderID
         AND KitchenStatus = N'AWAITING_PAYMENT'
         AND COALESCE(

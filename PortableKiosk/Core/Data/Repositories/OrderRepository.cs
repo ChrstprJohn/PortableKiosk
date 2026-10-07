@@ -316,6 +316,7 @@ namespace PortableKiosk.Core.Data.Repositories
                     order.OrderID = reader.GetInt32(0);
                     order.CreatedAt = reader.GetDateTime(1);
                     order.PlacedByName = reader.IsDBNull(2) ? null : reader.GetString(2);
+                    order.ProcessedByRole = reader.IsDBNull(3) ? null : reader.GetString(3);
                 }
             }
 
@@ -447,7 +448,9 @@ namespace PortableKiosk.Core.Data.Repositories
                 PlacedByStaffAccountID = reader.IsDBNull(reader.GetOrdinal("PlacedByStaffAccountID"))
                     ? (int?)null : reader.GetInt32(reader.GetOrdinal("PlacedByStaffAccountID")),
                 PlacedByName = reader.IsDBNull(reader.GetOrdinal("PlacedByName"))
-                    ? null : reader.GetString(reader.GetOrdinal("PlacedByName"))
+                    ? null : reader.GetString(reader.GetOrdinal("PlacedByName")),
+                ProcessedByRole = reader.IsDBNull(reader.GetOrdinal("ProcessedByRole"))
+                    ? null : reader.GetString(reader.GetOrdinal("ProcessedByRole"))
             };
         }
 

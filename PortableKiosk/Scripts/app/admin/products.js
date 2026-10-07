@@ -4,6 +4,112 @@
     var existingSizeKeys = [];
     var editVariantPreviewUrl = null;
 
+    function initializeProductFilters() {
+        var search = document.getElementById('productSearch');
+        var category = document.getElementById('productCategoryFilter');
+        var availability = document.getElementById('productAvailabilityFilter');
+        var count = document.getElementById('productResultCount');
+        var clear = document.getElementById('clearProductFilters');
+        var empty = document.getElementById('noProductMatches');
+        var reset = document.getElementById('resetProductFilters');
+        if (!search || !category || !availability || !count || !clear || !empty || !reset) return;
+
+        var groups = Array.from(document.querySelectorAll('[data-product-group]'));
+        var products = [];
+        var storageKey = 'admin-product-filters:' + window.location.pathname;
+
+        function normalize(value) {
+            return (value || '').toLocaleLowerCase().replace(/\s+/g, ' ').trim();
+        }
+
+        groups.forEach(function (group) {
+            var option = document.createElement('option');
+            option.value = group.dataset.categoryId;
+            option.textContent = group.querySelector('h2').textContent.trim();
+            category.appendChild(option);
+
+            Array.from(group.querySelectorAll('[data-product-result]')).forEach(function (result) {
+                var card = result.querySelector('[data-product-id]');
+                var sizes = Array.from(card.querySelectorAll('[data-variant-size]')).map(function (size) {
+                    return size.textContent;
+                }).join(' ');
+                products.push({
+                    result: result,
+                    group: group,
+                    categoryId: card.dataset.productCategoryId,
+                    available: normalize(card.dataset.productAvailable),
+                    text: normalize(card.querySelector('[data-product-name]').textContent + ' ' +
+                        card.dataset.productDescription + ' ' + card.dataset.productCategory + ' ' + sizes)
+                });
+            });
+        });
+
+        // Keep the current view after editing a product or variant in this tab.
+        try {
+            var saved = JSON.parse(window.sessionStorage.getItem(storageKey) || 'null');
+            if (saved) {
+                search.value = typeof saved.search === 'string' ? saved.search.slice(0, 150) : '';
+                category.value = typeof saved.category === 'string' ? saved.category : '';
+                availability.value = typeof saved.availability === 'string' ? saved.availability : '';
+                if (category.selectedIndex < 0) category.value = '';
+                if (availability.selectedIndex < 0) availability.value = '';
+            }
+        } catch (error) {
+            // Filtering still works when browser storage is unavailable.
+        }
+
+        function applyFilters() {
+            var terms = normalize(search.value).split(' ').filter(Boolean);
+            var visibleCount = 0;
+            var visibleGroups = new Set();
+
+            products.forEach(function (product) {
+                var matches = (!category.value || product.categoryId === category.value) &&
+                    (!availability.value || product.available === availability.value) &&
+                    terms.every(function (term) { return product.text.indexOf(term) !== -1; });
+                product.result.hidden = !matches;
+                if (matches) {
+                    visibleCount += 1;
+                    visibleGroups.add(product.group);
+                }
+            });
+
+            groups.forEach(function (group) { group.hidden = !visibleGroups.has(group); });
+            count.textContent = 'Showing ' + visibleCount + ' of ' + products.length +
+                (products.length === 1 ? ' product' : ' products');
+            clear.hidden = !terms.length && !category.value && !availability.value;
+            empty.hidden = visibleCount > 0 || products.length === 0;
+
+            try {
+                window.sessionStorage.setItem(storageKey, JSON.stringify({
+                    search: search.value,
+                    category: category.value,
+                    availability: availability.value
+                }));
+            } catch (error) {
+                // Browser storage is optional.
+            }
+        }
+
+        function clearFilters() {
+            search.value = '';
+            category.value = '';
+            availability.value = '';
+            applyFilters();
+            search.focus();
+        }
+
+        search.addEventListener('input', applyFilters);
+        search.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') event.preventDefault();
+        });
+        category.addEventListener('change', applyFilters);
+        availability.addEventListener('change', applyFilters);
+        clear.addEventListener('click', clearFilters);
+        reset.addEventListener('click', clearFilters);
+        applyFilters();
+    }
+
     function findControl(idSuffix) {
         return document.querySelector('[id$="' + idSuffix + '"]');
     }
@@ -447,5 +553,6 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         resetVariantRows();
+        initializeProductFilters();
     });
 })();

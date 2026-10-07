@@ -114,8 +114,11 @@
                                 <span class="block text-slate-800"><%#: Eval("ExpiresAtDisplay") %></span>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Placed by" ItemStyle-Width="180px">
-                            <ItemTemplate><span class="block text-slate-800"><%#: Eval("PlacedByDisplay") %></span></ItemTemplate>
+                        <asp:TemplateField HeaderText="Processed by" ItemStyle-Width="180px">
+                            <ItemTemplate>
+                                <span class="block text-slate-800"><%#: Eval("PlacedByDisplay") %></span>
+                                <span class="mt-0.5 block text-xs text-slate-600"><%#: Eval("ProcessedByRoleDisplay") %></span>
+                            </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Type" ItemStyle-Width="90px">
                             <ItemTemplate><%#: Eval("OrderTypeDisplay") %></ItemTemplate>
@@ -184,7 +187,7 @@
                     </div>
 
                     <dl class="grid grid-cols-1 gap-x-6 gap-y-3 border-b border-dashed border-slate-300 py-4 sm:grid-cols-2">
-                        <div><dt class="text-xs font-medium text-slate-500">Placed by</dt><dd class="mt-1 break-words text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsPlacedBy" runat="server" /></dd></div>
+                        <div><dt class="text-xs font-medium text-slate-500">Processed by</dt><dd class="mt-1 break-words text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsPlacedBy" runat="server" /><asp:Label ID="lblDetailsProcessedByRole" runat="server" CssClass="mt-0.5 block text-xs font-normal text-slate-600" /></dd></div>
                         <div><dt class="text-xs font-medium text-slate-500">Placed</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsCreatedAt" runat="server" /></dd></div>
                         <div><dt class="text-xs font-medium text-slate-500">Expires at</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsExpiresAt" runat="server" /></dd></div>
                         <div><dt class="text-xs font-medium text-slate-500">Order type</dt><dd class="mt-1 text-sm font-medium leading-5 text-slate-900"><asp:Literal ID="litDetailsOrderType" runat="server" /></dd></div>

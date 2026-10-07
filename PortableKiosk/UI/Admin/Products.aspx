@@ -24,10 +24,46 @@
             </button>
         </header>
 
+        <section class="mb-6" aria-label="Search and filter products">
+            <div class="grid items-end gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="min-w-0 sm:col-span-2">
+                    <label for="productSearch" class="mb-1.5 block text-xs font-medium text-slate-600">Search products</label>
+                    <div class="relative">
+                        <svg class="pointer-events-none absolute left-3 top-3.5 size-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4.5 4.5" /></svg>
+                        <input id="productSearch" type="search" maxlength="150" autocomplete="off" placeholder="Search by product name or size" class="block h-11 w-full rounded-md border border-slate-200 bg-white py-2 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-500 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" />
+                    </div>
+                </div>
+                <div class="min-w-0">
+                    <label for="productCategoryFilter" class="mb-1.5 block text-xs font-medium text-slate-600">Category</label>
+                    <div class="relative">
+                    <select id="productCategoryFilter" class="block h-11 w-full appearance-none rounded-md border border-slate-200 bg-white py-2 pl-3 pr-10 text-sm text-slate-900 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                        <option value="">All categories</option>
+                    </select>
+                    <svg class="pointer-events-none absolute inset-y-0 right-3 my-auto size-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                    </div>
+                </div>
+                <div class="min-w-0">
+                    <label for="productAvailabilityFilter" class="mb-1.5 block text-xs font-medium text-slate-600">Product availability</label>
+                    <div class="relative">
+                    <select id="productAvailabilityFilter" class="block h-11 w-full appearance-none rounded-md border border-slate-200 bg-white py-2 pl-3 pr-10 text-sm text-slate-900 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                        <option value="">All availability</option>
+                        <option value="true">Available</option>
+                        <option value="false">Unavailable</option>
+                    </select>
+                    <svg class="pointer-events-none absolute inset-y-0 right-3 my-auto size-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2 flex min-h-11 flex-wrap items-center justify-between gap-x-4">
+                <p id="productResultCount" class="m-0 text-xs text-slate-600" role="status" aria-live="polite" aria-atomic="true"></p>
+                <button id="clearProductFilters" type="button" hidden class="min-h-11 rounded-md px-3 text-sm font-medium text-slate-700 underline underline-offset-4 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">Clear filters</button>
+            </div>
+        </section>
+
         <!-- PRODUCT CARDS GROUPED BY CATEGORY -->
         <asp:Repeater ID="rptCategoryGroups" runat="server">
             <ItemTemplate>
-                <section class="mb-6">
+                <section class="mb-6" data-product-group data-category-id='<%# Eval("CategoryID") %>'>
                     <div class="mb-3 flex items-center gap-3">
                         <h2 class="shrink-0 text-lg font-semibold text-slate-800"><%# HttpUtility.HtmlEncode(Convert.ToString(Eval("CategoryName"))) %></h2>
                         <div class="h-px flex-1 bg-slate-200" aria-hidden="true"></div>
@@ -35,7 +71,7 @@
                     <div class="grid grid-cols-12 gap-4">
                         <asp:Repeater ID="rptProductCards" runat="server" DataSource='<%# Eval("Products") %>'>
                             <ItemTemplate>
-                                <div class="col-span-12 xl:col-span-6">
+                                <div class="col-span-12 xl:col-span-6" data-product-result>
                                     <div
                                         class="flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white"
                                         data-existing-size-keys='<%# Eval("ExistingSizeKeys") %>'
@@ -109,7 +145,7 @@
                                                                 ? "<img src='" + ResolveUrl(Convert.ToString(Eval("ImagePath"))) + "' class='h-9 w-9 rounded object-cover' alt='Variant' />"
                                                                 : "<span class='inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium bg-slate-50 text-slate-500 border'>No photo</span>" %>
                                                         </td>
-                                                        <td class="font-semibold">
+                                                        <td class="font-semibold" data-variant-size>
                                                             <%# string.IsNullOrWhiteSpace(Convert.ToString(Eval("SizeName"))) || Convert.ToString(Eval("SizeName")) == "No size"
                                                                 ? "<span class='text-slate-600'>Regular / Standard</span>"
                                                                 : Eval("SizeName") %>
@@ -187,6 +223,12 @@
                 </section>
             </ItemTemplate>
         </asp:Repeater>
+
+        <div id="noProductMatches" hidden class="rounded-lg border border-slate-200 bg-white p-8 text-center">
+            <h3 class="text-sm font-semibold text-slate-900">No products match your search</h3>
+            <p class="mt-1 text-sm text-slate-600">Try a different search or clear the filters to see all products.</p>
+            <button id="resetProductFilters" type="button" class="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">Clear filters</button>
+        </div>
 
         <!-- EMPTY STATE IF NO PRODUCTS -->
         <asp:Panel ID="pnlNoProducts" runat="server" Visible="false" CssClass="mt-3 rounded-lg border border-slate-200 bg-white p-8 text-center text-slate-500">
@@ -675,6 +717,6 @@
         </div>
     </div>
 
-    <script src="<%= ResolveUrl("~/Scripts/app/admin/products.js") %>?v=20260928.7"></script>
+    <script src="<%= ResolveUrl("~/Scripts/app/admin/products.js") %>?v=20261007.1"></script>
 
 </asp:Content>

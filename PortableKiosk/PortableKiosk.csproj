@@ -124,6 +124,7 @@
     <Content Include="Scripts\app\admin\catalog-config.js" />
     <Content Include="Scripts\app\admin\alert.js" />
     <Content Include="Scripts\app\admin\products.js" />
+    <Content Include="Scripts\app\admin\staff-accounts.js" />
     <Content Include="Scripts\app\user\kiosk.js" />
     <Content Include="Scripts\app\user\complete.js" />
     <Content Include="Scripts\app\user\menu.js" />
@@ -443,6 +444,8 @@
     <None Include="Database\Migrations\007_ADD_WEBSITE_QR_CODE.sql" />
     <None Include="Database\Migrations\008_DISABLE_IDENTITY_CACHE.sql" />
     <None Include="Database\Migrations\009_ADD_ORDER_PLACED_BY.sql" />
+    <None Include="Database\Migrations\010_ADD_ORDER_PROCESSOR_ROLE.sql" />
+    <None Include="Database\Migrations\Upgrades\UPDATE ORDER PROCESSOR ROLE.sql" />
     <None Include="Database\Migrations\Upgrades\UPDATE ORDER PLACED BY.sql" />
     <None Include="Database\Migrations\Upgrades\UPDATE ANALYTICS AND ORDER NUMBER CACHE.sql" />
     <None Include="Database\Commands\RESET DATA KEEP USERS.sql" />

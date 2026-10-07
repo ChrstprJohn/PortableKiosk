@@ -23,6 +23,44 @@
             </button>
         </header>
 
+        <section class="mb-6" aria-label="Search and filter staff accounts">
+            <div class="grid items-end gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="min-w-0 sm:col-span-2">
+                    <label for="staffSearch" class="mb-1.5 block text-xs font-medium text-slate-600">Search staff</label>
+                    <div class="relative">
+                        <svg class="pointer-events-none absolute left-3 top-3.5 size-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4.5 4.5" /></svg>
+                        <input id="staffSearch" type="search" maxlength="150" autocomplete="off" placeholder="Search by name or email" class="block h-11 w-full rounded-md border border-slate-200 bg-white py-2 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-500 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" />
+                    </div>
+                </div>
+                <div class="min-w-0">
+                    <label for="staffRoleFilter" class="mb-1.5 block text-xs font-medium text-slate-600">Role</label>
+                    <div class="relative">
+                    <select id="staffRoleFilter" class="block h-11 w-full appearance-none rounded-md border border-slate-200 bg-white py-2 pl-3 pr-10 text-sm text-slate-900 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                        <option value="">All roles</option>
+                        <option value="admin">Admin</option>
+                        <option value="crew">Crew</option>
+                    </select>
+                    <svg class="pointer-events-none absolute inset-y-0 right-3 my-auto size-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                    </div>
+                </div>
+                <div class="min-w-0">
+                    <label for="staffStatusFilter" class="mb-1.5 block text-xs font-medium text-slate-600">Account status</label>
+                    <div class="relative">
+                    <select id="staffStatusFilter" class="block h-11 w-full appearance-none rounded-md border border-slate-200 bg-white py-2 pl-3 pr-10 text-sm text-slate-900 focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200">
+                        <option value="">All statuses</option>
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                    </select>
+                    <svg class="pointer-events-none absolute inset-y-0 right-3 my-auto size-4 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2 flex min-h-11 flex-wrap items-center justify-between gap-x-4">
+                <p id="staffResultCount" class="m-0 text-xs text-slate-600" role="status" aria-live="polite" aria-atomic="true"></p>
+                <button id="clearStaffFilters" type="button" hidden class="min-h-11 rounded-md px-3 text-sm font-medium text-slate-700 underline underline-offset-4 hover:text-slate-950 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">Clear filters</button>
+            </div>
+        </section>
+
         <div class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/50 p-4" id="addStaffModal" tabindex="-1" aria-labelledby="createStaffHeading" aria-hidden="true">
             <div class="w-full max-w-md">
                 <div class="flex max-h-[90vh] flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
@@ -137,7 +175,7 @@
                 <div class="w-full">
                     <asp:Label ID="lblPassword" runat="server"
                         AssociatedControlID="txtPassword"
-                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Temporary password *" />
+                        CssClass="mb-1.5 block text-sm font-medium text-slate-700" Text="Password *" />
                     <asp:TextBox ID="txtPassword" runat="server"
                         CssClass="block w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm focus-visible:border-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200" TextMode="Password"
                         MaxLength="100" autocomplete="new-password" />
@@ -289,15 +327,21 @@
                 <h2 id="staffListHeading" class="text-sm font-semibold text-slate-950">Current staff</h2>
             </div>
 
-            <div class="w-full overflow-x-auto">
-                <asp:GridView ID="gridStaff" runat="server"
+            <div id="staffTableContainer" class="w-full overflow-x-auto">
+                <asp:GridView ID="gridStaff" runat="server" ClientIDMode="Static"
                     AutoGenerateColumns="false" GridLines="None"
                     OnRowCommand="gridStaff_RowCommand"
                     CssClass="w-full min-w-[600px] border-collapse text-left text-sm [&_th]:border-b [&_th]:border-slate-200 [&_th]:bg-white [&_th]:px-4 [&_th]:py-2.5 [&_th]:text-xs [&_th]:font-medium [&_th]:text-slate-500 [&_td]:px-4 [&_td]:py-2.5 [&_td]:text-slate-700 [&_tbody_tr]:border-b [&_tbody_tr]:border-slate-100 [&_tbody_tr:hover]:bg-slate-50 [&_tbody_tr:last-child]:border-b-0"
                     EmptyDataText="No staff accounts yet.">
                     <Columns>
-                        <asp:BoundField DataField="DisplayName" HeaderText="Staff member" />
-                        <asp:BoundField DataField="Email" HeaderText="Email" />
+                        <asp:TemplateField HeaderText="Staff member">
+                            <ItemTemplate>
+                                <span data-staff-account data-staff-role='<%#: Eval("StaffRole") %>' data-staff-active='<%# Eval("IsActive") %>'><%#: Eval("DisplayName") %></span>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Email">
+                            <ItemTemplate><span data-staff-email><%#: Eval("Email") %></span></ItemTemplate>
+                        </asp:TemplateField>
                         <asp:TemplateField HeaderText="Role">
                             <ItemTemplate>
                                 <span class='<%# GetRoleCss(Eval("StaffRole")) %>'>
@@ -329,7 +373,13 @@
                 </asp:GridView>
             </div>
 
+            <div id="noStaffMatches" hidden class="p-8 text-center">
+                <h3 class="text-sm font-semibold text-slate-900">No staff accounts match your search</h3>
+                <p class="mt-1 text-sm text-slate-600">Try a different name or email, or clear the filters to see all staff.</p>
+                <button id="resetStaffFilters" type="button" class="mt-4 inline-flex min-h-11 items-center justify-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400">Clear filters</button>
+            </div>
         </section>
     </main>
 
+    <script src="<%= ResolveUrl("~/Scripts/app/admin/staff-accounts.js") %>?v=20261007.1"></script>
 </asp:Content>

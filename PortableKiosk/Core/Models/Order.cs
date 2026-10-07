@@ -23,12 +23,26 @@ namespace PortableKiosk.Core.Models
 
         public string PlacedByName { get; set; }
 
+        public string ProcessedByRole { get; set; }
+
+        public string ProcessedByRoleDisplay
+        {
+            get
+            {
+                if (string.Equals(ProcessedByRole, "ADMIN", StringComparison.OrdinalIgnoreCase)) return "Admin";
+                if (string.Equals(ProcessedByRole, "CREW", StringComparison.OrdinalIgnoreCase)) return "Crew";
+                return PlacedByStaffAccountID.HasValue || !string.IsNullOrWhiteSpace(PlacedByName)
+                    ? "Role not recorded" : string.Empty;
+            }
+        }
+
         public string PlacedByDisplay
         {
             get
             {
                 if (!string.IsNullOrWhiteSpace(PlacedByName)) return PlacedByName;
                 if (PlacedByStaffAccountID.HasValue) return "Staff #" + PlacedByStaffAccountID.Value;
+                if (string.Equals(OrderSource, "KIOSK", StringComparison.OrdinalIgnoreCase)) return "Not processed at POS";
                 return "Not recorded";
             }
         }

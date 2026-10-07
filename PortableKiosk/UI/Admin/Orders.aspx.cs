@@ -28,6 +28,7 @@ namespace PortableKiosk.UI.Admin
             public int OrderID { get; set; }
             public string OrderNumber { get; set; }
             public string PlacedByDisplay { get; set; }
+            public string ProcessedByRoleDisplay { get; set; }
             public DateTime CreatedAt { get; set; }
             public string CreatedAtDisplay { get; set; }
             public string ExpiresAtDisplay { get; set; }
@@ -171,6 +172,7 @@ namespace PortableKiosk.UI.Admin
                         OrderID = order.OrderID,
                         OrderNumber = order.OrderNumber,
                         PlacedByDisplay = order.PlacedByDisplay,
+                        ProcessedByRoleDisplay = order.ProcessedByRoleDisplay,
                         CreatedAt = order.CreatedAt,
                         CreatedAtDisplay = FormatOrderDate(order.CreatedAt),
                         ExpiresAtDisplay = expiresAt.HasValue
@@ -257,6 +259,8 @@ namespace PortableKiosk.UI.Admin
             litDetailsCreatedAt.Text =
                 HttpUtility.HtmlEncode(FormatOrderDate(order.CreatedAt));
             litDetailsPlacedBy.Text = HttpUtility.HtmlEncode(order.PlacedByDisplay);
+            lblDetailsProcessedByRole.Text = HttpUtility.HtmlEncode(order.ProcessedByRoleDisplay);
+            lblDetailsProcessedByRole.Visible = !string.IsNullOrWhiteSpace(order.ProcessedByRoleDisplay);
             litDetailsOrderType.Text =
                 HttpUtility.HtmlEncode(Humanize(order.OrderType));
             litDetailsFulfillment.Text =

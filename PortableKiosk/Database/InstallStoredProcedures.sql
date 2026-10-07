@@ -376,7 +376,8 @@ BEGIN
         CreatedAt,
         OrderSource,
         PlacedByStaffAccountID,
-        PlacedByName
+        PlacedByName,
+        ProcessedByRole
     FROM Orders
     WHERE OrderID = @Value;
 END;
@@ -398,7 +399,8 @@ BEGIN
         CreatedAt,
         OrderSource,
         PlacedByStaffAccountID,
-        PlacedByName
+        PlacedByName,
+        ProcessedByRole
     FROM Orders
     WHERE OrderNumber = @Value;
 END;
@@ -419,7 +421,8 @@ BEGIN
         CreatedAt,
         OrderSource,
         PlacedByStaffAccountID,
-        PlacedByName
+        PlacedByName,
+        ProcessedByRole
     FROM Orders
     ORDER BY CreatedAt DESC, OrderID DESC;
 END;
@@ -432,7 +435,7 @@ BEGIN
     SET NOCOUNT OFF;
     SELECT o.OrderID, o.OrderNumber, o.OrderType,
         o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
-        o.ExpiresAt, o.CreatedAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName
+        o.ExpiresAt, o.CreatedAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName, o.ProcessedByRole
     FROM Orders o
     WHERE (o.KitchenStatus IN (N'QUEUED', N'PREPARING', N'SERVING')
         OR (@IncludeCompleted = 1 AND o.KitchenStatus = N'COMPLETED'))
@@ -555,14 +558,16 @@ AS
 BEGIN
     SET NOCOUNT OFF;
     DECLARE @PlacedByName NVARCHAR(200);
+    DECLARE @ProcessedByRole NVARCHAR(10);
     IF @OrderSource IS NULL OR @OrderSource NOT IN (N'KIOSK', N'POS')
         THROW 50001, 'Invalid order source.', 1;
     IF @OrderSource = N'POS'
     BEGIN
-        -- Store the name at placement so later account changes retain order history.
+        -- Snapshot the processor's name and role so later account changes retain order history.
         SELECT @PlacedByName = CONCAT(FirstName, N' ',
             CASE WHEN NULLIF(LTRIM(RTRIM(MiddleName)), N'') IS NULL THEN N'' ELSE MiddleName + N' ' END,
-            LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END)
+            LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END),
+            @ProcessedByRole = StaffRole
         FROM dbo.StaffAccounts
         WHERE StaffAccountID = @PlacedByStaffAccountID
             AND IsActive = 1 AND StaffRole IN (N'ADMIN', N'CREW');
@@ -577,19 +582,21 @@ BEGIN
             OrderSource,
             PlacedByStaffAccountID,
             PlacedByName,
+            ProcessedByRole,
             OrderType,
             FulfillmentMethod,
             TableNumber,
             KitchenStatus,
             ExpiresAt
         )
-    OUTPUT INSERTED.OrderID, INSERTED.CreatedAt, INSERTED.PlacedByName
+    OUTPUT INSERTED.OrderID, INSERTED.CreatedAt, INSERTED.PlacedByName, INSERTED.ProcessedByRole
     VALUES
         (
             @OrderNumber,
             @OrderSource,
             @PlacedByStaffAccountID,
             @PlacedByName,
+            @ProcessedByRole,
             @OrderType,
             @FulfillmentMethod,
             @TableNumber,
@@ -790,7 +797,7 @@ BEGIN
     SET NOCOUNT OFF;
     SELECT o.OrderID, o.OrderNumber, o.OrderType,
         o.FulfillmentMethod, o.TableNumber, o.KitchenStatus,
-        o.CreatedAt, o.ExpiresAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName, p.PaymentID, p.Amount, p.PaidAt
+        o.CreatedAt, o.ExpiresAt, o.OrderSource, o.PlacedByStaffAccountID, o.PlacedByName, o.ProcessedByRole, p.PaymentID, p.Amount, p.PaidAt
     FROM Payments p
     INNER JOIN Orders o ON o.OrderID = p.OrderID
     WHERE p.TransactionReference = @Reference
@@ -843,6 +850,7 @@ BEGIN
         o.OrderSource,
         o.PlacedByStaffAccountID,
         o.PlacedByName,
+        o.ProcessedByRole,
         COALESCE(
             o.ExpiresAt,
             DATEADD(MINUTE, @ExpiryMinutes, o.CreatedAt)
@@ -907,10 +915,12 @@ AS
 BEGIN
     SET NOCOUNT OFF;
     DECLARE @PlacedByName NVARCHAR(200);
+    DECLARE @ProcessedByRole NVARCHAR(10);
     -- Save the crew who accepts payment, including orders started on the kiosk.
     SELECT @PlacedByName = CONCAT(FirstName, N' ',
         CASE WHEN NULLIF(LTRIM(RTRIM(MiddleName)), N'') IS NULL THEN N'' ELSE MiddleName + N' ' END,
-        LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END)
+        LastName, CASE WHEN NULLIF(LTRIM(RTRIM(Suffix)), N'') IS NULL THEN N'' ELSE N' ' + Suffix END),
+        @ProcessedByRole = StaffRole
     FROM dbo.StaffAccounts
     WHERE StaffAccountID = @PlacedByStaffAccountID
         AND IsActive = 1 AND StaffRole IN (N'ADMIN', N'CREW');
@@ -919,8 +929,9 @@ BEGIN
     UPDATE Orders
     SET KitchenStatus = N'QUEUED', ExpiresAt = NULL,
         PlacedByStaffAccountID = @PlacedByStaffAccountID,
-        PlacedByName = @PlacedByName
-    OUTPUT INSERTED.PlacedByStaffAccountID, INSERTED.PlacedByName
+        PlacedByName = @PlacedByName,
+        ProcessedByRole = @ProcessedByRole
+    OUTPUT INSERTED.PlacedByStaffAccountID, INSERTED.PlacedByName, INSERTED.ProcessedByRole
     WHERE OrderID = @OrderID
         AND KitchenStatus = N'AWAITING_PAYMENT'
         AND COALESCE(

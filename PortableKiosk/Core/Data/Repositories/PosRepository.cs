@@ -298,6 +298,7 @@ namespace PortableKiosk.Core.Data.Repositories
                                 }
                                 order.PlacedByStaffAccountID = reader.GetInt32(0);
                                 order.PlacedByName = reader.GetString(1);
+                                order.ProcessedByRole = reader.GetString(2);
                             }
                         }
 

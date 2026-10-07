@@ -1,5 +1,7 @@
 # Portable Kiosk
 
+For the Orders **Processed by** name and role display on an existing database, run the entire `PortableKiosk/Database/Migrations/Upgrades/UPDATE ORDER PROCESSOR ROLE.sql` in SSMS before deploying this app version. It includes migrations 009/010 and the updated order/POS stored procedures and is safe to rerun. New orders preserve the role at processing time; older orders are filled from the linked staff account's current role where available. A fresh installation uses the updated `Schema.sql` and `InstallStoredProcedures.sql` instead.
+
 To clear non-user data before repopulating the catalog, run `PortableKiosk/Database/Commands/RESET DATA KEEP USERS.sql`, then `PortableKiosk/Database/Commands/POPULATE CATALOG.sql`. The reset preserves all admin/crew accounts, clears orders/payments/catalog and the saved QR link, restores default kiosk settings, and restarts catalog/order IDs at 1. See `Database/Commands/README.md` for details. Combined schema/procedure upgrades are in `PortableKiosk/Database/Migrations/Upgrades/`.
 
 For an existing `portable_kiosk_db`, apply any migrations not yet run in numeric order. If migration 005 was the last one applied, run `PortableKiosk/Database/Migrations/006_RENAME_READY_TO_SERVING.sql` once before deploying this version. It converts existing kitchen orders from `READY` to `SERVING` and updates the status constraint. If 005 has not been applied, run it before 006.

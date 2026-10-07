@@ -1,6 +1,6 @@
 -- Portable Kiosk database schema
 -- Microsoft SQL Server
--- Fresh database setup: run this entire file once; migrations 001-009 are included.
+-- Fresh database setup: run this entire file once; migrations 001-010 are included.
 -- Includes product descriptions, takeout table service, AWAITING_PAYMENT,
 -- EXPIRED payments, kiosk settings, SERVING (formerly READY), and website QR links.
 -- For an existing installation, use the migration scripts instead.
@@ -211,6 +211,9 @@ CREATE TABLE dbo.Orders
     PlacedByStaffAccountID INT NULL,
 
     PlacedByName NVARCHAR(200) NULL,
+
+    ProcessedByRole NVARCHAR(10) NULL,
+    CONSTRAINT CK_Orders_ProcessedByRole CHECK (ProcessedByRole IS NULL OR ProcessedByRole IN (N'ADMIN', N'CREW')),
 
     CONSTRAINT FK_Orders_PlacedByStaffAccount FOREIGN KEY (PlacedByStaffAccountID)
         REFERENCES dbo.StaffAccounts(StaffAccountID) ON DELETE SET NULL,
