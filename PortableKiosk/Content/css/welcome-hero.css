@@ -144,6 +144,21 @@ body:has(.kiosk-attract-page) .body-content {
     margin: 0.5rem 0 0;
 }
 
+@media (max-width: 699px) {
+    .kiosk-attract-brand {
+        justify-content: center;
+    }
+
+    .kiosk-attract-brand img {
+        height: clamp(3.75rem, 13vw, 5rem);
+        width: clamp(3.75rem, 13vw, 5rem);
+    }
+
+    .kiosk-attract-brand span {
+        display: none;
+    }
+}
+
 @media (min-aspect-ratio: 6/5) {
     .kiosk-attract-page {
         min-height: max(22rem, 100vh);
